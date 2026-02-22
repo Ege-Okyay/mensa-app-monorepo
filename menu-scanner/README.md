@@ -6,9 +6,8 @@ Go with Fiber to build the API, Google's genai for Gemini API, net/http for send
 - Extracts images from the HTML
 - Runs a goroutine to stream in parallel:
   1. Reads bytes into memory
-  2. Encode to Base64
-  3. Send the image to Gemini
-  4. Receive the response JSON
+  2. Send the bytes to Gemini
+  3. Receive the response JSON
 - Finally return the combined responses as JSON
 
 **TODO:** Generating an image and saving it to Supabase storage

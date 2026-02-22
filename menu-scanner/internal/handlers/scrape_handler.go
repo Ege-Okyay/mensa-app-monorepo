@@ -3,12 +3,13 @@ package handlers
 import (
 	"os"
 
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/logic"
 	"github.com/gofiber/fiber/v2"
 )
 
-func ScrapeAndAnalyze() fiber.Handler {
+func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		url := os.Getenv("IG_STORY_API_URL")
 
