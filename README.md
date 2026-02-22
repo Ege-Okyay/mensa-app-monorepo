@@ -1,13 +1,6 @@
 # Mensa App
 Monorepo for a web app where users can see their selected mensa menu for that time of the day with an AI generated image that shows what the food may look like + some information about it
 
-## Menu Scanner
-
-- For certain hours of the day, will scan some "Instagram story viewer" websites API
-- Send that to Gemini to get the menu items JSON
-- Generate an image for the food, save it to supabase storage
-- Cleanup old images asynchronously (cron / background job)
-
 ## Base Structure
 
 There will be few main components
