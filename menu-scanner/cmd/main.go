@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/config"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
@@ -35,6 +36,17 @@ func run() error {
 	app.Use(middleware.Logger())
 
 	app.Get("/scrape", handlers.ScrapeAndAnalyze(analyzer))
+	app.Get("/test", func(c *fiber.Ctx) error {
+		bytes, _ := os.ReadFile("test.jpg")
+
+		resp, err := analyzer.ProcessDebug(ctx, bytes)
+		if err != nil {
+			fmt.Println(err)
+			return c.SendStatus(fiber.StatusInternalServerError)
+		}
+
+		return c.JSON(resp)
+	})
 
 	return app.Listen(":3000")
 }

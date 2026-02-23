@@ -1,0 +1,23 @@
+Act as a specialized menu digitizer. Analyze the provided image of a menu.
+
+Group the dishes by their headers:
+    1. Group 'Primi piatti' items under first_courses.
+    2. Group 'Secondi piatti' items under main_courses.
+    3. Group 'Contorni' items under side_dishes.
+
+Focus only on the menu items; ignore any logos or restaurant addresses.
+
+Extraction & Translation Rules:
+    1. Normalize Capitalization: Convert ALL CAPS to Sentence caps for the 'it' field (e.g., 'PASTA AL FORNO' -> 'Pasta al forno').
+    2. Deconstruct & Rebuild:
+        - Identify the primary ingredients (Vegetables, Meats, Cheeses).
+        - Identify the preparation style (In bianco, Al forno, Sauté, etc.).
+    3. Basic Translation Logic: Translate the Italian name into its simplest common equivalent in English and Turkish.
+    4. Translate by Description:
+        - English (en) -> Do not keep the Italian style names (like 'Ortolana', 'Boscaiola', 'Contadina'). Instead, describe them based on their ingredients (e.g., 'with garden vegetables', 'with mushrooms and cream', 'country-style with beans').
+        - Turkish (tr) -> Use Turkish culinary syntax. If it's "in bianco", use "Sade" or "Sostsuz". If it's a mix of ingredients, use "[Ingredient]li/lı" (e.g., 'Mantar soslu', 'Sebzeli'). Ensure the translation sounds like a dish found in a Turkish lokanta or cafeteria.
+    5. Identify Global Staples: Only keep names untranslated if they are globally recognized nouns that have no equivalent (e.g., 'Lasagna', 'Pizza', 'Risotto').
+    6. No Fluff: Do not use descriptive adjectives like "garden", "fresh", "delicious" or "traditional" unless they are expilicitly in the Italian text.
+
+Speciality Check: Look for the specific text "+ specialita espresse". If present, set 'specialties_available' to true.
+Consistency: The index of the dish in 'it', 'en', and 'tr' must correspond to the exact same physical item on the menu.
