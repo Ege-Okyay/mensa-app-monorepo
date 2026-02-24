@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/models"
 	"google.golang.org/genai"
 )
 
@@ -12,19 +13,6 @@ type ImageAnalyzer struct {
 	client *genai.Client
 	model  string
 	prompt string
-}
-
-type LanguageGroup struct {
-	IT []string `json:"it"`
-	EN []string `json:"en"`
-	TR []string `json:"tr"`
-}
-
-type MenuResponse struct {
-	FirstCourses         LanguageGroup `json:"first_courses"`
-	MainCourses          LanguageGroup `json:"main_courses"`
-	SideDishes           LanguageGroup `json:"side_dishes"`
-	SpecialtiesAvailable bool          `json:"specialties_available"`
 }
 
 func NewImageAnalyzer(client *genai.Client, prompt string) *ImageAnalyzer {
@@ -35,7 +23,7 @@ func NewImageAnalyzer(client *genai.Client, prompt string) *ImageAnalyzer {
 	}
 }
 
-func (ia *ImageAnalyzer) Process(ctx context.Context, bytes []byte, mimeType string) (*MenuResponse, error) {
+func (ia *ImageAnalyzer) Process(ctx context.Context, bytes []byte, mimeType string) (*models.MenuResponse, error) {
 	config := &genai.GenerateContentConfig{
 		ResponseMIMEType: "application/json",
 		ResponseJsonSchema: &genai.Schema{
@@ -131,7 +119,7 @@ func (ia *ImageAnalyzer) Process(ctx context.Context, bytes []byte, mimeType str
 		return nil, err
 	}
 
-	var data MenuResponse
+	var data models.MenuResponse
 
 	err = json.Unmarshal([]byte(result.Text()), &data)
 	if err != nil {
