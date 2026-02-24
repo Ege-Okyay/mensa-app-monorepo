@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"os"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
@@ -9,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer) fiber.Handler {
+func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		url := os.Getenv("IG_STORY_API_URL")
 
@@ -26,8 +27,17 @@ func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
 
-		return c.JSON(fiber.Map{
-			"images": images,
-		})
+		if len(images) == 0 {
+			return c.Status(fiber.StatusInternalServerError).SendString("Empty images array")
+		}
+
+		img, err := logic.FetchImage(images[0])
+
+		resp, err := analyzer.Process(ctx, img, "image/jpeg")
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		}
+
+		return c.JSON(resp)
 	}
 }

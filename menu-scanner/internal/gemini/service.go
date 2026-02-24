@@ -35,7 +35,7 @@ func NewImageAnalyzer(client *genai.Client, prompt string) *ImageAnalyzer {
 	}
 }
 
-func (ia *ImageAnalyzer) ProcessDebug(ctx context.Context, bytes []byte) (*MenuResponse, error) {
+func (ia *ImageAnalyzer) Process(ctx context.Context, bytes []byte, mimeType string) (*MenuResponse, error) {
 	config := &genai.GenerateContentConfig{
 		ResponseMIMEType: "application/json",
 		ResponseJsonSchema: &genai.Schema{
@@ -118,7 +118,7 @@ func (ia *ImageAnalyzer) ProcessDebug(ctx context.Context, bytes []byte) (*MenuR
 	}
 
 	parts := []*genai.Part{
-		genai.NewPartFromBytes(bytes, "image/jpeg"),
+		genai.NewPartFromBytes(bytes, mimeType),
 		genai.NewPartFromText(ia.prompt),
 	}
 

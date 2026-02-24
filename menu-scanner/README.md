@@ -32,4 +32,65 @@ Go with Fiber to build the API, Google's genai for Gemini API, net/http for send
 }
 ```
 
+### Gemini Example Response
+```json
+{
+  "first_courses": {
+    "it": [
+      "Pasta all'ortolana",
+      "Pasta con salsiccia, radicchio e gorgonzola",
+      "Minestra d'orzo",
+      "Pasta/riso in bianco o al pomodoro"
+    ],
+    "en": [
+      "Pasta with garden vegetables",
+      "Pasta with sausage, radicchio, and gorgonzola",
+      "Barley soup",
+      "Pasta or rice plain or with tomato sauce"
+    ],
+    "tr": [
+      "Bahçe sebzeli makarna",
+      "Sosisli, radicchio ve gorgonzolalı makarna",
+      "Arpa çorbası",
+      "Sade veya domates soslu makarna/pirinç"
+    ]
+  },
+  "main_courses": {
+    "it": [
+      "Polpette di vitello",
+      "Sformato di zucca",
+      "Mozzarella in carrozza"
+    ],
+    "en": [
+      "Veal meatballs",
+      "Zucchini bake",
+      "Fried mozzarella"
+    ],
+    "tr": [
+      "Dana köfteleri",
+      "Kabak graten",
+      "Kızartılmış mozarella"
+    ]
+  },
+  "side_dishes": {
+    "it": [
+      "Broccoli gratinati",
+      "Patate al forno",
+      "Insalata mista"
+    ],
+    "en": [
+      "Gratinated broccoli",
+      "Baked potatoes",
+      "Mixed salad"
+    ],
+    "tr": [
+      "Gratine brokoli",
+      "Fırında patates",
+      "Karışık salata"
+    ]
+  },
+  "specialties_available": true
+}
+```
+
 **TODO:** Generating an image and saving it to Supabase storage

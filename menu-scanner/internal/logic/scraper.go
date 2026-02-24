@@ -18,7 +18,12 @@ func ExtactImagesFromHTML(html string) ([]string, error) {
 	var imgs []string
 	doc.Find("img").Each(func(i int, s *goquery.Selection) {
 		if src, exists := s.Attr("src"); exists {
-			imgs = append(imgs, src)
+			if err == nil {
+				clean_src := cleanImgURL(src)
+				if strings.HasPrefix(clean_src, "http") {
+					imgs = append(imgs, clean_src)
+				}
+			}
 		}
 	})
 
@@ -47,4 +52,12 @@ func FetchHTML(client *http.Client, url string, headers map[string]string) (stri
 	}
 
 	return string(body), nil
+}
+
+func cleanImgURL(src string) string {
+	clean := strings.ReplaceAll(src, `\"`, "")
+	clean = strings.Trim(clean, `\"`)
+	clean = strings.ReplaceAll(clean, `\/`, "/")
+
+	return clean
 }
