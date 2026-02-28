@@ -5,7 +5,7 @@ Monorepo for a web app where users can see their selected mensa menu for that ti
 
 There will be few main components
 
-- **Client web app** -> React Router v7, Tailwind, shadcn, daisyui or some other component library
+- **Client web app** -> React Router v7, Tailwind, and some headless component library
 
 - **API** -> Typescript, looking to try Hono for something lightweight
 
