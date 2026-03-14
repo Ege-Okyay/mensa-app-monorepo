@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import LanguageSelector from "./components/language-selector";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -42,7 +43,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <main className="w-full h-full max-w-sm">
+      <div className="ml-5 mr-5 mt-8 mb-8">
+        {/* Title bar */}
+        <div className="flex flex-row items-center justify-between">
+          <h1 className="text-h1 font-bold text-black">Mensa Daily Menu</h1>
+          <LanguageSelector />
+        </div>
+
+        {/* Content */}
+        <div className="mt-8">
+          <Outlet />
+        </div>
+      </div>
+    </main>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
