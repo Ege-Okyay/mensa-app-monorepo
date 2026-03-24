@@ -5,7 +5,6 @@ import { CreateMenuSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu
 /**
  * Business logic for handling mensas and their current menus. 
  */
-
 export const mensaService = {
   /**
    * Fetches all mensas without menu data.
@@ -85,7 +84,7 @@ export const mensaService = {
     if (error) throw new HTTPException(500, { message: error.message });
 
     if (!data || !data.current_menu) {
-      throw new HTTPException(404, { message: `Menu for slug "${slug}" not found` });
+      throw new HTTPException(404, { message: `Menu for slug '${slug}' not found` });
     }
 
     return data.current_menu;

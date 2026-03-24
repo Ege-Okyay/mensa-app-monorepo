@@ -8,29 +8,26 @@ import { HTTPException } from 'hono/http-exception';
  */
 export const mensaController = {
   /**
-   * Returns a list of all mensa locations.
+   * Returns a list of all mensa locations. 
+   * Use ?include=
+   *  - menu: include today's menu data.
    */
-  async getAllMensas(c: Context) {
-    const mensas = await mensaService.getAllMensas();
+  async getMensas(c: Context) {
+    const includeMenu = c.req.query('include') === 'menu';
+
+    const mensas = includeMenu
+      ? await mensaService.getAllMensasWithMenu()
+      : await mensaService.getAllMensas();
 
     return c.json(successResponse(mensas));
   },
 
   /**
-   * Returns all mensas including their menus for today.
-   */
-  async getAllMensasWithMenu(c: Context) {
-    const mensas = await mensaService.getAllMensasWithMenu();
-
-    return c.json(successResponse(mensas));
-  },
-
-  /**
-   * Fetches the current menu for a specific mensa using its URL slug.
+   * Fetches the current menu for a specific mensa using its slug.
    */
   async getMenuBySlug(c: Context) {
     const slug = c.req.param('slug');
-    if (!slug) throw new HTTPException(400, { message: `Missing "slug" parameter` });
+    if (!slug) throw new HTTPException(400, { message: 'Missing slug parameter' });
 
     const menu = await mensaService.getMensaMenuBySlug(slug);
 
