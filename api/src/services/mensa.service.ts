@@ -2,39 +2,57 @@ import { HTTPException } from 'hono/http-exception';
 import { supabase } from '../core/supabase.js';
 import { CreateMenuSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu } from '../models/mensa.js';
 
-export class MensaService {
-  async getAll(): Promise<Mensa[]> {
+/**
+ * Business logic for handling mensas and their current menus. 
+ */
+
+export const mensaService = {
+  /**
+   * Fetches all mensas without menu data.
+   */
+  async getAllMensas(): Promise<Mensa[]> {
     const { data, error } = await supabase
       .from('mensas')
       .select('*');
-    
+
     if (error) throw new HTTPException(500, { message: error.message });
 
     return data;
-  }
+  },
 
-  async getAllWithMenu(): Promise<MensaWithMenu[]> {
+  /**
+   * Fetches all mensas along with their current menu data.
+   */
+  async getAllMensasWithMenu(): Promise<MensaWithMenu[]> {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-        id,
-        slug,
-        name,
-        current_menu:mensa_current_menus (
-          menu_data,
-          updated_at
-        )
-      `);
+      id,
+      slug,
+      name,
+      current_menu:mensa_current_menus (
+        menu_data,
+        updated_at
+      )
+    `);
 
     if (error) throw new HTTPException(500, { message: error.message });
 
     return data;
-  }
+  },
 
-  async createMenu(rawDto: unknown): Promise<MensaCurrentMenu> {
+  /**
+   * Creates or updates a mensa menu after validating the input with Zod.
+   * @param rawDto The unvalidated data from the scraper.
+   */
+  async createMensaMenu(rawDto: unknown): Promise<MensaCurrentMenu> {
     const result = CreateMenuSchema.safeParse(rawDto);
 
-    if (!result.success) throw new HTTPException(400, { message: `Invalid menu data: ${result.error.message}` });
+    if (!result.success) {
+      throw new HTTPException(400, {
+        message: `Invalid menu data: ${result.error.message}`
+      });
+    }
 
     const { data, error } = await supabase
       .from('mensa_current_menus')
@@ -45,21 +63,25 @@ export class MensaService {
     if (error) throw new HTTPException(500, { message: error.message });
 
     return data;
-  }
+  },
 
-  async getCurrentMenuBySlug(slug: string): Promise<MensaCurrentMenu> {
+  /**
+   * Fetches a specific mensa's menu using its URL slug.
+   * @param slug Slug of the mensa.
+   */
+  async getMensaMenuBySlug(slug: string): Promise<MensaCurrentMenu> {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-        current_menu:mensa_current_menus (
-          mensa_id,
-          menu_data,
-          updated_at
-        )
-      `)
+      current_menu:mensa_current_menus (
+        mensa_id,
+        menu_data,
+        updated_at
+      )
+    `)
       .eq('slug', slug)
       .maybeSingle();
-    
+
     if (error) throw new HTTPException(500, { message: error.message });
 
     if (!data || !data.current_menu) {
