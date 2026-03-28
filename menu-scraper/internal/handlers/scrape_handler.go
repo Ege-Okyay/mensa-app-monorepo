@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
@@ -95,11 +94,6 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 
 			if isLocal {
 				img, err = os.ReadFile(source)
-				if strings.HasSuffix(strings.ToLower(source), ".png") {
-					mimeType = "image/png"
-				} else if strings.HasSuffix(strings.ToLower(source), ".webp") {
-					mimeType = "image/webp"
-				}
 			} else {
 				img, err = logic.FetchImage(source)
 			}
