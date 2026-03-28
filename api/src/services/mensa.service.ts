@@ -1,9 +1,20 @@
 import { HTTPException } from 'hono/http-exception';
 import { supabase } from '../core/supabase.js';
-import { CreateMenuSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu } from '../models/mensa.js';
+import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu, type MenuData } from '../models/mensa.js';
 
 /**
- * Business logic for handling mensas and their current menus. 
+ * Helper function to transform and validate database results
+ */
+const mapMensaWithMenu = (row: any): MensaWithMenu => ({
+  ...row,
+  current_menu: row.current_menu ? {
+    ...row.current_menu,
+    menu_data: MenuDataSchema.parse(row.current_menu.menu_data)
+  } : null
+});
+
+/**
+ * Business logic for handling mensas and their current menus.
  */
 export const mensaService = {
   /**
@@ -26,18 +37,18 @@ export const mensaService = {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-      id,
-      slug,
-      name,
-      current_menu:mensa_current_menus (
-        menu_data,
-        updated_at
-      )
-    `);
+        id,
+        slug,
+        name,
+        current_menu:mensa_current_menus (
+          menu_data,
+          updated_at
+        )
+      `);
 
     if (error) throw new HTTPException(500, { message: error.message });
 
-    return data;
+    return (data || []).map(mapMensaWithMenu);
   },
 
   /**
@@ -68,16 +79,14 @@ export const mensaService = {
    * Fetches a specific mensa's menu using its URL slug.
    * @param slug Slug of the mensa.
    */
-  async getMensaMenuBySlug(slug: string): Promise<MensaCurrentMenu> {
+  async getMensaMenuBySlug(slug: string): Promise<MenuData> {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-      current_menu:mensa_current_menus (
-        mensa_id,
-        menu_data,
-        updated_at
-      )
-    `)
+        current_menu:mensa_current_menus (
+          menu_data
+        )
+      `)
       .eq('slug', slug)
       .maybeSingle();
 
@@ -87,6 +96,6 @@ export const mensaService = {
       throw new HTTPException(404, { message: `Menu for slug '${slug}' not found` });
     }
 
-    return data.current_menu;
+    return MenuDataSchema.parse(data.current_menu.menu_data);
   }
 }
