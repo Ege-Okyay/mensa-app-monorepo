@@ -29,5 +29,7 @@ The service returns a nested structure for full localization support:
 ```
 
 **TODO:**
-- Integrate with Supabase Storage for dish image previews.
-- Add error recovery for failed AI generations.
+- ageneral allergens information without going into the details for every food
+- implement x-api-key type of security between hono api and scraper
+- pig meat gets translated as normal meat for example "Rosticciata" -> "Roast meat" and "Kızartılmış et" (analysis_v3)
+- performance enhancments
