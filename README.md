@@ -1,18 +1,24 @@
 # Mensa App
-Monorepo for a web app where users can see their selected mensa menu for that time of the day with an AI generated image that shows what the food may look like + some information about it
 
-## Base Structure
+A monorepo for a web application that digitizes Mensa menus. The app uses Gemini to parse menu images, translate them, and generate visual previews of the dishes (work in progress).
 
-There will be few main components
+## Project Structure
 
-- **Client web app** -> React Router v7, Tailwind, and some headless component library
+- **`web-app`**: Frontend built with React Router v7.
+- **`api`**: Backend service to bridge the database and the frontend (Node.js/TypeScript).
+- **`menu-scraper`**: A Go service that fetches menu images, uses Gemini to parse the text into structured data, and handles translations.
+- **`supabase`**: Handles our database (Postgres) and storage for AI-generated images.
 
-- **API** -> Typescript, looking to try Hono for something lightweight
+## Current Tech Stack
 
-- **Menu Scanner** -> Go
+- **Frontend**: React Router, Tailwind CSS, daisyUI component library.
+- **Backend**: Hono/Typescript (API) & Go (Scraper).
+- **AI**: Gemini for OCR/Translation/Analysis.
+- **Infrastructure**: Supabase (DB & Storage), Vercel/Render for hosting.
 
-- **Database** -> Supabase free tier because it also has 1 GB file storage for the generated images, which will be most likely enough because every day the old images will get deleted
-
-- **Hosting** -> For now Vercel for frontend and API, Supabase for database to host everything without paying anything, Render to host menu scanner because its in Go (may migrate to Typescript if it gives any problems)
-
-- **Security** -> At first rate limiting etc on the API would most likely be enough, but probably gonna need to add Cloudflare or something later because when gone public app will 100% get attacked
+## How it works (The Flow)
+1. The scraper fetches the latest menu image from a third-party instagram story viewer API. 
+2. Gemini parses the image to extract dish names, descriptions, and allergens in Italian, English, and Turkish.
+3. The structured data is stored in Supabase.
+4. (WIP) An AI-generated image is created for each dish to give users a better idea of what they're eating.
+5. Users can check the menu on the web app in their preferred language.
