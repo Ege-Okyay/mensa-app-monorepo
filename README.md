@@ -7,7 +7,7 @@ A monorepo for a web application that digitizes Mensa menus. The app uses Gemini
 - **`web-app`**: Frontend built with React Router v7.
 - **`api`**: Backend service to bridge the database and the frontend (Node.js/TypeScript).
 - **`menu-scraper`**: A Go service that fetches menu images, uses Gemini to parse the text into structured data, and handles translations.
-- **`supabase`**: Handles our database (Postgres) and storage for AI-generated images.
+- **`supabase`**: Postgres database and S3 storage for food images.
 
 ## Current Tech Stack
 
