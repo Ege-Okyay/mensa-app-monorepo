@@ -30,6 +30,7 @@ func run() error {
 	fmt.Println("--- Application Configuration ---")
 	fmt.Printf("Gemini Model: %s\n", cfg.GeminiModel)
 	fmt.Printf("Prompt File:  prompts/%s\n", os.Getenv("GEMINI_PROMPT_FILE_NAME"))
+	fmt.Printf("Running on port: %s\n", cfg.Port)
 	fmt.Println("---------------------------------")
 
 	analyzer, err := initGeminiAnalyzer(ctx, *cfg)
@@ -43,7 +44,8 @@ func run() error {
 	app.Get("/scrape", handlers.ScrapeAndAnalyze(analyzer, ctx))
 	app.Get("/test", handlers.TestAnalyze(analyzer, ctx))
 
-	return app.Listen(":3000")
+	portStr := fmt.Sprintf(":%s", cfg.Port)
+	return app.Listen(portStr)
 }
 
 func initGeminiAnalyzer(ctx context.Context, cfg config.AppConfig) (*gemini.ImageAnalyzer, error) {

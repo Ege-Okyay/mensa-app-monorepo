@@ -13,6 +13,7 @@ type AppConfig struct {
 	GeminiAPIKey string
 	GeminiModel  string
 	FixedPrompt  string
+	Port         string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -32,5 +33,6 @@ func LoadConfig() (*AppConfig, error) {
 		GeminiAPIKey: os.Getenv("GEMINI_API_KEY"),
 		GeminiModel:  os.Getenv("GEMINI_MODEL"),
 		FixedPrompt:  string(prompt),
+		Port:         os.Getenv("PORT"),
 	}, nil
 }
