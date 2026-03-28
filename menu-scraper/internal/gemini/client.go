@@ -11,7 +11,7 @@ type GeminiClient struct {
 	Model  string
 }
 
-func NewGeminiClient(ctx context.Context, apiKey string) (*GeminiClient, error) {
+func NewGeminiClient(ctx context.Context, apiKey string, model string) (*GeminiClient, error) {
 	client, err := genai.NewClient(ctx, &genai.ClientConfig{
 		APIKey:  apiKey,
 		Backend: genai.BackendGeminiAPI,
@@ -22,6 +22,6 @@ func NewGeminiClient(ctx context.Context, apiKey string) (*GeminiClient, error) 
 
 	return &GeminiClient{
 		Client: client,
-		Model:  "gemini-2.5-flash",
+		Model:  model,
 	}, nil
 }

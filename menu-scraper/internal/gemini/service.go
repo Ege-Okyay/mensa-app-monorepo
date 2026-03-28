@@ -15,94 +15,18 @@ type ImageAnalyzer struct {
 	prompt string
 }
 
-func NewImageAnalyzer(client *genai.Client, prompt string) *ImageAnalyzer {
+func NewImageAnalyzer(client *GeminiClient, prompt string) *ImageAnalyzer {
 	return &ImageAnalyzer{
-		client: client,
-		model:  "gemini-2.5-flash-lite",
+		client: client.Client,
+		model:  client.Model,
 		prompt: prompt,
 	}
 }
 
 func (ia *ImageAnalyzer) Process(ctx context.Context, bytes []byte, mimeType string) (*models.MenuResponse, error) {
 	config := &genai.GenerateContentConfig{
-		ResponseMIMEType: "application/json",
-		ResponseJsonSchema: &genai.Schema{
-			Type: genai.TypeObject,
-			Properties: map[string]*genai.Schema{
-				"first_courses": {
-					Type:        genai.TypeObject,
-					Title:       "FirstCourses",
-					Description: "List of first courses in different languages.",
-					Properties: map[string]*genai.Schema{
-						"it": {
-							Type:  genai.TypeArray,
-							Items: &genai.Schema{Type: genai.TypeString},
-						},
-						"en": {
-							Type:        genai.TypeArray,
-							Items:       &genai.Schema{Type: genai.TypeString},
-							Description: "English translation describing the ingredients and cooking style. Do not keep Italian names.",
-						},
-						"tr": {
-							Type:    genai.TypeArray,
-							Items:   &genai.Schema{Type: genai.TypeString},
-							Default: "Turkish translation using local culinary terms (e.g., 'sebzeli', 'soslu').",
-						},
-					},
-					Required: []string{"en", "it", "tr"},
-				},
-				"main_courses": {
-					Type:        genai.TypeObject,
-					Title:       "MainCourses",
-					Description: "List of main courses in different languages.",
-					Properties: map[string]*genai.Schema{
-						"it": {
-							Type:  genai.TypeArray,
-							Items: &genai.Schema{Type: genai.TypeString},
-						},
-						"en": {
-							Type:        genai.TypeArray,
-							Items:       &genai.Schema{Type: genai.TypeString},
-							Description: "English translation describing the ingredients and cooking style. Do not keep Italian names.",
-						},
-						"tr": {
-							Type:    genai.TypeArray,
-							Items:   &genai.Schema{Type: genai.TypeString},
-							Default: "Turkish translation using local culinary terms (e.g., 'sebzeli', 'soslu').",
-						},
-					},
-					Required: []string{"en", "it", "tr"},
-				},
-				"side_dishes": {
-					Title:       "SideDishes",
-					Description: "List of side dishses in different languages.",
-					Type:        genai.TypeObject,
-					Properties: map[string]*genai.Schema{
-						"it": {
-							Type:  genai.TypeArray,
-							Items: &genai.Schema{Type: genai.TypeString},
-						},
-						"en": {
-							Type:        genai.TypeArray,
-							Items:       &genai.Schema{Type: genai.TypeString},
-							Description: "English translation describing the ingredients and cooking style. Do not keep Italian names.",
-						},
-						"tr": {
-							Type:    genai.TypeArray,
-							Items:   &genai.Schema{Type: genai.TypeString},
-							Default: "Turkish translation using local culinary terms (e.g., 'sebzeli', 'soslu').",
-						},
-					},
-					Required: []string{"en", "it", "tr"},
-				},
-				"specialties_available": {
-					Title:       "SpecialtiesAvailable",
-					Description: "Wheter there are any specialties available",
-					Type:        genai.TypeBoolean,
-				},
-			},
-			Required: []string{"first_courses", "main_courses", "side_dishes", "specialties_available"},
-		},
+		ResponseMIMEType:   "application/json",
+		ResponseJsonSchema: GetMenuResponseSchema(),
 	}
 
 	parts := []*genai.Part{

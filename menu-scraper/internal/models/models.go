@@ -1,14 +1,21 @@
 package models
 
-type LanguageGroup struct {
-	IT []string `json:"it"`
-	EN []string `json:"en"`
-	TR []string `json:"tr"`
+type LocalizedDish struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+}
+
+type MenuItem struct {
+	IT        LocalizedDish `json:"it"`
+	EN        LocalizedDish `json:"en"`
+	TR        LocalizedDish `json:"tr"`
+	Allergens []string      `json:"allergens"`
 }
 
 type MenuResponse struct {
-	FirstCourses         LanguageGroup `json:"first_courses"`
-	MainCourses          LanguageGroup `json:"main_courses"`
-	SideDishes           LanguageGroup `json:"side_dishes"`
-	SpecialtiesAvailable bool          `json:"specialties_available"`
+	MensaName            string     `json:"mensa_name"`
+	FirstCourses         []MenuItem `json:"first_courses"`
+	MainCourses          []MenuItem `json:"main_courses"`
+	SideDishes           []MenuItem `json:"side_dishes"`
+	SpecialtiesAvailable bool       `json:"specialties_available"`
 }

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
@@ -34,7 +36,7 @@ func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber
 			return c.Status(fiber.StatusInternalServerError).SendString("Empty images array")
 		}
 
-		results, err := analyzeImages(ctx, analyzer, images)
+		results, err := analyzeImages(ctx, analyzer, images, false)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
@@ -43,7 +45,35 @@ func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber
 	}
 }
 
-func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images []string) ([]*models.MenuResponse, error) {
+func TestAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		testDir := "test"
+		entries, err := os.ReadDir(testDir)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString(fmt.Sprintf("failed to read test dir: %v", err))
+		}
+
+		var images []string
+		for _, entry := range entries {
+			if !entry.IsDir() {
+				images = append(images, filepath.Join(testDir, entry.Name()))
+			}
+		}
+
+		if len(images) == 0 {
+			return c.Status(fiber.StatusInternalServerError).SendString("Empty test images array")
+		}
+
+		results, err := analyzeImages(ctx, analyzer, images, true)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		}
+
+		return c.JSON(results)
+	}
+}
+
+func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images []string, isLocal bool) ([]*models.MenuResponse, error) {
 	var (
 		wg        sync.WaitGroup
 		resultsCh = make(chan *models.MenuResponse, len(images))
@@ -51,28 +81,42 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 		sem       = make(chan struct{}, 5)
 	)
 
-	for _, imgURL := range images {
+	for _, imgSource := range images {
 		wg.Add(1)
-		go func(url string) {
+		go func(source string) {
 			defer wg.Done()
 
 			sem <- struct{}{}
 			defer func() { <-sem }()
 
-			img, err := logic.FetchImage(url)
+			var img []byte
+			var err error
+			mimeType := "image/jpeg"
+
+			if isLocal {
+				img, err = os.ReadFile(source)
+				if strings.HasSuffix(strings.ToLower(source), ".png") {
+					mimeType = "image/png"
+				} else if strings.HasSuffix(strings.ToLower(source), ".webp") {
+					mimeType = "image/webp"
+				}
+			} else {
+				img, err = logic.FetchImage(source)
+			}
+
 			if err != nil {
-				errorsCh <- fmt.Errorf("fetching %s: %w", url, err)
+				errorsCh <- fmt.Errorf("getting image %s: %w", source, err)
 				return
 			}
 
-			resp, err := analyzer.Process(ctx, img, "image/jpeg")
+			resp, err := analyzer.Process(ctx, img, mimeType)
 			if err != nil {
-				errorsCh <- fmt.Errorf("analyzing %s: %w", url, err)
+				errorsCh <- fmt.Errorf("analyzing %s: %w", source, err)
 				return
 			}
 
 			resultsCh <- resp
-		}(imgURL)
+		}(imgSource)
 	}
 
 	go func() {

@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -10,6 +11,7 @@ import (
 type AppConfig struct {
 	StoryAPIUrl  string
 	GeminiAPIKey string
+	GeminiModel  string
 	FixedPrompt  string
 }
 
@@ -19,7 +21,8 @@ func LoadConfig() (*AppConfig, error) {
 		log.Fatal("Error loading .env file")
 	}
 
-	prompt, err := os.ReadFile("prompts/analysis_v1.txt")
+	promptDir := fmt.Sprintf("prompts/%s", os.Getenv("GEMINI_PROMPT_FILE_NAME"))
+	prompt, err := os.ReadFile(promptDir)
 	if err != nil {
 		return nil, err
 	}
@@ -27,6 +30,7 @@ func LoadConfig() (*AppConfig, error) {
 	return &AppConfig{
 		StoryAPIUrl:  os.Getenv("IG_STORY_API_URL"),
 		GeminiAPIKey: os.Getenv("GEMINI_API_KEY"),
+		GeminiModel:  os.Getenv("GEMINI_MODEL"),
 		FixedPrompt:  string(prompt),
 	}, nil
 }

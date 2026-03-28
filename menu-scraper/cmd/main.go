@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/config"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
@@ -26,6 +27,11 @@ func run() error {
 		log.Fatalf("Config error: %v", err)
 	}
 
+	fmt.Println("--- Application Configuration ---")
+	fmt.Printf("Gemini Model: %s\n", cfg.GeminiModel)
+	fmt.Printf("Prompt File:  prompts/%s\n", os.Getenv("GEMINI_PROMPT_FILE_NAME"))
+	fmt.Println("---------------------------------")
+
 	analyzer, err := initGeminiAnalyzer(ctx, *cfg)
 	if err != nil {
 		return err
@@ -35,28 +41,18 @@ func run() error {
 	app.Use(middleware.Logger())
 
 	app.Get("/scrape", handlers.ScrapeAndAnalyze(analyzer, ctx))
-	// app.Get("/test", func(c *fiber.Ctx) error {
-	// 	bytes, _ := os.ReadFile("test.jpg")
-
-	// 	resp, err := analyzer.Process(ctx, bytes)
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 		return c.SendStatus(fiber.StatusInternalServerError)
-	// 	}
-
-	// 	return c.JSON(resp)
-	// })
+	app.Get("/test", handlers.TestAnalyze(analyzer, ctx))
 
 	return app.Listen(":3000")
 }
 
 func initGeminiAnalyzer(ctx context.Context, cfg config.AppConfig) (*gemini.ImageAnalyzer, error) {
-	geminiClient, err := gemini.NewGeminiClient(ctx, cfg.GeminiAPIKey)
+	geminiClient, err := gemini.NewGeminiClient(ctx, cfg.GeminiAPIKey, cfg.GeminiModel)
 	if err != nil {
 		return nil, fmt.Errorf("gemini init error: %w", err)
 	}
 
-	analyzer := gemini.NewImageAnalyzer(geminiClient.Client, cfg.FixedPrompt)
+	analyzer := gemini.NewImageAnalyzer(geminiClient, cfg.FixedPrompt)
 
 	return analyzer, nil
 }
