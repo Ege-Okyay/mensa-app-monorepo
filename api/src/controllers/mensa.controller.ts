@@ -2,6 +2,7 @@ import type { Context } from 'hono';
 import { mensaService } from '../services/mensa.service.js';
 import { successResponse } from '../core/response.js';
 import { HTTPException } from 'hono/http-exception';
+import { scanService } from '../services/scan.service.js';
 
 /**
  * Handlers for mensas and their current menu data.
@@ -32,5 +33,10 @@ export const mensaController = {
     const menu = await mensaService.getMensaMenuBySlug(slug);
 
     return c.json(successResponse(menu));
+  },
+
+  async syncMenus(c: Context) {
+    await scanService.scanAllAndSync();
+    return c.json(successResponse);
   }
 };

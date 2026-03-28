@@ -16,4 +16,5 @@ export const config = {
     url: getEnv('SUPABASE_URL'),
     key: getEnv('SUPABASE_KEY'),
   },
+  scraperUrl: getEnv('SCRAPER_URL'),
 };
