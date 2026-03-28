@@ -39,7 +39,9 @@ func run() error {
 	}
 
 	app := fiber.New()
+
 	app.Use(middleware.Logger())
+	app.Use(middleware.Auth(cfg.InternalAPIKey))
 
 	app.Get("/scrape", handlers.ScrapeAndAnalyze(analyzer, ctx))
 	app.Get("/test", handlers.TestAnalyze(analyzer, ctx))

@@ -9,7 +9,12 @@ export const scanService = {
    */
   async scanAllAndSync(): Promise<void> {
     try {
-      const response = await fetch(`${config.scraperUrl}/test`);
+      const response = await fetch(`${config.scraperUrl}/test`, {
+        headers: {
+          'X-Internal-Key': config.scraperApiKey
+        }
+      });
+
       if (!response.ok) {
         throw new Error(`Scraper returned ${response.status}: ${await response.text()}`);
       }

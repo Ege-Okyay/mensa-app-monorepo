@@ -9,11 +9,12 @@ import (
 )
 
 type AppConfig struct {
-	StoryAPIUrl  string
-	GeminiAPIKey string
-	GeminiModel  string
-	FixedPrompt  string
-	Port         string
+	StoryAPIUrl    string
+	GeminiAPIKey   string
+	GeminiModel    string
+	FixedPrompt    string
+	Port           string
+	InternalAPIKey string
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -29,10 +30,11 @@ func LoadConfig() (*AppConfig, error) {
 	}
 
 	return &AppConfig{
-		StoryAPIUrl:  os.Getenv("IG_STORY_API_URL"),
-		GeminiAPIKey: os.Getenv("GEMINI_API_KEY"),
-		GeminiModel:  os.Getenv("GEMINI_MODEL"),
-		FixedPrompt:  string(prompt),
-		Port:         os.Getenv("PORT"),
+		StoryAPIUrl:    os.Getenv("IG_STORY_API_URL"),
+		GeminiAPIKey:   os.Getenv("GEMINI_API_KEY"),
+		GeminiModel:    os.Getenv("GEMINI_MODEL"),
+		FixedPrompt:    string(prompt),
+		Port:           os.Getenv("PORT"),
+		InternalAPIKey: os.Getenv("INTERNAL_API_KEY"),
 	}, nil
 }

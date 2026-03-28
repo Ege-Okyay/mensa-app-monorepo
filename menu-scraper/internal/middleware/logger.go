@@ -10,10 +10,17 @@ import (
 func Logger() fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		start := time.Now()
-		c.Next()
-		duration := time.Since(start)
-		log.Printf("%s %s %s", c.Method(), c.Path(), duration)
 
-		return nil
+		err := c.Next()
+
+		duration := time.Since(start)
+		status := c.Response().StatusCode()
+		method := c.Method()
+		path := c.Path()
+		ip := c.IP()
+
+		log.Printf("[%d] %-7s %s (%s) - %s", status, method, path, duration, ip)
+
+		return err
 	}
 }

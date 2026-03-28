@@ -17,4 +17,5 @@ export const config = {
     key: getEnv('SUPABASE_KEY'),
   },
   scraperUrl: getEnv('SCRAPER_URL'),
+  scraperApiKey: getEnv('SCRAPER_API_KEY'),
 };
