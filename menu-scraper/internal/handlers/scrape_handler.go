@@ -109,6 +109,8 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 				return
 			}
 
+			resp.PopulateCommonAllergens()
+
 			resultsCh <- resp
 		}(imgSource)
 	}

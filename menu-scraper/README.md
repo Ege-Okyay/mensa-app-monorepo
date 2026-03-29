@@ -29,7 +29,6 @@ The service returns a nested structure for full localization support:
 ```
 
 **TODO:**
-- ageneral allergens information without going into the details for every food
-- implement x-api-key type of security between hono api and scraper
+- a general allergens information without going into the details for every food
 - pig meat gets translated as normal meat for example "Rosticciata" -> "Roast meat" and "Kızartılmış et" (analysis_v3)
 - performance enhancments
