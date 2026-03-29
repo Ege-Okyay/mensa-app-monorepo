@@ -29,6 +29,5 @@ The service returns a nested structure for full localization support:
 ```
 
 **TODO:**
-- a general allergens information without going into the details for every food
 - pig meat gets translated as normal meat for example "Rosticciata" -> "Roast meat" and "Kızartılmış et" (analysis_v3)
 - performance enhancments
