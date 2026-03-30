@@ -7,8 +7,8 @@ serve({
   port: config.port,
 }, (info) => {
   console.log(`Server is running on http://localhost:${info.port}`);
-  console.log('---Active Routes---');
 
+  console.log('\n---Active Routes---');
   app.routes.forEach((route) => {
     console.log(`${route.method.padEnd(7)} ${route.path}`);
   });

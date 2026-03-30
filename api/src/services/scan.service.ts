@@ -1,13 +1,13 @@
 import { HTTPException } from 'hono/http-exception';
 import { config } from '../core/config.js';
 import { mensaService } from './mensa.service.js';
-import type { MenuData } from '../models/mensa.js';
+import type { MensaCurrentMenu, MenuData } from '../models/mensa.js';
 
 export const scanService = {
   /**
    * Triggers the scraper, processes all returned menus, and updates the database.
    */
-  async scanAllAndSync(): Promise<void> {
+  async scanAllAndSync(): Promise<MensaCurrentMenu | undefined> {
     try {
       const response = await fetch(`${config.scraperUrl}/test`, {
         headers: {
@@ -33,10 +33,12 @@ export const scanService = {
           continue;
         }
 
-        await mensaService.createMensaMenu({
+        const createdMensaMenu = await mensaService.createMensaMenu({
           mensa_id: matchedMensa.id,
           menu_data: result
         });
+
+        return createdMensaMenu;
       }
     } catch (err) {
       console.error('Scan and sync failed:', err);

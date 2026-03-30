@@ -22,6 +22,7 @@ export const MenuDataSchema = z.object({
   main_courses: z.array(MenuItemSchema),
   side_dishes: z.array(MenuItemSchema),
   specialties_available: z.boolean(),
+  common_allergens: z.array(z.string())
 });
 
 export type LocalizedDish = z.infer<typeof LocalizedDishSchema>;
