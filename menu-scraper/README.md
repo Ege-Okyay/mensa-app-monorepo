@@ -16,18 +16,18 @@ The service returns a nested structure for full localization support:
   "mensa_name": "Borsellino",
   "first_courses": [
     {
-      "it": { "name": "Pasta al forno", "description": "Pasta cotta al forno..." },
-      "en": { "name": "Baked Pasta", "description": "Oven-baked pasta with..." },
-      "tr": { "name": "Fırın Makarna", "description": "Fırında pişirilmiş..." },
-      "allergens": ["Gluten", "Milk"]
+      "it": { "name": "Pasta Aglio e Olio", "description": "Pasta saltata con un soffritto..." },
+      "en": { "name": "Pasta with Garlic and Oil", "description": "Pasta tossed with a fragrant..." },
+      "tr": { "name": "Sarımsaklı ve Zeytinyağlı Makarna", "description": "Sarımsaklı, zeytinyağlı ve acı..." },
+      "allergens": ["Gluten"]
     }
   ],
   "main_courses": [...],
   "side_dishes": [...],
-  "specialties_available": false
+  "specialties_available": false,
+  "common_allergens": ["Gluten", "Soy"]
 }
 ```
 
 **TODO:**
-- pig meat gets translated as normal meat for example "Rosticciata" -> "Roast meat" and "Kızartılmış et" (analysis_v3)
 - performance enhancments
