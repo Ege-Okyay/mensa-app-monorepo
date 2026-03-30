@@ -36,8 +36,7 @@ export const mensaController = {
   },
 
   async syncMenus(c: Context) {
-    const createdMenu = await scanService.scanAllAndSync();
-    
-    return c.json(successResponse(createdMenu));
+    await scanService.scanAllAndSync();
+    return c.json(successResponse);
   }
 };

@@ -7,7 +7,7 @@ export const scanService = {
   /**
    * Triggers the scraper, processes all returned menus, and updates the database.
    */
-  async scanAllAndSync(): Promise<MensaCurrentMenu | undefined> {
+  async scanAllAndSync(): Promise<void> {
     try {
       const response = await fetch(`${config.scraperUrl}/test`, {
         headers: {
@@ -33,12 +33,10 @@ export const scanService = {
           continue;
         }
 
-        const createdMensaMenu = await mensaService.createMensaMenu({
+        await mensaService.createMensaMenu({
           mensa_id: matchedMensa.id,
           menu_data: result
         });
-
-        return createdMensaMenu;
       }
     } catch (err) {
       console.error('Scan and sync failed:', err);
