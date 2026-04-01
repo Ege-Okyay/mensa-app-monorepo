@@ -1,7 +1,17 @@
-export default function SideDish() {
+import type { MenuItem } from "~/lib/api/types";
+
+interface SideDishProps {
+  menuItem: MenuItem;
+}
+
+export default function SideDish({ menuItem }: SideDishProps) {
+  // Using English by default
+  const dish = menuItem.en;
+
   return (
-    <div className="bg-background p- rounded border border-border border-dashed text-center p-0.5">
-      <span className="text-text font-semibold text-body">Roasted Potatoes</span>
+    <div className="rounded-xl border-border border-2 border-dotted bg-background w-full p-3 flex flex-col gap-1">
+      <h2 className="text-text text-h2 font-bold leading-tight">{dish.name}</h2>
+      <span className="text-body text-text-muted leading-tight">{dish.description}</span>
     </div>
   );
 }

@@ -13,6 +13,8 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
 
   const result: ApiResponse<T> = await response.json();
 
+  // console.log(result);
+
   if (!response.ok || !result.success) {
     throw new Error(result.message || `Request failed with status ${response.status}`);
   }

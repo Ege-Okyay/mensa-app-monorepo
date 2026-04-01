@@ -15,7 +15,7 @@ export interface MenuData {
   first_courses: MenuItem[];
   main_courses: MenuItem[];
   side_dishes: MenuItem[];
-  specialties_availabe: boolean;
+  specialties_available: boolean;
   common_allergens: string[];
 }
 
