@@ -1,7 +1,7 @@
 import { HTTPException } from 'hono/http-exception';
 import { config } from '../core/config.js';
 import { mensaService } from './mensa.service.js';
-import type { MensaCurrentMenu, MenuData } from '../models/mensa.js';
+import type { MenuData } from '../models/mensa.js';
 
 export const scanService = {
   /**
