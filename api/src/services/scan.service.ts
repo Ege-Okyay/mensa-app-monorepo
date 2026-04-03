@@ -10,7 +10,8 @@ export const scanService = {
    */
   async scanAllAndSync(
     supabase: SupabaseClient<Database>,
-    scraperConfig: { url: string; key: string }
+    scraperConfig: { url: string; key: string },
+    kv: KVNamespace
   ): Promise<void> {
     try {
       const response = await fetch(`${scraperConfig.url}/test`, {
@@ -25,7 +26,7 @@ export const scanService = {
 
       const rawResults = await response.json() as MenuData[];
 
-      const mensas = await mensaService.getAllMensas(supabase);
+      const mensas = await mensaService.getAllMensas(supabase, kv);
 
       for (const result of rawResults) {
         const matchedMensa = mensas.find(m =>
@@ -40,7 +41,7 @@ export const scanService = {
         await mensaService.createMensaMenu(supabase, {
           mensa_id: matchedMensa.id,
           menu_data: result
-        });
+        }, kv);
       }
     } catch (err) {
       console.error('Scan and sync failed:', err);

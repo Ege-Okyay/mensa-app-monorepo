@@ -21,12 +21,20 @@ export const mensaService = {
   /**
    * Fetches all mensas without menu data.
    */
-  async getAllMensas(supabase: SupabaseClient<Database>): Promise<Mensa[]> {
+  async getAllMensas(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<Mensa[]> {
+    const cached = await kv.get('mensas', 'json') as Mensa[];
+    if (cached) {
+      console.log('RETRIVED DATA FROM CACHE');
+      return cached;
+    }
+
     const { data, error } = await supabase
       .from('mensas')
       .select('*');
 
     if (error) throw new HTTPException(500, { message: error.message });
+
+    await kv.put('mensas', JSON.stringify(data), { expirationTtl: 86400 });
 
     return data;
   },
@@ -34,7 +42,13 @@ export const mensaService = {
   /**
    * Fetches all mensas along with their current menu data.
    */
-  async getAllMensasWithMenu(supabase: SupabaseClient<Database>): Promise<MensaWithMenu[]> {
+  async getAllMensasWithMenu(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<MensaWithMenu[]> {
+    const cached = await kv.get('mensas_with_menu', 'json') as MensaWithMenu[];
+    if (cached) {
+      console.log('RETRIVED DATA FROM CACHE');
+      return cached;
+    }
+
     const { data, error } = await supabase
       .from('mensas')
       .select(`
@@ -49,6 +63,8 @@ export const mensaService = {
 
     if (error) throw new HTTPException(500, { message: error.message });
 
+    await kv.put('mensas_with_menu', JSON.stringify(data), { expirationTtl: 86400 });
+
     return (data || []).map(mapMensaWithMenu);
   },
 
@@ -56,7 +72,7 @@ export const mensaService = {
    * Creates or updates a mensa menu after validating the input with Zod.
    * @param rawDto The unvalidated data from the scraper.
    */
-  async createMensaMenu(supabase: SupabaseClient<Database>, rawDto: unknown): Promise<MensaCurrentMenu> {
+  async createMensaMenu(supabase: SupabaseClient<Database>, rawDto: unknown, kv: KVNamespace): Promise<MensaCurrentMenu> {
     const result = CreateMenuSchema.safeParse(rawDto);
 
     if (!result.success) {
@@ -73,6 +89,17 @@ export const mensaService = {
 
     if (error) throw new HTTPException(500, { message: error.message });
 
+    const { data: mensa } = await supabase
+      .from('mensas')
+      .select('slug')
+      .eq('id', result.data.mensa_id)
+      .single();
+
+    if (mensa) {
+      await kv.delete(`menu:${mensa.slug}`);
+      await kv.delete('mensas_with_menu');
+    }
+
     return data;
   },
 
@@ -80,7 +107,13 @@ export const mensaService = {
    * Fetches a specific mensa's menu using its URL slug.
    * @param slug Slug of the mensa.
    */
-  async getMensaMenuBySlug(supabase: SupabaseClient<Database>, slug: string): Promise<MenuData> {
+  async getMensaMenuBySlug(supabase: SupabaseClient<Database>, slug: string, kv: KVNamespace): Promise<MenuData> {
+    const cached = await kv.get(`menu:${slug}`, 'json') as MenuData;
+    if (cached) {
+      console.log('RETRIVED DATA FROM CACHE');
+      return cached;
+    }
+
     const { data, error } = await supabase
       .from('mensas')
       .select(`
@@ -93,10 +126,14 @@ export const mensaService = {
 
     if (error) throw new HTTPException(500, { message: error.message });
 
-    if (!data || !data.current_menu) {
+    if (!data?.current_menu) {
       throw new HTTPException(404, { message: `Menu for slug '${slug}' not found` });
     }
 
-    return MenuDataSchema.parse(data.current_menu.menu_data);
+    const menu = MenuDataSchema.parse(data.current_menu.menu_data);
+
+    await kv.put(`menu:${slug}`, JSON.stringify(menu), { expirationTtl: 86400 });
+
+    return menu;
   }
-}
+};

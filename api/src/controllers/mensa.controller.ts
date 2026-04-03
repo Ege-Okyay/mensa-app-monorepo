@@ -17,12 +17,13 @@ export const mensaController = {
    */
   async getMensas(c: Context) {
     const supabase = getSupabase(c.env);
+    const kv = c.env.MENSA_APP_CACHE;
 
     const includeMenu = c.req.query('include') === 'menu';
 
     const mensas = includeMenu
-      ? await mensaService.getAllMensasWithMenu(supabase)
-      : await mensaService.getAllMensas(supabase);
+      ? await mensaService.getAllMensasWithMenu(supabase, kv)
+      : await mensaService.getAllMensas(supabase, kv);
 
     return c.json(successResponse(mensas));
   },
@@ -32,11 +33,12 @@ export const mensaController = {
    */
   async getMenuBySlug(c: Context) {
     const supabase = getSupabase(c.env);
+    const kv = c.env.MENSA_APP_CACHE;
     
     const slug = c.req.param('slug');
     if (!slug) throw new HTTPException(400, { message: 'Missing slug parameter' });
 
-    const menu = await mensaService.getMensaMenuBySlug(supabase, slug);
+    const menu = await mensaService.getMensaMenuBySlug(supabase, slug, kv);
 
     return c.json(successResponse(menu));
   },
@@ -44,8 +46,9 @@ export const mensaController = {
   async syncMenus(c: Context) {
     const config = getConfig(c.env);
     const supabase = getSupabase(c.env);
+    const kv = c.env.MENSA_APP_CACHE;
 
-    await scanService.scanAllAndSync(supabase, config.scraper);
+    await scanService.scanAllAndSync(supabase, config.scraper, kv);
     return c.json(successResponse);
   }
 };
