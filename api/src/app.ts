@@ -1,10 +1,9 @@
 import { Hono } from 'hono';
-import { logger } from 'hono/logger';
 import mensaRouter from './routes/mensa.routes.js';
 import { errorResponse } from './core/response.js';
 
 const app = new Hono()
-  .use('*', logger())
+  // .use('*', logger()) -> Wrangler has built in logger
   .route('/mensa', mensaRouter);
 
 app.onError((err, c) => {

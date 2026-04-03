@@ -7,6 +7,6 @@ mensaRouter.get('/', mensaController.getMensas);
 mensaRouter.get('/menu/:slug', mensaController.getMenuBySlug);
 
 // Debug route
-mensaRouter.post('/sync', mensaController.syncMenus);
+mensaRouter.post('/debug/sync', mensaController.syncMenus);
 
 export default mensaRouter;

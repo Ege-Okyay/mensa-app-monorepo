@@ -1,8 +1,4 @@
-```
-npm install
-npm run dev
-```
-
-```
-open http://localhost:3000
-```
+TODO:
+- Implement Cloudflare KV storage for caching
+- Improve supabase client handling
+- Better config system and usage
