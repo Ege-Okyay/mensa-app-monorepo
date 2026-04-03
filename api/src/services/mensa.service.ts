@@ -1,6 +1,7 @@
 import { HTTPException } from 'hono/http-exception';
-import { supabase } from '../core/supabase.js';
 import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu, type MenuData } from '../models/mensa.js';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "../models/database.types.js";
 
 /**
  * Helper function to transform and validate database results
@@ -20,7 +21,7 @@ export const mensaService = {
   /**
    * Fetches all mensas without menu data.
    */
-  async getAllMensas(): Promise<Mensa[]> {
+  async getAllMensas(supabase: SupabaseClient<Database>): Promise<Mensa[]> {
     const { data, error } = await supabase
       .from('mensas')
       .select('*');
@@ -33,7 +34,7 @@ export const mensaService = {
   /**
    * Fetches all mensas along with their current menu data.
    */
-  async getAllMensasWithMenu(): Promise<MensaWithMenu[]> {
+  async getAllMensasWithMenu(supabase: SupabaseClient<Database>): Promise<MensaWithMenu[]> {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
@@ -55,7 +56,7 @@ export const mensaService = {
    * Creates or updates a mensa menu after validating the input with Zod.
    * @param rawDto The unvalidated data from the scraper.
    */
-  async createMensaMenu(rawDto: unknown): Promise<MensaCurrentMenu> {
+  async createMensaMenu(supabase: SupabaseClient<Database>, rawDto: unknown): Promise<MensaCurrentMenu> {
     const result = CreateMenuSchema.safeParse(rawDto);
 
     if (!result.success) {
@@ -79,7 +80,7 @@ export const mensaService = {
    * Fetches a specific mensa's menu using its URL slug.
    * @param slug Slug of the mensa.
    */
-  async getMensaMenuBySlug(slug: string): Promise<MenuData> {
+  async getMensaMenuBySlug(supabase: SupabaseClient<Database>, slug: string): Promise<MenuData> {
     const { data, error } = await supabase
       .from('mensas')
       .select(`

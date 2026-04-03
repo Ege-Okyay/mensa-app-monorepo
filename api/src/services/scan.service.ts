@@ -1,17 +1,21 @@
 import { HTTPException } from 'hono/http-exception';
-import { config } from '../core/config.js';
 import { mensaService } from './mensa.service.js';
 import type { MenuData } from '../models/mensa.js';
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "../models/database.types.js";
 
 export const scanService = {
   /**
    * Triggers the scraper, processes all returned menus, and updates the database.
    */
-  async scanAllAndSync(): Promise<void> {
+  async scanAllAndSync(
+    supabase: SupabaseClient<Database>,
+    scraperConfig: { url: string; key: string }
+  ): Promise<void> {
     try {
-      const response = await fetch(`${config.scraperUrl}/test`, {
+      const response = await fetch(`${scraperConfig.url}/test`, {
         headers: {
-          'X-Internal-Key': config.scraperApiKey
+          'X-Internal-Key': scraperConfig.key
         }
       });
 
@@ -21,7 +25,7 @@ export const scanService = {
 
       const rawResults = await response.json() as MenuData[];
 
-      const mensas = await mensaService.getAllMensas();
+      const mensas = await mensaService.getAllMensas(supabase);
 
       for (const result of rawResults) {
         const matchedMensa = mensas.find(m =>
@@ -33,7 +37,7 @@ export const scanService = {
           continue;
         }
 
-        await mensaService.createMensaMenu({
+        await mensaService.createMensaMenu(supabase, {
           mensa_id: matchedMensa.id,
           menu_data: result
         });

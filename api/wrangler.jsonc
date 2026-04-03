@@ -1,0 +1,9 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "mensa-app-api",
+    "main": "src/index.ts",
+    "compatibility_date": "2026-03-27",
+    "observability": {
+        "enabled": true
+    },
+}

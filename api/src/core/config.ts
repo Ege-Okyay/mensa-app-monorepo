@@ -1,19 +1,21 @@
-const getEnv = (key: string, defaultValue?: string): string => {
-  const value = process.env[key];
+export interface Env {
+  PORT: string;
+  SUPABASE_URL: string;
+  SUPABASE_KEY: string;
+  SCRAPER_URL: string;
+  SCRAPER_KEY: string;
+}
 
-  if (!value && defaultValue === undefined) {
-    throw new Error(`Environment variable ${key} is required`);
+export const getConfig = (env: Env) => {
+  return {
+    port: env.PORT,
+    supabase: {
+      url: env.SUPABASE_URL,
+      key: env.SUPABASE_KEY 
+    },
+    scraper: {
+      url: env.SCRAPER_URL,
+      key: env.SCRAPER_KEY
+    }
   }
-
-  return value || (defaultValue as string);
-};
-
-export const config = {
-  port: parseInt(getEnv('PORT', '3000'), 10),
-  supabase: {
-    url: getEnv('SUPABASE_URL'),
-    key: getEnv('SUPABASE_KEY'),
-  },
-  scraperUrl: getEnv('SCRAPER_URL'),
-  scraperApiKey: getEnv('SCRAPER_API_KEY'),
 };
