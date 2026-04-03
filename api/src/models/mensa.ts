@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Database } from './database.types.js';
+import type { Database } from './database.types';
 
 export type Mensa = Database['public']['Tables']['mensas']['Row'];
 export type MensaCurrentMenu = Database['public']['Tables']['mensa_current_menus']['Row'];

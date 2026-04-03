@@ -4,6 +4,7 @@ export interface Env {
   SUPABASE_KEY: string;
   SCRAPER_URL: string;
   SCRAPER_KEY: string;
+  MENSA_APP_CACHE: KVNamespace;
 }
 
 export const getConfig = (env: Env) => {

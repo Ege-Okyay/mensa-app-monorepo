@@ -1,10 +1,10 @@
 import type { Context } from 'hono';
-import { mensaService } from '../services/mensa.service.js';
-import { successResponse } from '../core/response.js';
+import { mensaService } from '../services/mensa.service';
+import { successResponse } from '../core/response';
 import { HTTPException } from 'hono/http-exception';
-import { scanService } from '../services/scan.service.js';
-import { getSupabase } from "../core/supabase.js";
-import { getConfig } from "../core/config.js";
+import { scanService } from '../services/scan.service';
+import { getSupabase } from '../core/supabase';
+import { getConfig } from '../core/config';
 
 /**
  * Handlers for mensas and their current menu data.

@@ -1,8 +1,8 @@
 import { HTTPException } from 'hono/http-exception';
-import { mensaService } from './mensa.service.js';
-import type { MenuData } from '../models/mensa.js';
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "../models/database.types.js";
+import { mensaService } from './mensa.service';
+import type { MenuData } from '../models/mensa';
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../models/database.types';
 
 export const scanService = {
   /**

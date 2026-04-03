@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { mensaController } from '../controllers/mensa.controller.js';
+import { mensaController } from '../controllers/mensa.controller';
 
 const mensaRouter = new Hono();
 

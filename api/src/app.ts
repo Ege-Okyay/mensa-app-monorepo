@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
-import mensaRouter from './routes/mensa.routes.js';
-import { errorResponse } from './core/response.js';
+import mensaRouter from './routes/mensa.routes';
+import { errorResponse } from './core/response';
 
 const app = new Hono()
   // .use('*', logger()) -> Wrangler has built in logger

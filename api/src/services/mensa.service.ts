@@ -1,7 +1,7 @@
 import { HTTPException } from 'hono/http-exception';
-import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu, type MenuData } from '../models/mensa.js';
+import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu, type MenuData } from '../models/mensa';
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "../models/database.types.js";
+import type { Database } from "../models/database.types";
 
 /**
  * Helper function to transform and validate database results

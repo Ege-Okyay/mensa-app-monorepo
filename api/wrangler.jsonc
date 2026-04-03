@@ -1,9 +1,15 @@
 {
-    "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "mensa-app-api",
-    "main": "src/index.ts",
-    "compatibility_date": "2026-03-27",
-    "observability": {
-        "enabled": true
-    },
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "mensa-app-api",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-03-27",
+	"observability": {
+		"enabled": true
+	},
+	"kv_namespaces": [
+		{
+			"binding": "MENSA_APP_CACHE",
+			"id": "7f21c6b3f5f8449c985d1e7a48f561a8"
+		}
+	],
 }
