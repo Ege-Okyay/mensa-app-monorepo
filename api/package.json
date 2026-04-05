@@ -10,6 +10,7 @@
     "@hono/zod-validator": "^0.7.6",
     "@supabase/supabase-js": "^2.99.2",
     "hono": "^4.12.8",
+    "hono-rate-limiter": "^0.5.3",
     "zod": "^4.3.6"
   },
   "devDependencies": {

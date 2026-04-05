@@ -1,7 +1,7 @@
 import { HTTPException } from 'hono/http-exception';
 import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu, type MenuData } from '../models/mensa';
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "../models/database.types";
+import type { SupabaseClient } from '@supabase/supabase-js';
+import type { Database } from '../models/database.types';
 
 /**
  * Helper function to transform and validate database results
@@ -23,10 +23,7 @@ export const mensaService = {
    */
   async getAllMensas(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<Mensa[]> {
     const cached = await kv.get('mensas', 'json') as Mensa[];
-    if (cached) {
-      console.log('RETRIVED DATA FROM CACHE');
-      return cached;
-    }
+    if (cached) return cached;
 
     const { data, error } = await supabase
       .from('mensas')
@@ -44,10 +41,7 @@ export const mensaService = {
    */
   async getAllMensasWithMenu(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<MensaWithMenu[]> {
     const cached = await kv.get('mensas_with_menu', 'json') as MensaWithMenu[];
-    if (cached) {
-      console.log('RETRIVED DATA FROM CACHE');
-      return cached;
-    }
+    if (cached) return cached;
 
     const { data, error } = await supabase
       .from('mensas')
@@ -109,10 +103,7 @@ export const mensaService = {
    */
   async getMensaMenuBySlug(supabase: SupabaseClient<Database>, slug: string, kv: KVNamespace): Promise<MenuData> {
     const cached = await kv.get(`menu:${slug}`, 'json') as MenuData;
-    if (cached) {
-      console.log('RETRIVED DATA FROM CACHE');
-      return cached;
-    }
+    if (cached) return cached;
 
     const { data, error } = await supabase
       .from('mensas')

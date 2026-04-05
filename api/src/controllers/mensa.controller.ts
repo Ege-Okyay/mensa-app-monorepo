@@ -1,10 +1,10 @@
-import type { Context } from 'hono';
 import { mensaService } from '../services/mensa.service';
 import { successResponse } from '../core/response';
 import { HTTPException } from 'hono/http-exception';
 import { scanService } from '../services/scan.service';
 import { getSupabase } from '../core/supabase';
 import { getConfig } from '../core/config';
+import type { AppContext } from '../app';
 
 /**
  * Handlers for mensas and their current menu data.
@@ -15,7 +15,7 @@ export const mensaController = {
    * Use ?include=
    *  - menu: include today's menu data.
    */
-  async getMensas(c: Context) {
+  async getMensas(c: AppContext) {
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;
 
@@ -31,7 +31,7 @@ export const mensaController = {
   /**
    * Fetches the current menu for a specific mensa using its slug.
    */
-  async getMenuBySlug(c: Context) {
+  async getMenuBySlug(c: AppContext) {
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;
     
@@ -43,7 +43,7 @@ export const mensaController = {
     return c.json(successResponse(menu));
   },
 
-  async syncMenus(c: Context) {
+  async syncMenus(c: AppContext) {
     const config = getConfig(c.env);
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;
