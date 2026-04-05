@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/joho/godotenv"
 )
@@ -15,6 +16,7 @@ type AppConfig struct {
 	FixedPrompt    string
 	Port           string
 	InternalAPIKey string
+	RateLimit      int
 }
 
 func LoadConfig() (*AppConfig, error) {
@@ -29,6 +31,9 @@ func LoadConfig() (*AppConfig, error) {
 		return nil, err
 	}
 
+	limitStr := os.Getenv("RATE_LIMIT")
+	limit, _ := strconv.Atoi(limitStr)
+
 	return &AppConfig{
 		StoryAPIUrl:    os.Getenv("IG_STORY_API_URL"),
 		GeminiAPIKey:   os.Getenv("GEMINI_API_KEY"),
@@ -36,5 +41,6 @@ func LoadConfig() (*AppConfig, error) {
 		FixedPrompt:    string(prompt),
 		Port:           os.Getenv("PORT"),
 		InternalAPIKey: os.Getenv("INTERNAL_API_KEY"),
+		RateLimit:      limit,
 	}, nil
 }

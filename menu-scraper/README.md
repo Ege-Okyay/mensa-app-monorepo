@@ -31,4 +31,3 @@ The service returns a nested structure for full localization support:
 
 **TODO:**
 - performance enhancments -> scale down images before streaming to gemini
-- rate limiting

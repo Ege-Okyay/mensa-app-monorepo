@@ -42,6 +42,7 @@ func run() error {
 
 	app.Use(middleware.Logger())
 	app.Use(middleware.Auth(cfg.InternalAPIKey))
+	app.Use(middleware.RateLimiter(cfg.RateLimit))
 
 	app.Get("/scrape", handlers.ScrapeAndAnalyze(analyzer, ctx))
 	app.Get("/test", handlers.TestAnalyze(analyzer, ctx))
