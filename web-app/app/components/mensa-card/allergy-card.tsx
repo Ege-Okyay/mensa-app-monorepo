@@ -22,7 +22,7 @@ export default function AllergyCard({ allergens }: AllergyCardProps) {
         ) : (
           <div className="flex flex-row items-center gap-2 py-0.5 px-1">
             <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
-            <span className="text-[11px] font-medium text-text-muted italic">No common allergens identified</span>
+            <span className="text-body-sm font-medium text-text-muted italic">No common allergens identified</span>
           </div>
         )}
       </div>

@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "./app.css";
 import LanguageSelector from "./components/language-selector";
+import { UtensilsCrossed } from "lucide-react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,11 +30,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html data-theme="light" lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
         <Meta />
         <Links />
       </head>
-      <body className="bg-background flex justify-center h-dvh">
+      <body className="bg-background flex justify-center h-dvh overflow-hidden">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -44,18 +45,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <main className="w-full h-full max-w-sm">
-      <div className="ml-5 mr-5 mt-8 mb-8">
-        {/* Title bar */}
+    <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
+      <header className="px-5 pt-8 pb-4 shrink-0 bg-background/80 backdrop-blur-md sticky top-0 z-20">
         <div className="flex flex-row items-center justify-between">
-          <h1 className="text-h1 font-bold text-black">Mensa Daily Menu</h1>
+          <div className="flex flex-row items-center gap-3">
+            <div className="w-11 h-11 rounded-2xl bg-brand flex items-center justify-center shadow-lg shadow-brand/20 border-b-4 border-black/10">
+              <UtensilsCrossed className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-h1 font-black text-black tracking-tighter leading-tight">
+              Mensa<span className="text-brand">Today</span>
+            </h1>
+          </div>
           <LanguageSelector />
         </div>
-
-        {/* Content */}
-        <div className="mt-8">
-          <Outlet />
-        </div>
+      </header>
+      
+      <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
+        <Outlet />
       </div>
     </main>
   );
