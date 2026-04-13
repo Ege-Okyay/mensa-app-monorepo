@@ -1,85 +1,47 @@
-import { Clock, Zap } from "lucide-react";
-import SectionTitle from "./section-title";
-import FoodCard from "./food-card";
-import SideDish from "./side-dish";
-import Allergy from "./allergy";
-import type { MenuData } from "~/lib/api/types";
+import { AlertCircle, ChevronRight, FileText } from "lucide-react";
+import type { Mensa } from "~/lib/api/types";
 
 interface MensaCardProps {
-  menu: MenuData;
+  mensa: Mensa;
+  isPublished: boolean;
+  imageUrl: string;
 }
 
-export default function MensaCard({ menu }: MensaCardProps) {
+export function MensaCard({ mensa, isPublished, imageUrl }: MensaCardProps) {
   return (
-    <div className="card bg-white w-full rounded-2xl shadow-sm overflow-y-auto h-[80svh] border border-border no-scrollbar flex flex-col">
-      <figure className="relative h-32 w-full shrink-0">
+    <div className="flex flex-col gap-3">
+      <div className="relative h-44 w-full rounded-xl overflow-hidden shadow-sm">
         <img
-          className="w-full h-full object-cover"
-          src="https://www.edisu.piemonte.it/sites/default/files/styles/anteprima_galleria/public/sedi-mense-universitarie-immagini/castelfidardo/castelfidardo%205.jpg?itok=Zbb4GXkk"
-          alt="Mensa Header"
+          src={imageUrl}
+          alt={`${mensa.name} image`}
+          className={`w-full h-full object-cover ${!isPublished && 'grayscale'}`}
         />
-        <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent flex items-end justify-start">
-          <div className="mb-3 ml-4 mr-4 flex flex-row items-end justify-between w-full">
-            <div className="flex flex-col gap-0.5">
-              <h2 className="text-white font-bold text-h1 leading-tight">Mensa {menu.mensa_name}</h2>
-              <div className="flex flex-row items-center gap-1.5 text-white/80">
-                <Clock className="w-3 h-3" />
-                <span className="font-medium text-body-sm uppercase tracking-wider">Open until 15:00</span>
+        <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
+      </div>
+
+      <div className="flex flex-row items-center justify-between px-3">
+        <div className="flex flex-col gap-0.5">
+          <h3 className="text-h1 font-bold text-text tracking-tight">{mensa.name}</h3>
+          <div className="flex items-center gap-1.5 mt-0.5">
+            {isPublished ? (
+              <div className="flex items-center gap-1.5 text-green-600">
+                <FileText className="w-3.5 h-3.5" />
+                <span className="text-body-sm font-black uppercase tracking-widest">Menu Available</span>
               </div>
-            </div>
-            {menu.specialties_available && (
-              <div className="bg-brand px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm mb-0.5">
-                <Zap className="w-3 h-3 text-white fill-white" />
-                <span className="text-white font-semibold text-body-sm uppercase tracking-tighter">Specialties Available</span>
+            ) : (
+              <div className="flex items-center gap-1.5 text-text-muted">
+                <AlertCircle className="w-3.5 h-3.5" />
+                <span className="text-body-sm font-bold uppercase tracking-widest italic">Not Published Yet</span>
               </div>
             )}
           </div>
         </div>
-      </figure>
 
-      {menu.common_allergens?.length > 0 && (
-        <div className="px-4 pt-4 shrink-0">
-          <div className="flex flex-col gap-2">
-            <span className="text-body-sm font-bold text-text-muted uppercase tracking-[0.15em]">Common Allergens</span>
-            <div className="flex flex-row gap-1.5 overflow-x-auto no-scrollbar pb-1">
-              {menu.common_allergens.map((allergen) => (
-                <Allergy key={allergen} name={allergen} />
-              ))}
-            </div>
+        {isPublished && (
+          <div className="bg-brand w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg shadow-brand/20 group-active:translate-x-1 transition-transform">
+            <ChevronRight className="w-6 h-6 text-white" />
           </div>
-          <div className="divider m-0 mt-2 h-px opacity-50"></div>
-        </div>
-      )}
-
-      <div className="flex-1 px-3 pb-6">
-        <div className="space-y-6">
-          <div>
-            <SectionTitle title="FIRST COURSES" />
-            <div className="flex flex-col gap-2.5">
-              {menu.first_courses.map((course, index) => (
-                <FoodCard key={index} menuItem={course} />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <SectionTitle title="MAIN COURSES" />
-            <div className="flex flex-col gap-2.5">
-              {menu.main_courses.map((course, index) => (
-                <FoodCard key={index} menuItem={course} />
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <SectionTitle title="SIDE DISHES" />
-            <div className="flex flex-col gap-2.5">
-              {menu.side_dishes.map((course, index) => (
-                <SideDish key={index} menuItem={course} />
-              ))}
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

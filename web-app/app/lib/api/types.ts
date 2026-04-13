@@ -23,9 +23,7 @@ export interface Mensa {
   id: string;
   name: string;
   slug: string;
-}
-
-export interface MensaWithMenu extends Mensa {
+  location: string;
   current_menu: {
     menu_data: MenuData;
     updated_at: string;
