@@ -1,12 +1,12 @@
 import { HTTPException } from 'hono/http-exception';
-import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MensaWithMenu, type MenuData } from '../models/mensa';
+import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MenuData } from '../models/mensa';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../models/database.types';
 
 /**
  * Helper function to transform and validate database results
  */
-const mapMensaWithMenu = (row: any): MensaWithMenu => ({
+const mapMensaWithMenu = (row: any): Mensa => ({
   ...row,
   current_menu: row.current_menu ? {
     ...row.current_menu,
@@ -19,28 +19,10 @@ const mapMensaWithMenu = (row: any): MensaWithMenu => ({
  */
 export const mensaService = {
   /**
-   * Fetches all mensas without menu data.
+   * Fetches all mensas along with their current menu data.
    */
   async getAllMensas(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<Mensa[]> {
     const cached = await kv.get('mensas', 'json') as Mensa[];
-    if (cached) return cached;
-
-    const { data, error } = await supabase
-      .from('mensas')
-      .select('*');
-
-    if (error) throw new HTTPException(500, { message: error.message });
-
-    await kv.put('mensas', JSON.stringify(data), { expirationTtl: 86400 });
-
-    return data;
-  },
-
-  /**
-   * Fetches all mensas along with their current menu data.
-   */
-  async getAllMensasWithMenu(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<MensaWithMenu[]> {
-    const cached = await kv.get('mensas_with_menu', 'json') as MensaWithMenu[];
     if (cached) return cached;
 
     const { data, error } = await supabase
@@ -57,7 +39,7 @@ export const mensaService = {
 
     if (error) throw new HTTPException(500, { message: error.message });
 
-    await kv.put('mensas_with_menu', JSON.stringify(data), { expirationTtl: 86400 });
+    await kv.put('mensas', JSON.stringify(data), { expirationTtl: 86400 });
 
     return (data || []).map(mapMensaWithMenu);
   },
@@ -91,7 +73,7 @@ export const mensaService = {
 
     if (mensa) {
       await kv.delete(`menu:${mensa.slug}`);
-      await kv.delete('mensas_with_menu');
+      await kv.delete('mensas');
     }
 
     return data;

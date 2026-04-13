@@ -1,7 +1,14 @@
 import { z } from 'zod';
 import type { Database } from './database.types';
 
-export type Mensa = Database['public']['Tables']['mensas']['Row'];
+type MensaRow = Database['public']['Tables']['mensas']['Row'];
+export interface Mensa extends MensaRow {
+  current_menu?: {
+    menu_data: MenuData;
+    updated_at: string | null;
+  } | null;
+}
+
 export type MensaCurrentMenu = Database['public']['Tables']['mensa_current_menus']['Row'];
 
 export const LocalizedDishSchema = z.object({
@@ -25,18 +32,11 @@ export const MenuDataSchema = z.object({
   common_allergens: z.array(z.string())
 });
 
-export type LocalizedDish = z.infer<typeof LocalizedDishSchema>;
-export type MenuItem = z.infer<typeof MenuItemSchema>;
-export type MenuData = z.infer<typeof MenuDataSchema>;
-
-export interface MensaWithMenu extends Mensa {
-  current_menu: {
-    menu_data: MenuData;
-    updated_at: string | null;
-  } | null;
-}
-
 export const CreateMenuSchema = z.object({
   mensa_id: z.uuid(),
   menu_data: MenuDataSchema
 });
+
+export type LocalizedDish = z.infer<typeof LocalizedDishSchema>;
+export type MenuItem = z.infer<typeof MenuItemSchema>;
+export type MenuData = z.infer<typeof MenuDataSchema>;
