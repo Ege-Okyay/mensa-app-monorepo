@@ -3,14 +3,14 @@ import type { Mensa, MenuData } from "./types"
 
 export const mensaApi = {
   /**
-   * Fetches all mensas
+   * Fetches all mensas without their current menu data.
    */
   getAll: () =>
     api.get<Mensa[]>(`/mensa`),
 
   /** 
-   * Fetches the mensa with its menu by its slug
+   * Fetches the mensa with its current menu data by its slug.
    */
-  getMenu: (slug: string) =>
-    api.get<MenuData>(`/mensa/menu/${slug}`)
+  getMensaWithMenu: (slug: string) =>
+    api.get<Mensa>(`/mensa/${slug}`)
 }

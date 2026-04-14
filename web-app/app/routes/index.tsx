@@ -12,14 +12,11 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const { mensas } = loaderData;
 
   const sortedMensas = [...mensas].sort((a, b) => {
-    const aPublished = a.current_menu !== null;
-    const bPublished = b.current_menu !== null;
-
-    if (aPublished === bPublished) {
+    if (a.has_menu === b.has_menu) {
       return a.name.localeCompare(b.name);
     }
     
-    return aPublished ? -1 : 1
+    return a.has_menu ? -1 : 1
   });
 
   return (
@@ -34,19 +31,18 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
         <div className="flex flex-col gap-8">
           {sortedMensas.map((mensa) => {
-            const isPublished = mensa.current_menu !== null;
             const imageUrl = `https://xoarqcxbowmkqvzchhde.supabase.co/storage/v1/object/public/mensas/${mensa.slug}.webp`;
 
             return (
               <div
                 key={mensa.id}
-                className={`w-full transition-all duration-200 ${isPublished ? "active:scale-[0.98]" : "opacity-60"}`}
+                className={`w-full transition-all duration-200 ${mensa.has_menu ? "active:scale-[0.98]" : "opacity-60"}`}
               >
-                {isPublished ? (
+                {mensa.has_menu ? (
                   <Link to={`/mensa/${mensa.slug}`} className="block group">
                     <MensaCard
                       mensa={mensa}
-                      isPublished={isPublished}
+                      hasMenu={mensa.has_menu}
                       imageUrl={imageUrl}
                     />
                   </Link>
@@ -54,7 +50,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   <div className="block cursor-not-allowed">
                     <MensaCard
                       mensa={mensa}
-                      isPublished={isPublished}
+                      hasMenu={mensa.has_menu}
                       imageUrl={imageUrl}
                     />
                   </div>

@@ -24,9 +24,10 @@ export interface Mensa {
   name: string;
   slug: string;
   location: string;
-  current_menu: {
+  has_menu: boolean;
+  current_menu?: {
     menu_data: MenuData;
-    updated_at: string;
+    updated_at: string | null;
   } | null;
 }
 

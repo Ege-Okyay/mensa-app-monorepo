@@ -3,27 +3,27 @@ import type { Mensa } from "~/lib/api/types";
 
 interface MensaCardProps {
   mensa: Mensa;
-  isPublished: boolean;
+  hasMenu: boolean;
   imageUrl: string;
 }
 
-export function MensaCard({ mensa, isPublished, imageUrl }: MensaCardProps) {
+export function MensaCard({ mensa, hasMenu, imageUrl }: MensaCardProps) {
   return (
     <div className="flex flex-col gap-3">
       <div className="relative h-44 w-full rounded-xl overflow-hidden shadow-sm">
         <img
           src={imageUrl}
           alt={`${mensa.name} image`}
-          className={`w-full h-full object-cover ${!isPublished && 'grayscale'}`}
+          className={`w-full h-full object-cover ${!hasMenu && 'grayscale'}`}
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
       </div>
 
-      <div className="flex flex-row items-center justify-between px-3">
+      <div className="flex flex-row items-center justify-between">
         <div className="flex flex-col gap-0.5">
           <h3 className="text-h1 font-bold text-text tracking-tight">{mensa.name}</h3>
           <div className="flex items-center gap-1.5 mt-0.5">
-            {isPublished ? (
+            {hasMenu ? (
               <div className="flex items-center gap-1.5 text-green-600">
                 <FileText className="w-3.5 h-3.5" />
                 <span className="text-body-sm font-black uppercase tracking-widest">Menu Available</span>
@@ -37,7 +37,7 @@ export function MensaCard({ mensa, isPublished, imageUrl }: MensaCardProps) {
           </div>
         </div>
 
-        {isPublished && (
+        {hasMenu && (
           <div className="bg-brand w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg shadow-brand/20 group-active:translate-x-1 transition-transform">
             <ChevronRight className="w-6 h-6 text-white" />
           </div>
