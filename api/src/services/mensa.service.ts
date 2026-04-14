@@ -1,5 +1,5 @@
 import { HTTPException } from 'hono/http-exception';
-import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu, type MenuData } from '../models/mensa';
+import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu } from '../models/mensa';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../models/database.types';
 
@@ -19,7 +19,7 @@ const mapMensaWithMenu = (row: any): Mensa => ({
  */
 export const mensaService = {
   /**
-   * Fetches all mensas along with their current menu data.
+   * Fetches all mensas without their current menu data.
    */
   async getAllMensas(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<Mensa[]> {
     const cached = await kv.get('mensas', 'json') as Mensa[];
@@ -28,20 +28,48 @@ export const mensaService = {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-        id,
-        slug,
-        name,
-        current_menu:mensa_current_menus (
-          menu_data,
-          updated_at
-        )
+        id, slug, name, location,
+        current_menu:mensa_current_menus ( mensa_id )
       `);
 
     if (error) throw new HTTPException(500, { message: error.message });
 
-    await kv.put('mensas', JSON.stringify(data), { expirationTtl: 86400 });
+    const result = (data || []).map(m => ({
+      ...m,
+      has_menu: m.current_menu !== null,
+      current_menu: undefined
+    }));
 
-    return (data || []).map(mapMensaWithMenu);
+    await kv.put('mensas', JSON.stringify(result), { expirationTtl: 86400 });
+
+    return result;
+  },
+
+  /**
+   * Fetches a single mensa with its current menu data using its slug.
+   * @param slug Slug of the mensa.
+   */
+  async getMensaWithMenuBySlug(supabase: SupabaseClient<Database>, slug: string, kv: KVNamespace): Promise<Mensa> {
+    const cached = await kv.get(`mensa:${slug}`, 'json') as Mensa;
+    if (cached) return cached;
+
+    const { data, error } = await supabase
+      .from('mensas')
+      .select(`
+        id, slug, name, location,
+        current_menu:mensa_current_menus ( menu_data )
+      `)
+      .eq('slug', slug)
+      .maybeSingle();
+
+    if (error) throw new HTTPException(500, { message: error.message });
+    if (!data) throw new HTTPException(404, { message: `Mensa '${slug}' not found` });
+
+    const mensa = mapMensaWithMenu(data);
+
+    await kv.put(`mensa:${slug}`, JSON.stringify(mensa), { expirationTtl: 86400 });
+
+    return mensa;
   },
 
   /**
@@ -59,7 +87,10 @@ export const mensaService = {
 
     const { data, error } = await supabase
       .from('mensa_current_menus')
-      .upsert(result.data)
+      .upsert({
+        mensa_id: result.data.mensa_id,
+        menu_data: result.data.menu_data as any
+      })
       .select()
       .single();
 
@@ -72,41 +103,10 @@ export const mensaService = {
       .single();
 
     if (mensa) {
-      await kv.delete(`menu:${mensa.slug}`);
+      await kv.delete(`mensa:${mensa.slug}`);
       await kv.delete('mensas');
     }
 
     return data;
-  },
-
-  /**
-   * Fetches a specific mensa's menu using its URL slug.
-   * @param slug Slug of the mensa.
-   */
-  async getMensaMenuBySlug(supabase: SupabaseClient<Database>, slug: string, kv: KVNamespace): Promise<MenuData> {
-    const cached = await kv.get(`menu:${slug}`, 'json') as MenuData;
-    if (cached) return cached;
-
-    const { data, error } = await supabase
-      .from('mensas')
-      .select(`
-        current_menu:mensa_current_menus (
-          menu_data
-        )
-      `)
-      .eq('slug', slug)
-      .maybeSingle();
-
-    if (error) throw new HTTPException(500, { message: error.message });
-
-    if (!data?.current_menu) {
-      throw new HTTPException(404, { message: `Menu for slug '${slug}' not found` });
-    }
-
-    const menu = MenuDataSchema.parse(data.current_menu.menu_data);
-
-    await kv.put(`menu:${slug}`, JSON.stringify(menu), { expirationTtl: 86400 });
-
-    return menu;
   }
 };

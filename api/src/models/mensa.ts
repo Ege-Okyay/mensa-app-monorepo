@@ -1,26 +1,17 @@
 import { z } from 'zod';
 import type { Database } from './database.types';
 
-type MensaRow = Database['public']['Tables']['mensas']['Row'];
-export interface Mensa extends MensaRow {
-  current_menu?: {
-    menu_data: MenuData;
-    updated_at: string | null;
-  } | null;
-}
-
-export type MensaCurrentMenu = Database['public']['Tables']['mensa_current_menus']['Row'];
-
+// Zod schemas
 export const LocalizedDishSchema = z.object({
   name: z.string(),
-  description: z.string(),
+  description: z.string()
 });
 
 export const MenuItemSchema = z.object({
   it: LocalizedDishSchema,
   en: LocalizedDishSchema,
   tr: LocalizedDishSchema,
-  allergens: z.array(z.string()),
+  allergens: z.array(z.string())
 });
 
 export const MenuDataSchema = z.object({
@@ -33,10 +24,22 @@ export const MenuDataSchema = z.object({
 });
 
 export const CreateMenuSchema = z.object({
-  mensa_id: z.uuid(),
+  mensa_id: z.string(),
   menu_data: MenuDataSchema
 });
 
+// Types and interfaces
 export type LocalizedDish = z.infer<typeof LocalizedDishSchema>;
 export type MenuItem = z.infer<typeof MenuItemSchema>;
 export type MenuData = z.infer<typeof MenuDataSchema>;
+
+type MensaRow = Database['public']['Tables']['mensas']['Row'];
+export type MensaCurrentMenu = Database['public']['Tables']['mensa_current_menus']['Row'];
+
+export interface Mensa extends MensaRow {
+  has_menu: boolean;
+  current_menu?: {
+    menu_data: MenuData;
+    updated_at: string | null;
+  } | null;
+};

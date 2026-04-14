@@ -3,8 +3,8 @@ import { mensaController } from '../controllers/mensa.controller';
 
 const mensaRouter = new Hono();
 
-mensaRouter.get('/', mensaController.getMensas);
-mensaRouter.get('/menu/:slug', mensaController.getMenuBySlug);
+mensaRouter.get('/', mensaController.getAllMensas);
+mensaRouter.get('/:slug', mensaController.getMensaWithMenuBySlug);
 
 // Debug route
 mensaRouter.post('/debug/sync', mensaController.syncMenus);

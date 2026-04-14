@@ -11,9 +11,9 @@ import type { AppContext } from '../app';
  */
 export const mensaController = {
   /**
-   * Returns a list of all mensa locations with their current menu data. 
+   * Returns a list of all mensa locations without current menu data. 
    */
-  async getMensas(c: AppContext) {
+  async getAllMensas(c: AppContext) {
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;
 
@@ -23,16 +23,16 @@ export const mensaController = {
   },
 
   /**
-   * Fetches the current menu for a specific mensa using its slug.
+   * Fetches a specific mensa with its current menu data using its slug.
    */
-  async getMenuBySlug(c: AppContext) {
+  async getMensaWithMenuBySlug(c: AppContext) {
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;
 
     const slug = c.req.param('slug');
     if (!slug) throw new HTTPException(400, { message: 'Missing slug parameter' });
 
-    const menu = await mensaService.getMensaMenuBySlug(supabase, slug, kv);
+    const menu = await mensaService.getMensaWithMenuBySlug(supabase, slug, kv);
 
     return c.json(successResponse(menu));
   },
