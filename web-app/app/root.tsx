@@ -12,6 +12,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import LanguageSelector from "./components/language-selector";
 import { UtensilsCrossed } from "lucide-react";
+import { LanguageProvider } from "./lib/contexts/language-context";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -36,7 +37,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="bg-background flex justify-center h-dvh overflow-hidden">
-        {children}
+        <LanguageProvider>
+          {children}
+        </LanguageProvider>
         <ScrollRestoration />
         <Scripts />
       </body>

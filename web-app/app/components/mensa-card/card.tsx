@@ -1,5 +1,6 @@
 import { AlertCircle, ChevronRight, FileText } from "lucide-react";
 import type { Mensa } from "~/lib/api/types";
+import { useTranslation } from "~/lib/contexts/language-context";
 
 interface MensaCardProps {
   mensa: Mensa;
@@ -8,6 +9,8 @@ interface MensaCardProps {
 }
 
 export function MensaCard({ mensa, hasMenu, imageUrl }: MensaCardProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="flex flex-col gap-3">
       <div className="relative h-44 w-full rounded-xl overflow-hidden shadow-sm">
@@ -26,12 +29,12 @@ export function MensaCard({ mensa, hasMenu, imageUrl }: MensaCardProps) {
             {hasMenu ? (
               <div className="flex items-center gap-1.5 text-green-600">
                 <FileText className="w-3.5 h-3.5" />
-                <span className="text-body-sm font-black uppercase tracking-widest">Menu Available</span>
+                <span className="text-body-sm font-black uppercase tracking-widest">{t("status.menu_available")}</span>
               </div>
             ) : (
               <div className="flex items-center gap-1.5 text-text-muted">
                 <AlertCircle className="w-3.5 h-3.5" />
-                <span className="text-body-sm font-bold uppercase tracking-widest italic">Not Published Yet</span>
+                <span className="text-body-sm font-bold uppercase tracking-widest italic">{t("status.not_published")}</span>
               </div>
             )}
           </div>

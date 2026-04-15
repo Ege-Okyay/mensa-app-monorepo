@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import type { Route } from "./+types/index";
 import { mensaApi } from "~/lib/api/mensa";
 import { MensaCard } from "~/components/mensa-card/card";
+import { useTranslation } from "~/lib/contexts/language-context";
 
 export async function loader() {
   const mensas = await mensaApi.getAll();
@@ -10,6 +11,7 @@ export async function loader() {
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { mensas } = loaderData;
+  const { t } = useTranslation();
 
   const sortedMensas = [...mensas].sort((a, b) => {
     if (a.has_menu === b.has_menu) {
@@ -25,8 +27,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
       <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-1 px-1">
-          <h2 className="text-display font-bold text-text tracking-tight">Locations</h2>
-          <p className="text-body-sm text-text-muted font-semibold uppercase tracking-widest">Pick a canteen</p>
+          <h2 className="text-display font-bold text-text tracking-tight">{t("common.locations")}</h2>
+          <p className="text-body-sm text-text-muted font-semibold uppercase tracking-widest">{t("common.pick_a_mensa")}</p>
         </div>
 
         <div className="flex flex-col gap-8">

@@ -10,6 +10,7 @@ import {
   CircleDot as Sesame,
   AlertCircle
 } from "lucide-react";
+import { useTranslation, type AllPaths } from "~/lib/contexts/language-context";
 
 const iconMap: Record<string, any> = {
   "Gluten": Wheat,
@@ -29,12 +30,13 @@ interface AllergyProps {
 
 export default function Allergy({ name }: AllergyProps) {
   const Icon = iconMap[name] || AlertCircle;
+  const { t } = useTranslation();
 
   return (
     <div className="pl-2 pr-2 pt-0.5 pb-0.5 flex justify-center items-center bg-background border border-border rounded shrink-0 shadow-sm">
       <div className="flex flex-row items-center gap-1.5">
         <Icon className="w-3 h-3 text-brand" />
-        <span className="text-text font-semibold text-body-sm uppercase tracking-wider">{name}</span>
+        <span className="text-text font-semibold text-body-sm uppercase tracking-wider">{t(`allergens.${name.toLowerCase()}` as AllPaths)}</span>
       </div>
     </div>
   );
