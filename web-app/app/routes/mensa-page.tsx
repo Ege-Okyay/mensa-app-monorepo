@@ -3,6 +3,7 @@ import MensaMenuCard from "~/components/mensa-menu-card/card";
 import type { Route } from "./+types/mensa-page";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
+import { useTranslation } from "~/lib/contexts/language-context";
 
 export async function loader({ params }: Route.LoaderArgs) {
   const mensa = await mensaApi.getMensaWithMenu(params.slug);
@@ -12,6 +13,7 @@ export async function loader({ params }: Route.LoaderArgs) {
 export default function MensaPage({ loaderData }: Route.ComponentProps) {
   const { mensa } = loaderData;
   const imageUrl = `https://xoarqcxbowmkqvzchhde.supabase.co/storage/v1/object/public/mensas/${mensa.slug}.webp`;
+  const { t } = useTranslation();
 
   if (!mensa.current_menu) {
     return (
@@ -20,12 +22,12 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
           <AlertCircle className="w-12 h-12 text-brand" />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-display font-bold text-text">No Menu Found</h1>
-          <p className="text-body text-text-muted">Today's menu for {mensa.name} hasn't been published yet.</p>
+          <h1 className="text-display font-bold text-text">{t("status.no_menu")}</h1>
+          <p className="text-body text-text-muted">{t("status.no_menu_desc").replace("{name}", mensa.name)}</p>
         </div>
         <Link to="/" className="btn btn-brand rounded-2xl gap-2 shadow-lg shadow-brand/20">
           <ArrowLeft className="w-4 h-4" />
-          Back to Locations
+          {t("common.back_to_locations")}
         </Link>
       </div>
     )

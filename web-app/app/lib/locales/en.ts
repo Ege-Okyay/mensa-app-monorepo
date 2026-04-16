@@ -2,12 +2,13 @@ export const en = {
   common: {
     locations: "Locations",
     pick_a_mensa: "Pick a mensa",
-    back_to_locations: "Back to Locations"
+    back_to_locations: "Back to Locations",
   },
   status: {
     menu_available: "Menu Available",
     not_published: "Not Published Yet",
-    no_menu: "No Menu Found"
+    no_menu: "No Menu Found",
+    no_menu_desc: "Today's menu for Mensa {name} hasn't been published yet",
   },
   menu: {
     first_courses: "FIRST COURSES",
@@ -19,6 +20,7 @@ export const en = {
   allergens: {
     title: "Allergens",
     common: "Common Allergens",
+    no_common_detected: "No common allergens identified",
     gluten: "Gluten",
     dairy: "Dairy",
     eggs: "Eggs",

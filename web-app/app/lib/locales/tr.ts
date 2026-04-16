@@ -9,18 +9,20 @@ export const tr: TranslationKeys = {
   status: {
     menu_available: "Menü Mevcut",
     not_published: "Henüz Yayınlanmadı",
-    no_menu: "Menü Bulunamadı"
+    no_menu: "Menü Bulunamadı",
+    no_menu_desc: "Mensa {name} için bugünün menüsü henüz yayınlanmadı",
   },
   menu: {
     first_courses: "BAŞLANGIÇLAR",
     main_courses: "ANA YEMEKLER",
     side_dishes: "YAN LEZZETLER",
     specialties: "Özel Yemekler Mevcut",
-    details: "Daha fazla detay yakında"
+    details: "Daha fazla detay yakında gelicek"
   },
   allergens: {
     title: "Alerjenler",
     common: "Yaygın Alerjenler",
+    no_common_detected: "Herhangi bir yaygın alerjen tespit edilmedi",
     gluten: "Gluten",
     dairy: "Süt Ürünleri",
     eggs: "Yumurta",
