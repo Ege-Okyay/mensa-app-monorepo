@@ -18,9 +18,9 @@ export default function MensaMenuCard({ menu, imageUrl }: MensaMenuCardProps) {
     <div className="card bg-white w-full rounded-2xl shadow-sm overflow-y-auto h-[80svh] border border-border no-scrollbar flex flex-col">
       <figure className="relative h-32 w-full shrink-0">
         <img
-          className="w-full h-full object-cover"
           src={imageUrl}
           alt={`${menu.mensa_name} header image`}
+          className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent flex items-ends justify-start">
           <div className="mb-3 ml-4 mr-4 flex flex-col justify-end items-start gap-1.5 w-full">

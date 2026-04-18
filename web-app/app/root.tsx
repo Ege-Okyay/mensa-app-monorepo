@@ -57,9 +57,15 @@ export default function App() {
               <div className="w-11 h-11 rounded-2xl bg-brand flex items-center justify-center shadow-lg shadow-brand/20 border-b-4 border-black/10">
                 <UtensilsCrossed className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-h1 font-black text-black tracking-tighter leading-tight">
-                Mensa<span className="text-brand">Today</span>
-              </h1>
+              <div className="flex flex-col">
+                <h1 className="text-h1 font-black text-black tracking-tighter leading-tight">
+                  Mensa<span className="text-brand">Today</span>
+                </h1>
+                <div className="flex items-center gap-1 opacity-40">
+                  <div className="w-1 h-1 rounded-full bg-brand"></div>
+                  <span className="text-body-sm font-bold uppercase tracking-widest">Torino Piemonte</span>
+                </div>
+              </div>
             </div>
           </Link>
           <LanguageSelector />

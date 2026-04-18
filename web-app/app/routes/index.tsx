@@ -41,7 +41,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                 className={`w-full transition-all duration-200 ${mensa.has_menu ? "active:scale-[0.98]" : "opacity-60"}`}
               >
                 {mensa.has_menu ? (
-                  <Link to={`/mensa/${mensa.slug}`} className="block group">
+                  <Link 
+                    to={`/mensa/${mensa.slug}`}
+                    className="block group"
+                  >
                     <MensaCard
                       mensa={mensa}
                       hasMenu={mensa.has_menu}

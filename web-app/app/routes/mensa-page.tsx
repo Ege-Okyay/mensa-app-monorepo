@@ -25,9 +25,12 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
           <h1 className="text-display font-bold text-text">{t("status.no_menu")}</h1>
           <p className="text-body text-text-muted">{t("status.no_menu_desc").replace("{name}", mensa.name)}</p>
         </div>
-        <Link to="/" className="btn btn-brand rounded-2xl gap-2 shadow-lg shadow-brand/20">
-          <ArrowLeft className="w-4 h-4" />
-          {t("common.back_to_locations")}
+        <Link 
+          to="/" 
+          className="btn h-12 px-4 rounded-2xl bg-brand  text-white border-none gap-3 shadow-lg transition-transform active:scale-[0.98]"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="font-bold">{t("common.back_to_locations")}</span>
         </Link>
       </div>
     )
