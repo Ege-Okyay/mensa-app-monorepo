@@ -6,8 +6,6 @@ import (
 	"net/http"
 )
 
-// TODO: Detect mime type instead of hard coding it
-
 // FetchImage fetches the image from given URL and returns the raw bytes and MIME type
 func FetchImage(url string) ([]byte, error) {
 	resp, err := http.Get(url)

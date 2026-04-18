@@ -1,10 +1,16 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
 	"fmt"
+	"image"
+	_ "image/gif"
+	_ "image/jpeg"
+	_ "image/png"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
@@ -12,6 +18,7 @@ import (
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/logic"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/models"
 	"github.com/gofiber/fiber/v2"
+	_ "golang.org/x/image/webp"
 )
 
 func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber.Handler {
@@ -90,12 +97,30 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 
 			var img []byte
 			var err error
+
+			ext := filepath.Ext(source)
 			mimeType := "image/jpeg"
+
+			switch strings.ToLower(ext) {
+			case ".png":
+				mimeType = "image/png"
+			case ".webp":
+				mimeType = "image/webp"
+			}
 
 			if isLocal {
 				img, err = os.ReadFile(source)
 			} else {
 				img, err = logic.FetchImage(source)
+			}
+
+			debugImage("ORIGINAL", img)
+
+			resizedImg, err := logic.ResizeImage(img)
+
+			if err == nil {
+				debugImage("RESIZED", resizedImg)
+				img = resizedImg
 			}
 
 			if err != nil {
@@ -139,4 +164,16 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 	}
 
 	return results, nil
+}
+
+func debugImage(label string, data []byte) {
+	sizeKB := float64(len(data)) / 1024
+
+	config, _, err := image.DecodeConfig(bytes.NewReader(data))
+	if err != nil {
+		fmt.Printf("[%s] size: %.2f KB | resolution: unknown (%v)\n", label, sizeKB, err)
+		return
+	}
+
+	fmt.Printf("[%s] size: %.2f KB | resolution: %dx%d\n", label, sizeKB, config.Width, config.Height)
 }

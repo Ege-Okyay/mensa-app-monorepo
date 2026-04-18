@@ -20,7 +20,10 @@ func ExtactImagesFromHTML(html string) ([]string, error) {
 		if src, exists := s.Attr("src"); exists {
 			if err == nil {
 				clean_src := cleanImgURL(src)
-				if strings.HasPrefix(clean_src, "http") {
+
+				isGif := strings.HasSuffix(strings.ToLower(clean_src), ".gif")
+
+				if strings.HasPrefix(clean_src, "http") && !isGif {
 					imgs = append(imgs, clean_src)
 				}
 			}
