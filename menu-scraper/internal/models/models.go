@@ -15,6 +15,7 @@ type MenuItem struct {
 }
 
 type MenuResponse struct {
+	IsMenu               bool       `json:"is_menu"`
 	MensaName            string     `json:"mensa_name"`
 	FirstCourses         []MenuItem `json:"first_courses"`
 	MainCourses          []MenuItem `json:"main_courses"`

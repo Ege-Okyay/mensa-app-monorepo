@@ -109,9 +109,11 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 				return
 			}
 
-			resp.PopulateCommonAllergens()
+			if resp.IsMenu {
+				resp.PopulateCommonAllergens()
+				resultsCh <- resp
+			}
 
-			resultsCh <- resp
 		}(imgSource)
 	}
 

@@ -29,6 +29,10 @@ func GetMenuResponseSchema() *genai.Schema {
 	return &genai.Schema{
 		Type: genai.TypeObject,
 		Properties: map[string]*genai.Schema{
+			"is_menu": {
+				Type:        genai.TypeBoolean,
+				Description: "True if the image is a red background mensa menu, false otherwise.",
+			},
 			"mensa_name": {
 				Type:        genai.TypeString,
 				Description: "The specific mensa name found in the header.",
@@ -54,6 +58,7 @@ func GetMenuResponseSchema() *genai.Schema {
 			},
 		},
 		Required: []string{
+			"is_menu",
 			"mensa_name",
 			"first_courses",
 			"main_courses",
