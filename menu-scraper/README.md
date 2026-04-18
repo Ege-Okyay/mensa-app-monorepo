@@ -30,6 +30,5 @@ The service returns a nested structure for full localization support:
 ```
 
 **TODO:**
-- scale down images before streaming to gemini
 - didnt return the olimpia and principe menus /scrape
 - hash the image url (or the bytes), skip calling gemini if found before
