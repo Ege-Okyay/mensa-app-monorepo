@@ -84,7 +84,7 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 		wg        sync.WaitGroup
 		resultsCh = make(chan *models.MenuResponse, len(images))
 		errorsCh  = make(chan error, len(images))
-		sem       = make(chan struct{}, 5)
+		sem       = make(chan struct{}, 3)
 	)
 
 	for _, imgSource := range images {
@@ -92,11 +92,29 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 		go func(source string) {
 			defer wg.Done()
 
+			var img []byte
+			var err error
+			if isLocal {
+				img, err = os.ReadFile(source)
+			} else {
+				img, err = logic.FetchImage(source)
+			}
+
+			if err != nil {
+				errorsCh <- fmt.Errorf("getting image %s: %w", source, err)
+				return
+			}
+
 			sem <- struct{}{}
 			defer func() { <-sem }()
 
-			var img []byte
-			var err error
+			debugImage("ORIGINAL", img)
+
+			resizedImg, err := logic.ResizeImage(img)
+			if err == nil {
+				debugImage("RESIZED", resizedImg)
+				img = resizedImg
+			}
 
 			ext := filepath.Ext(source)
 			mimeType := "image/jpeg"
@@ -106,26 +124,6 @@ func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images [
 				mimeType = "image/png"
 			case ".webp":
 				mimeType = "image/webp"
-			}
-
-			if isLocal {
-				img, err = os.ReadFile(source)
-			} else {
-				img, err = logic.FetchImage(source)
-			}
-
-			debugImage("ORIGINAL", img)
-
-			resizedImg, err := logic.ResizeImage(img)
-
-			if err == nil {
-				debugImage("RESIZED", resizedImg)
-				img = resizedImg
-			}
-
-			if err != nil {
-				errorsCh <- fmt.Errorf("getting image %s: %w", source, err)
-				return
 			}
 
 			resp, err := analyzer.Process(ctx, img, mimeType)
