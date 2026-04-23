@@ -8,6 +8,7 @@ export interface MenuItem {
   en: LocalizedDish;
   tr: LocalizedDish;
   allergens: string[];
+  dietary_category: "Meat" | "Vegetarian" | "Vegan";
 }
 
 export interface MenuData {

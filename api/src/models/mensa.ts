@@ -11,7 +11,8 @@ export const MenuItemSchema = z.object({
   it: LocalizedDishSchema,
   en: LocalizedDishSchema,
   tr: LocalizedDishSchema,
-  allergens: z.array(z.string())
+  allergens: z.array(z.string()),
+  dietary_category: z.enum(["Meat", "Vegetarian", "Vegan"])
 });
 
 export const MenuDataSchema = z.object({

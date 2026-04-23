@@ -8,10 +8,11 @@ type LocalizedDish struct {
 }
 
 type MenuItem struct {
-	IT        LocalizedDish `json:"it"`
-	EN        LocalizedDish `json:"en"`
-	TR        LocalizedDish `json:"tr"`
-	Allergens []string      `json:"allergens"`
+	IT              LocalizedDish `json:"it"`
+	EN              LocalizedDish `json:"en"`
+	TR              LocalizedDish `json:"tr"`
+	Allergens       []string      `json:"allergens"`
+	DietaryCategory string        `json:"dietary_category"`
 }
 
 type MenuResponse struct {

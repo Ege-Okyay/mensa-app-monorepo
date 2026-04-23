@@ -8,27 +8,5 @@ Go service that scrapes menu images from a third party Instagram story viewer, p
 - **goquery**: For parsing HTML and extracting image sources.
 - **Concurrency**: Goroutines and channels to analyze multiple menu images in parallel.
 
-## Response Schema (v2)
-The service returns a nested structure for full localization support:
-
-```json
-{
-  "mensa_name": "Borsellino",
-  "first_courses": [
-    {
-      "it": { "name": "Pasta Aglio e Olio", "description": "Pasta saltata con un soffritto..." },
-      "en": { "name": "Pasta with Garlic and Oil", "description": "Pasta tossed with a fragrant..." },
-      "tr": { "name": "Sarımsaklı ve Zeytinyağlı Makarna", "description": "Sarımsaklı, zeytinyağlı ve acı..." },
-      "allergens": ["Gluten"]
-    }
-  ],
-  "main_courses": [...],
-  "side_dishes": [...],
-  "specialties_available": false,
-  "common_allergens": ["Gluten", "Soy"]
-}
-```
-
 **TODO:**
-- didnt return the olimpia and principe menus /scrape
 - hash the image url (or the bytes), skip calling gemini if found before

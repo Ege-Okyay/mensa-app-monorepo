@@ -22,8 +22,12 @@ func GetMenuResponseSchema() *genai.Schema {
 				Type:  genai.TypeArray,
 				Items: &genai.Schema{Type: genai.TypeString},
 			},
+			"dietary_category": {
+				Type: genai.TypeString,
+				Enum: []string{"Meat", "Vegetarian", "Vegan"},
+			},
 		},
-		Required: []string{"it", "en", "tr", "allergens"},
+		Required: []string{"it", "en", "tr", "allergens", "dietary_category"},
 	}
 
 	return &genai.Schema{

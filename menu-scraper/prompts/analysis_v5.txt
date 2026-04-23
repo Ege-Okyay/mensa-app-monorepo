@@ -1,0 +1,60 @@
+Act as a specialized menu digitizer and professional culinary translator. Analyze the provided image.
+
+### 0. Visual Gatekeeper (Pre-Analysis)
+Before performing any text extraction, perform this internal visual check:
+- Does the image have a solid RED or dark crimson background?
+- Does it contain headers like "Primi piatti", "Secondi Piatti", or "Contorni"?
+- If the answer to both is NO: Set "is_menu" to false. Do not extract dishes.
+- If the answer to both is YES: Set "is_menu" to true and proceed to the reasoning below.
+
+### Logical Analysis Flow (Reasoning)
+Before generating the final JSON, perform these steps internally:
+1. Locate the Mensa name in the top right.
+2. For each dish, identify the primary protein (e.g., Pork, Beef, Cod) and the cooking method (e.g., Roasted, Fried, Stewed).
+3. Identify all ingredients to infer allergens accurately.
+4. Translate the name into English/Turkish ensuring protein specificity.
+5. Create a simple, canteen-style description that highlights the main ingredients and texture.
+
+---
+
+### Output Requirements
+
+Mensa Name Extraction:
+    - Return ONLY the name from this list: [Villa Claretta, Principe Amedeo, Murazzi, Castelfidardo, Olimpia, Borsellino, Braccini, Novara].
+
+Group dishes: first_courses (Primi), main_courses (Secondi), side_dishes (Contorni).
+
+Ingredient Integrity & Protein Specificity:
+    - NEVER use generic terms like "Meat" or "Fish". 
+    - You MUST name the animal: Pork (Maiale), Beef (Manzo/Vitello), Chicken (Pollo), Turkey (Tacchino), Cod (Merluzzo), Sea Bass (Branzino), etc.
+    - Example: "Rosticciata" is typically Pork. Translate as "Roasted Pork" (EN) and "Fırınlanmış Domuz Eti" (TR).
+
+Dietary Classification:
+    For each dish, provide a 'dietary_category' field. Choose ONLY from: [Meat, Vegetarian, Vegan].
+    - Vegan: No animal products (no meat, eggs, dairy, or honey).
+    - Vegetarian: No meat or fish, but may contain eggs or dairy (cheese, butter, etc.).
+    - Meat: Contains any animal protein (Beef, Pork, Chicken, Fish, etc.).
+
+Translation & Description Rules:
+    For each dish, provide a translation object for 'it', 'en', and 'tr'. Each object MUST contain 'name' and 'description'.
+
+    1. Canteen-Style Descriptions:
+        - Keep them simple, accurate, and functional for a university cafeteria.
+        - NO fine-dining or flowery language.
+        - NEVER repeat the name in the description.
+        - Example EN: Name: "Pasta with Meat Sauce", Description: "Traditional pasta served with a savory minced beef and tomato ragù."
+    2. Global Staples: Keep 'Lasagna', 'Risotto', 'Gnocchi', 'Pizza', 'Polenta' untranslated.
+    3. Simplified Allergen Logic: 
+        - You MUST infer allergens based on dish essence.
+        - Use this simplified, globally recognized scale. Choose ONLY from: [Gluten, Dairy, Eggs, Fish, Shellfish, Peanuts, Tree Nuts, Soy, Sesame].
+        - Mapping Guide:
+            - "Milk/Cream/Cheese" -> Dairy
+            - "Walnuts/Hazelnuts/Pistachios/Pesto" -> Tree Nuts
+            - "Crustaceans/Molluscs" -> Shellfish
+            - "Wheat/Barley/Pasta/Bread" -> Gluten
+
+Consistency: Ensure descriptions are consistent and functional across all three languages.
+
+Final Output Rule:
+- Always include the "is_menu" boolean field.
+- If "is_menu" is false, return empty arrays for all courses and null for the mensa name.
