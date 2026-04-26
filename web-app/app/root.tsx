@@ -13,6 +13,7 @@ import { LanguageProvider } from "./lib/contexts/language-context";
 import Header from "./components/header";
 import { useEffect, useState } from "react";
 import InstallBanner from "./components/install-banner";
+import SplashScreen from "./components/splash-screen";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -56,6 +57,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [showBanner, setShowBanner] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -86,6 +88,11 @@ export default function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => setIsInitializing(false), 800);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
 
@@ -106,14 +113,20 @@ export default function App() {
 
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
-      <Header />
+      {isInitializing && <SplashScreen />}
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
-        <Outlet />
-      </div>
+      {!isInitializing && (
+        <>
+          <Header />
 
-      {showBanner && (
-        <InstallBanner onInstall={handleInstallClick} onDismiss={handleDismiss} />
+          <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
+            <Outlet />
+          </div>
+
+          {showBanner && (
+            <InstallBanner onInstall={handleInstallClick} onDismiss={handleDismiss} />
+          )}
+        </>
       )}
     </main>
   );

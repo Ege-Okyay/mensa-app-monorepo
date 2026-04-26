@@ -1,6 +1,5 @@
 - need to show how to install on ios devices
 - no download popup shows up on other than chrome (google, opera, safari) etc
-- better splash screen
 - reduce the image sizes
 - did not translate correctly -> Risotto al Radicchio is same in it - en - tr
 - error -> request timeout (?)
