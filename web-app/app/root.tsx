@@ -29,20 +29,20 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html data-theme="light">
+    <html data-theme="light" translate="no">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="theme-color" content="#E83939" />
         <meta name="google" content="notranslate" />
 
-        <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
 
         <Meta />
         <Links />
       </head>
-      <body translate="no" className="bg-background flex justify-center h-dvh overflow-hidden">
+      <body className="bg-background flex justify-center h-dvh overflow-hidden">
         <LanguageProvider>
           {children}
         </LanguageProvider>

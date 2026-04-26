@@ -4,7 +4,8 @@ export const tr: TranslationKeys = {
   common: {
     locations: "Konumlar",
     pick_a_mensa: "Bir yemekhane seçin",
-    back_to_locations: "Konumlara Geri Dön"
+    back_to_locations: "Konumlara Geri Dön",
+    view_on_maps: "Haritalarda Göster"
   },
   status: {
     menu_available: "Menü Mevcut",

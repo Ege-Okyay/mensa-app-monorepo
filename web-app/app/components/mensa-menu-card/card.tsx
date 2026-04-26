@@ -1,4 +1,4 @@
-import { Clock, Zap } from "lucide-react";
+import { Clock, Zap, MapPin } from "lucide-react";
 import SectionTitle from "./section-title";
 import FoodCard from "./food-card";
 import SideDish from "./side-dish";
@@ -9,10 +9,17 @@ import { useTranslation } from "~/lib/contexts/language-context";
 interface MensaMenuCardProps {
   menu: MenuData;
   imageUrl: string;
+  location: string;
 }
 
-export default function MensaMenuCard({ menu, imageUrl }: MensaMenuCardProps) {
+export default function MensaMenuCard({ menu, imageUrl, location }: MensaMenuCardProps) {
   const { t } = useTranslation();
+
+  const handleOpenMaps = () => {
+    if (location) {
+      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, '_blank');
+    }
+  };
 
   return (
     <div className="card bg-white w-full rounded-2xl shadow-sm overflow-y-auto h-[80svh] border border-border no-scrollbar flex flex-col">
@@ -23,17 +30,29 @@ export default function MensaMenuCard({ menu, imageUrl }: MensaMenuCardProps) {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent flex items-ends justify-start">
-          <div className="mb-3 ml-4 mr-4 flex flex-col justify-end items-start gap-1.5 w-full">
-            {menu.specialties_available && (
-              <div className="bg-brand px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm mb-0.5">
-                <Zap className="w-3 h-3 text-white fill-white" />
-                <span className="text-white font-semibold text-body-sm uppercase tracking-tighter">{t("menu.specialties")}</span>
-              </div>
-            )}
+          <div className="mb-3 ml-4 mr-4 flex flex-row justify-between items-end w-full">
+            <div className="flex flex-col justify-end items-start gap-1.5">
+              {menu.specialties_available && (
+                <div className="bg-brand px-2 py-1 rounded-lg flex items-center gap-1 shadow-sm mb-0.5">
+                  <Zap className="w-3 h-3 text-white fill-white" />
+                  <span className="text-white font-semibold text-body-sm uppercase tracking-tighter">{t("menu.specialties")}</span>
+                </div>
+              )}
 
-            <h2 className="text-white font-bold text-h1 leading-tight">
-              Mensa {menu.mensa_name}
-            </h2>
+              <h2 className="text-white font-bold text-h1 leading-tight">
+                Mensa {menu.mensa_name}
+              </h2>
+            </div>
+
+            {location && (
+              <button
+                onClick={handleOpenMaps}
+                className="bg-white/20 hover:bg-white/30 backdrop-blur-md p-2 rounded-xl text-white transition-colors"
+                title={t("common.view_on_maps")}
+              >
+                <MapPin className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
       </figure>

@@ -5,6 +5,7 @@ export const it: TranslationKeys = {
     locations: "Sedi",
     pick_a_mensa: "Scegli una mensa",
     back_to_locations: "Torna alle sedi",
+    view_on_maps: "Visualizza su Maps",
   },
   status: {
     menu_available: "Menu Disponibile",

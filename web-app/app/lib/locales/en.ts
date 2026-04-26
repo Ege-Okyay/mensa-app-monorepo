@@ -3,6 +3,7 @@ export const en = {
     locations: "Locations",
     pick_a_mensa: "Pick a mensa",
     back_to_locations: "Back to Locations",
+    view_on_maps: "View on Maps",
   },
   status: {
     menu_available: "Menu Available",
