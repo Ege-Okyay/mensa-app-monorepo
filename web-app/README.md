@@ -1,1 +1,2 @@
 - improve SEO
+- reduce the image sizes

@@ -10,10 +10,9 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import LanguageSelector from "./components/language-selector";
-import { UtensilsCrossed } from "lucide-react";
 import { LanguageProvider } from "./lib/contexts/language-context";
 import Header from "./components/header";
+import { useEffect } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -33,11 +32,17 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <html data-theme="light" lang="en">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <meta name="theme-color" content="#E83939" />
+        <meta name="google" content="notranslate" />
+
+        <link rel="apple-touch-icon" href="/apple-touch-icon-180x180.png" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+
         <Meta />
         <Links />
       </head>
-      <body className="bg-background flex justify-center h-dvh overflow-hidden">
+      <body translate="no" className="bg-background flex justify-center h-dvh overflow-hidden">
         <LanguageProvider>
           {children}
         </LanguageProvider>
@@ -49,10 +54,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  useEffect(() => {
+    if ("serviceWorker" in navigator && import.meta.env.PROD) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("/sw.js");
+      });
+    }
+  }, []);
+
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
       <Header />
-      
+
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
         <Outlet />
       </div>
