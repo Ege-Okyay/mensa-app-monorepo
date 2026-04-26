@@ -33,3 +33,14 @@
     --color-brand-border: #EBB7AD;
     --color-brand-border-subtle: #F7DDDD;
 }
+
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}

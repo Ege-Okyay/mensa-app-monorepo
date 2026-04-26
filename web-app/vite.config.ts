@@ -18,7 +18,8 @@ export default defineConfig({
       filename: "sw.ts",
       registerType: "autoUpdate",
       devOptions: {
-        enabled: true
+        enabled: true,
+        suppressWarnings: true
       },
       manifest: {
         name: "MensaToday - Torino Piemonte",

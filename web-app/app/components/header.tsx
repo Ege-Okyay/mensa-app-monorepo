@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header className="px-5 pt-8 pb-4 shrink-0 bg-background/80 backdrop-blur-md sticky top-0 z-20">
       <div className="flex flex-row items-center justify-between">
-        <Link to="/">
+        <Link viewTransition to="/">
           <div className="flex flex-row items-center gap-3 active:scale-95 transition-transform">
             <div className="w-11 h-11 rounded-2xl bg-brand flex items-center justify-center shadow-lg shadow-brand/20 border-b-4 border-black/10">
               <UtensilsCrossed className="w-6 h-6 text-white" />

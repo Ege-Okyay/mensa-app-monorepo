@@ -25,11 +25,12 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
           <h1 className="text-display font-bold text-text">{t("status.no_menu")}</h1>
           <p className="text-body text-text-muted">{t("status.no_menu_desc").replace("{name}", mensa.name)}</p>
         </div>
-        <Link 
-          to="/" 
-          className="btn h-12 px-4 rounded-2xl bg-brand  text-white border-none gap-3 shadow-lg transition-transform active:scale-[0.98]"
+        <Link
+          viewTransition
+          to="/"
+          className="btn h-12 px-4 rounded-2xl bg-brand text-white border-none shadow-lg transition-all active:scale-[0.98] group flex items-center justify-center gap-2"
         >
-          <ArrowLeft className="w-5 h-5" />
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           <span className="font-bold">{t("common.back_to_locations")}</span>
         </Link>
       </div>
@@ -40,11 +41,20 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
     <>
       <title>{`Mensa Today - ${mensa.name}`}</title>
 
-      <div className="w-full max-w-2xl h-full max-h-[85vh] flex">
+      <div className="w-full max-w-2xl h-full max-h-[85vh] flex flex-col gap-4">
         <MensaMenuCard
           menu={mensa.current_menu.menu_data}
           imageUrl={imageUrl}
         />
+        
+        <Link 
+          viewTransition
+          to="/"
+          className="btn btn-ghost h-12 w-full rounded-2xl border-2 border-border/50 hover:bg-slate-100/50 text-text-muted transition-all active:scale-[0.98] group flex items-center justify-center gap-2">
+          
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span className="font-bold tracking-tight">{t("common.back_to_locations")}</span>
+        </Link>
       </div>
     </>
   );

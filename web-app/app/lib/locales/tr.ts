@@ -12,6 +12,11 @@ export const tr: TranslationKeys = {
     no_menu: "Menü Bulunamadı",
     no_menu_desc: "Mensa {name} için bugünün menüsü henüz yayınlanmadı",
   },
+  install: {
+    title: "MensaToday'i yükle",
+    description: "Hızlı erişim için ana sayfaya ekle",
+    install_text: "Yükle"
+  },
   menu: {
     first_courses: "BAŞLANGIÇLAR",
     main_courses: "ANA YEMEKLER",

@@ -1,6 +1,5 @@
 import {
   isRouteErrorResponse,
-  Link,
   Links,
   Meta,
   Outlet,
@@ -12,7 +11,8 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { LanguageProvider } from "./lib/contexts/language-context";
 import Header from "./components/header";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import InstallBanner from "./components/install-banner";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -29,7 +29,7 @@ export const links: Route.LinksFunction = () => [
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html data-theme="light" lang="en">
+    <html data-theme="light">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -54,6 +54,30 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showBanner, setShowBanner] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+
+      const isDismissed = sessionStorage.getItem("pwa_banner_dismissed");
+      if (!isDismissed) {
+        setShowBanner(true);
+      }
+    };
+
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    window.addEventListener("appinstalled", () => {
+      setDeferredPrompt(null);
+      setShowBanner(false);
+    });
+
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+  }, []);
+
   useEffect(() => {
     if ("serviceWorker" in navigator && import.meta.env.PROD) {
       window.addEventListener("load", () => {
@@ -62,6 +86,24 @@ export default function App() {
     }
   }, []);
 
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    const { outcome } = await deferredPrompt.userChoice();
+
+    if (outcome === "accepted") {
+      setDeferredPrompt(null);
+      setShowBanner(false);
+    }
+  };
+
+  const handleDismiss = () => {
+    setShowBanner(false);
+    sessionStorage.setItem("pwa_banner_dismissed", "true");
+  }
+
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
       <Header />
@@ -69,6 +111,10 @@ export default function App() {
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
         <Outlet />
       </div>
+
+      {showBanner && (
+        <InstallBanner onInstall={handleInstallClick} onDismiss={handleDismiss} />
+      )}
     </main>
   );
 }

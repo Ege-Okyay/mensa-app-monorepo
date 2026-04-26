@@ -1,2 +1,3 @@
 - improve SEO
 - reduce the image sizes
+- no download popup shows up on some browsers like opera

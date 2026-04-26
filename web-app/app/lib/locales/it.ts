@@ -12,6 +12,11 @@ export const it: TranslationKeys = {
     no_menu: "Nessun menu trovato",
     no_menu_desc: "Il menu di oggi per Mensa {name} non è ancora stato pubblicato",
   },
+  install: {
+    title: "Installa MensaToday",
+    description: "Aggiungi alla schermata iniziale per un accesso immediato",
+    install_text: "Installa"
+  },
   menu: {
     first_courses: "PRIMI PIATTI",
     main_courses: "SECONDI PIATTI",

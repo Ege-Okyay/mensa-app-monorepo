@@ -10,6 +10,11 @@ export const en = {
     no_menu: "No Menu Found",
     no_menu_desc: "Today's menu for Mensa {name} hasn't been published yet",
   },
+  install: {
+    title: "Install MensaToday",
+    description: "Add to home for instant access",
+    install_text: "Install"
+  },
   menu: {
     first_courses: "FIRST COURSES",
     main_courses: "MAIN COURSES",
