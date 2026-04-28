@@ -39,7 +39,7 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <title>{`Mensa Today - ${mensa.name}`}</title>
+      <title>{`MensaToday - ${mensa.name}`}</title>
 
       <div className="w-full max-w-2xl h-full max-h-[85vh] flex flex-col gap-4">
         <MensaMenuCard

@@ -3,6 +3,7 @@ import type { Route } from "./+types/index";
 import { mensaApi } from "~/lib/api/mensa";
 import { MensaCard } from "~/components/mensa-card/card";
 import { useTranslation } from "~/lib/contexts/language-context";
+import { getOptimizedImageUrl } from "~/lib/utils/image";
 
 export async function loader() {
   const mensas = await mensaApi.getAll();
@@ -23,7 +24,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <title>Mensa Today</title>
+      <title>MensaToday</title>
 
       <div className="flex flex-col gap-10">
         <div className="flex flex-col gap-1 px-1">
@@ -33,7 +34,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
         <div className="flex flex-col gap-8">
           {sortedMensas.map((mensa) => {
-            const imageUrl = `https://xoarqcxbowmkqvzchhde.supabase.co/storage/v1/object/public/mensas/${mensa.slug}.webp`;
+            const imageUrl = getOptimizedImageUrl(mensa.slug, 1200);
 
             return (
               <div

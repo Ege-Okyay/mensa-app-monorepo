@@ -1,7 +1,4 @@
 - need to show how to install on ios devices
-- translation in vegan / veggie badges 
 - no download popup shows up on other than chrome (google, opera, safari) etc
-- reduce the image sizes
-- did not translate correctly -> Risotto al Radicchio is same in it - en - tr
 - error -> request timeout (?)
 - improve SEO

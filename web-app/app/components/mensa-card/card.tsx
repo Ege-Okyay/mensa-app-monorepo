@@ -17,6 +17,8 @@ export function MensaCard({ mensa, hasMenu, imageUrl }: MensaCardProps) {
         <img
           src={imageUrl}
           alt={`${mensa.name} image`}
+          loading="lazy"
+          decoding="async"
           className={`w-full h-full object-cover ${!hasMenu && 'grayscale'}`}
         />
         <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
