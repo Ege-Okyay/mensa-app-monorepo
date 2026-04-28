@@ -23,7 +23,7 @@ export const tr: TranslationKeys = {
     main_courses: "ANA YEMEKLER",
     side_dishes: "YAN LEZZETLER",
     specialties: "Özel Yemekler Mevcut",
-    details: "Daha fazla detay yakında gelicek"
+    details: "Daha fazla detay yakında..."
   },
   allergens: {
     title: "Alerjenler",
@@ -38,5 +38,9 @@ export const tr: TranslationKeys = {
     tree_nuts: "Sert Kabuklu Yemişler",
     soy: "Soya",
     sesame: "Susam",
+  },
+  dietary: {
+    vegan: "Vegan",
+    vegetarian: "Vejetaryen"
   }
 };

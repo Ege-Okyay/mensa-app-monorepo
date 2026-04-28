@@ -23,7 +23,7 @@ export const it: TranslationKeys = {
     main_courses: "SECONDI PIATTI",
     side_dishes: "CONTORNI",
     specialties: "Specialità Disponibili",
-    details: "Maggiori dettagli in arrivo"
+    details: "Maggiori dettagli in arrivo..."
   },
   allergens: {
     title: "Allergeni",
@@ -38,5 +38,9 @@ export const it: TranslationKeys = {
     tree_nuts: "Frutta a guscio",
     soy: "Soia",
     sesame: "Sesamo",
+  },
+  dietary: {
+    vegan: "Vegano",
+    vegetarian: "Vegetariano"
   }
 };

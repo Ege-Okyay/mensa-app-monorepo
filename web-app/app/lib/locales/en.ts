@@ -21,7 +21,7 @@ export const en = {
     main_courses: "MAIN COURSES",
     side_dishes: "SIDE DISHES",
     specialties: "Specialties Available",
-    details: "More details coming soon"
+    details: "More details coming soon..."
   },
   allergens: {
     title: "Allergens",
@@ -36,6 +36,10 @@ export const en = {
     tree_nuts: "Tree Nuts",
     soy: "Soy",
     sesame: "Sesame",
+  },
+  dietary: {
+    vegan: "Vegan",
+    vegetarian: "Veggie"
   }
 };
 
