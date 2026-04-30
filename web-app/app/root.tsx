@@ -14,6 +14,8 @@ import Header from "./components/header";
 import { useEffect, useState } from "react";
 import InstallBanner from "./components/install-banner";
 import SplashScreen from "./components/splash-screen";
+import { useAppInitialization } from "./lib/hooks/use-app-initialization";
+import { usePWA } from "./lib/hooks/use-pwa";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -55,78 +57,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showBanner, setShowBanner] = useState(false);
-  const [isInitializing, setIsInitializing] = useState(true);
+  const isInitializing = useAppInitialization();
+  const { showBanner, install, dismiss } = usePWA();
 
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e);
-
-      const isDismissed = sessionStorage.getItem("pwa_banner_dismissed");
-      if (!isDismissed) {
-        setShowBanner(true);
-      }
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    window.addEventListener("appinstalled", () => {
-      setDeferredPrompt(null);
-      setShowBanner(false);
-    });
-
-    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-  }, []);
-
-  useEffect(() => {
-    if ("serviceWorker" in navigator && import.meta.env.PROD) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js");
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsInitializing(false), 800);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    deferredPrompt.prompt();
-
-    const { outcome } = await deferredPrompt.userChoice();
-
-    if (outcome === "accepted") {
-      setDeferredPrompt(null);
-      setShowBanner(false);
-    }
-  };
-
-  const handleDismiss = () => {
-    setShowBanner(false);
-    sessionStorage.setItem("pwa_banner_dismissed", "true");
+  if (isInitializing) {
+    return (
+      <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
+        <SplashScreen />
+      </main>
+    );
   }
 
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
-      {isInitializing && <SplashScreen />}
+      <Header />
 
-      {!isInitializing && (
-        <>
-          <Header />
+      <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
+        <Outlet />
+      </div>
 
-          <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
-            <Outlet />
-          </div>
-
-          {showBanner && (
-            <InstallBanner onInstall={handleInstallClick} onDismiss={handleDismiss} />
-          )}
-        </>
+      {showBanner && (
+        <InstallBanner onInstall={install} onDismiss={dismiss} />
       )}
     </main>
   );
