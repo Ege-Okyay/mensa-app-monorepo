@@ -5,14 +5,14 @@ export default function IOSInstallPrompt({ onDismiss }: { onDismiss: () => void 
   const { t } = useTranslation();
 
   return (
-    <div className="fixed bottom-4 left-1/2 w-[94%] max-w-sm bg-white/95 backdrop-blur-md rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.12)] p-6 border border-white/20 flex flex-col gap-5 z-[100] animate-slide-up [transform:translateX(-50%)]">
+    <div className="fixed bottom-4 left-1/2 w-[94%] max-w-sm bg-white/95 backdrop-blur-md rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.12)] p-6 border border-white/20 flex flex-col gap-5 z-100 animate-slide-up transform-[translateX(-50%)]">
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-3">
           <div className="w-12 h-12 bg-brand rounded-2xl flex items-center justify-center shrink-0 shadow-lg shadow-brand/20">
             <UtensilsCrossed className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h3 className="font-bold text-[16px] text-text leading-tight">{t("install.title")}</h3>
+            <h3 className="font-bold text-h2 text-text leading-tight">{t("install.title")}</h3>
             <p className="text-[13px] text-text-muted mt-1 leading-snug">{t("install.description")}</p>
           </div>
         </div>
