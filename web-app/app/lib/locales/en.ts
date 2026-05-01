@@ -12,9 +12,13 @@ export const en = {
     no_menu_desc: "Today's menu for Mensa {name} hasn't been published yet",
   },
   install: {
-    title: "Install MensaToday",
-    description: "Add to home for instant access",
-    install_text: "Install"
+    title: "MensaToday on your Home Screen",
+    description: "Enable notifications and get instant access to daily menus.",
+    install_text: "Install",
+    ios_steps: {
+      step1: "Tap Share or the three dots in your browser menu.",
+      step2: "Select 'Add to Home Screen' from the list."
+    }
   },
   menu: {
     first_courses: "FIRST COURSES",

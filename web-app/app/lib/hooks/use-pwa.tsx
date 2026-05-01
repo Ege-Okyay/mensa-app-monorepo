@@ -2,31 +2,33 @@ import { useCallback, useEffect, useState } from "react";
 
 export function usePWA() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
-  const [showBanner, setShowBanner] = useState(false);
+  const [activeBanner, setActiveBanner] = useState<"none" | "generic" | "ios">("none");
 
   useEffect(() => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isStandalone = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone == true;
+
+    // Android / Chrome prompt
     const handleBeforeInstallPrompt = (e: Event) => {
+      if (isIOS) return;
+      
       e.preventDefault();
       setDeferredPrompt(e);
 
-      const isDismissed = sessionStorage.getItem("pwa_banner_dismissed");
-      if (!isDismissed) {
-        setShowBanner(true);
+      if (!sessionStorage.getItem("pwa_banner_dismissed")) {
+        setActiveBanner("generic");
       }
     };
 
-    const handleAppInstalled = () => {
-      setDeferredPrompt(null);
-      setShowBanner(false);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+
+    // IOS instructions
+    if (isIOS && !isStandalone && !sessionStorage.getItem("ios_banner_dismissed")) {
+      setActiveBanner("ios");
     }
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    window.addEventListener("appinstalled", handleAppInstalled);
-
-    return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-      window.removeEventListener("appinstalled", handleAppInstalled);
-    };
+    return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   }, []);
 
   useEffect(() => {
@@ -44,20 +46,24 @@ export function usePWA() {
 
     const { outcome } = await deferredPrompt.userChoice();
 
-    if (outcome === "accepted") {
-      setDeferredPrompt(null);
-      setShowBanner(false);
-    }
+    if (outcome === "accepted") setActiveBanner("none");
   }, [deferredPrompt]);
 
   const dismiss = useCallback(() => {
-    setShowBanner(false);
+    setActiveBanner("none");
     sessionStorage.setItem("pwa_banner_dismissed", "true");
   }, []);
 
+  const dismissIOS = useCallback(() => {
+    setActiveBanner("none");
+    sessionStorage.setItem("ios_banner_dismissed", "true");
+  }, []);
+
   return {
-    showBanner,
+    showBanner: activeBanner === "generic",
+    showIOSBanner: activeBanner === "ios",
     install,
-    dismiss
+    dismiss,
+    dismissIOS
   };
 }

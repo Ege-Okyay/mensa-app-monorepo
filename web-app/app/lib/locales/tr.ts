@@ -14,9 +14,13 @@ export const tr: TranslationKeys = {
     no_menu_desc: "Mensa {name} için bugünün menüsü henüz yayınlanmadı",
   },
   install: {
-    title: "MensaToday'i yükle",
-    description: "Hızlı erişim için ana sayfaya ekle",
-    install_text: "Yükle"
+    title: "MensaToday'i Ana Ekrana Ekleyin",
+    description: "Bildirimleri etkinleştirin ve günlük menülere anında ulaşın.",
+    install_text: "Yükle",
+    ios_steps: {
+      step1: "Tarayıcı menüsündeki Paylaş veya üç nokta simgesine dokunun.",
+      step2: "Listeden 'Ana Ekrana Ekle' seçeneğini seçin."
+    }
   },
   menu: {
     first_courses: "BAŞLANGIÇLAR",

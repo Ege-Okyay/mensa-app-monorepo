@@ -1,5 +1,4 @@
-- need to show how to install on ios devices
 - some text under the mensa-card that shows the last updated time for the menu
-- no download popup shows up on other than chrome (google, opera, safari) etc
+- no download popup shows up on other than chrome (google, opera) etc
 - error -> request timeout (?)
 - improve SEO

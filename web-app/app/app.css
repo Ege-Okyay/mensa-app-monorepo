@@ -32,6 +32,18 @@
     --color-brand-soft: #FCF3F3;
     --color-brand-border: #EBB7AD;
     --color-brand-border-subtle: #F7DDDD;
+
+    @keyframes slide-up {
+        from { 
+            transform: translate(-50%, calc(0% + 2rem)); 
+            opacity: 0; 
+        }
+        to { 
+            transform: translate(-50%, 0%); 
+            opacity: 1; 
+        }
+    }
+    --animate-slide-up: slide-up 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer utilities {

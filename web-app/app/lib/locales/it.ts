@@ -14,9 +14,13 @@ export const it: TranslationKeys = {
     no_menu_desc: "Il menu di oggi per Mensa {name} non è ancora stato pubblicato",
   },
   install: {
-    title: "Installa MensaToday",
-    description: "Aggiungi alla schermata iniziale per un accesso immediato",
-    install_text: "Installa"
+    title: "MensaToday sulla tua Home",
+    description: "Attiva le notifiche e accedi istantaneamente ai menu del giorno.",
+    install_text: "Installa",
+    ios_steps: {
+      step1: "Tocca Condividi o i tre puntini nel menu del browser.",
+      step2: "Seleziona 'Aggiungi alla schermata Home' dall'elenco."
+    }
   },
   menu: {
     first_courses: "PRIMI PIATTI",

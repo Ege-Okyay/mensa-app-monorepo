@@ -11,11 +11,12 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { LanguageProvider } from "./lib/contexts/language-context";
 import Header from "./components/header";
-import { useEffect, useState } from "react";
 import InstallBanner from "./components/install-banner";
 import SplashScreen from "./components/splash-screen";
 import { useAppInitialization } from "./lib/hooks/use-app-initialization";
 import { usePWA } from "./lib/hooks/use-pwa";
+import IOSInstallBanner from "./components/ios-install-banner";
+import { useEffect, useState } from "react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -58,18 +59,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const isInitializing = useAppInitialization();
-  const { showBanner, install, dismiss } = usePWA();
+  const { showBanner, showIOSBanner, install, dismiss, dismissIOS } = usePWA();
+  const [canShowIOS, setCanShowIOS] = useState(false);
 
-  if (isInitializing) {
-    return (
-      <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
-        <SplashScreen />
-      </main>
-    );
-  }
+  useEffect(() => {
+    if (showIOSBanner && !isInitializing) {
+      const timer = setTimeout(() => setCanShowIOS(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [showIOSBanner, isInitializing]);
+
+  if (isInitializing) return <SplashScreen />;
 
   return (
-    <main className="w-full h-full max-w-sm flex flex-col overflow-hidden">
+    <main className="w-full h-full max-w-sm flex flex-col overflow-hidden relative">
       <Header />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
@@ -78,6 +81,10 @@ export default function App() {
 
       {showBanner && (
         <InstallBanner onInstall={install} onDismiss={dismiss} />
+      )}
+
+      {showIOSBanner && canShowIOS && (
+        <IOSInstallBanner onDismiss={dismissIOS} />
       )}
     </main>
   );
