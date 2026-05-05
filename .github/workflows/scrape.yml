@@ -1,0 +1,61 @@
+name: Mensa Menu Scraper Cron
+
+on:
+    schedule:
+        - cron: '20,40 10 * * 1-5'
+        - cron: '0,20,40 11 * * 1-5'
+        - cron: '0,20 12 * * 1-5'
+    workflow_dispatch:
+
+jobs:
+    scrape-and-sync:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
+            - name: Set up Go
+              uses: actions/setup-go@v5
+              with:
+                go-version: '1.25.0'
+                cache-dependency-path: menu-scraper/go.sum
+            
+            - name: Install dependencies
+              run: |
+                cd menu-scraper
+                go mod download
+            
+            - name: Build scraper
+              run: |
+                cd menu-scraper
+                go build -o scraper ./cmd/main.go
+
+            - name: Run scraper
+              env:
+                # Internal
+                PORT: 3001
+                INTERNAL_API_KEY: ${{ secrets.INTERNAL_API_KEY  }}
+                RATE_LIMIT: 5
+
+                # Gemini
+                GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+                GEMINI_MODEL: gemini-3.1-flash-lite-preview
+                GEMINI_PROMPT_FILE_NAME: analysis_v5.txt
+
+                # Other
+                IG_STORY_API_URL: ${{ secrets.IG_STORY_API_URL }}
+
+                GO_ENV: production
+              run: |
+                cd menu-scraper
+                ./scraper
+            
+            - name: Upload logs on failure
+              if: failure()
+              uses: actions/upload-artifact@v4
+              with:
+                name: scraper-error-logs
+                path: |
+                  menu-scraper/*.log
+                  menu-scraper/debug/
