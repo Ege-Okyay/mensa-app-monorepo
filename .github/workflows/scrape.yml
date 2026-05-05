@@ -1,6 +1,9 @@
 name: Mensa Menu Scraper Cron
 
 on:
+    push:
+        branches:
+            - feature/better-sync-logic
     schedule:
         - cron: '20,40 10 * * 1-5'
         - cron: '0,20,40 11 * * 1-5'
