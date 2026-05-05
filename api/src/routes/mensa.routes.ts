@@ -8,5 +8,6 @@ mensaRouter.get('/:slug', mensaController.getMensaWithMenuBySlug);
 
 // Debug route
 mensaRouter.post('/debug/sync', mensaController.syncMenus);
+mensaRouter.post('/debug/mock-sync', mensaController.debugMockSync);
 
 export default mensaRouter;

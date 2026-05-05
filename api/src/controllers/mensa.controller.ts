@@ -44,5 +44,14 @@ export const mensaController = {
 
     await scanService.scanAllAndSync(supabase, config.scraper, kv);
     return c.json(successResponse);
+  },
+  
+  async debugMockSync(c: AppContext) {
+    const supabase = getSupabase(c.env);
+    const kv = c.env.MENSA_APP_CACHE;
+    const mockData = await c.req.json();
+
+    await scanService.applySync(supabase, mockData, kv);
+    return c.json(successResponse({ processed: mockData.length }));
   }
 };
