@@ -13,6 +13,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/config"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/logic"
@@ -21,37 +22,38 @@ import (
 	_ "golang.org/x/image/webp"
 )
 
-func ScrapeAndAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber.Handler {
+func ScrapeAndProcess(ctx context.Context, analyzer *gemini.ImageAnalyzer, storyAPIUrl string) ([]*models.MenuResponse, error) {
+	client := httpclient.New()
+	headers := httpclient.DefaultHeaders()
+
+	html, err := logic.FetchHTML(client, storyAPIUrl, headers)
+	if err != nil {
+		return nil, fmt.Errorf("fetch HTML failed: %w", err)
+	}
+
+	images, err := logic.ExtactImagesFromHTML(html)
+	if err != nil {
+		return nil, fmt.Errorf("extract images failed: %w", err)
+	}
+
+	if len(images) == 0 {
+		return nil, fmt.Errorf("no images found in story")
+	}
+
+	return AnalyzeImages(ctx, analyzer, images, false)
+}
+
+func ScrapeAndAnalyze(ctx context.Context, analyzer *gemini.ImageAnalyzer, cfg *config.AppConfig) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		url := os.Getenv("IG_STORY_API_URL")
-
-		client := httpclient.New()
-		headers := httpclient.DefaultHeaders()
-
-		html, err := logic.FetchHTML(client, url, headers)
+		results, err := ScrapeAndProcess(ctx, analyzer, cfg.StoryAPIUrl)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
-
-		images, err := logic.ExtactImagesFromHTML(html)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-		}
-
-		if len(images) == 0 {
-			return c.Status(fiber.StatusInternalServerError).SendString("Empty images array")
-		}
-
-		results, err := analyzeImages(ctx, analyzer, images, false)
-		if err != nil {
-			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
-		}
-
 		return c.JSON(results)
 	}
 }
 
-func TestAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber.Handler {
+func TestAnalyze(ctx context.Context, analyzer *gemini.ImageAnalyzer) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		testDir := "test"
 		entries, err := os.ReadDir(testDir)
@@ -70,7 +72,7 @@ func TestAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber.Hand
 			return c.Status(fiber.StatusInternalServerError).SendString("Empty test images array")
 		}
 
-		results, err := analyzeImages(ctx, analyzer, images, true)
+		results, err := AnalyzeImages(ctx, analyzer, images, true)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
@@ -79,7 +81,7 @@ func TestAnalyze(analyzer *gemini.ImageAnalyzer, ctx context.Context) fiber.Hand
 	}
 }
 
-func analyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images []string, isLocal bool) ([]*models.MenuResponse, error) {
+func AnalyzeImages(ctx context.Context, analyzer *gemini.ImageAnalyzer, images []string, isLocal bool) ([]*models.MenuResponse, error) {
 	var (
 		wg        sync.WaitGroup
 		resultsCh = make(chan *models.MenuResponse, len(images))

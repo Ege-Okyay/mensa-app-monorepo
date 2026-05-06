@@ -7,4 +7,3 @@ SUPABASE_KEY=""
 
 # Scraper
 SCRAPER_URL="http://localhost:3001"
-SCRAPER_API_KEY=""

@@ -2,7 +2,6 @@ package config
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 
@@ -17,22 +16,19 @@ type AppConfig struct {
 	Port           string
 	InternalAPIKey string
 	RateLimit      int
+	SyncAPIUrl     string
 }
 
 func LoadConfig() (*AppConfig, error) {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	_ = godotenv.Load()
 
 	promptDir := fmt.Sprintf("prompts/%s", os.Getenv("GEMINI_PROMPT_FILE_NAME"))
 	prompt, err := os.ReadFile(promptDir)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to read prompt file: %w", err)
 	}
 
-	limitStr := os.Getenv("RATE_LIMIT")
-	limit, _ := strconv.Atoi(limitStr)
+	limit, _ := strconv.Atoi(os.Getenv("RATE_LIMIT"))
 
 	return &AppConfig{
 		StoryAPIUrl:    os.Getenv("IG_STORY_API_URL"),
@@ -42,5 +38,6 @@ func LoadConfig() (*AppConfig, error) {
 		Port:           os.Getenv("PORT"),
 		InternalAPIKey: os.Getenv("INTERNAL_API_KEY"),
 		RateLimit:      limit,
+		SyncAPIUrl:     os.Getenv("SYNC_API_URL"),
 	}, nil
 }
