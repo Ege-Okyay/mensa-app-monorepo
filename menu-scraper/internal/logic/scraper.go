@@ -9,7 +9,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func ExtactImagesFromHTML(html string) ([]string, error) {
+func ExtractImagesFromHTML(html string) ([]string, error) {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse HTML: %w", err)

@@ -1,33 +1,31 @@
 package main
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/config"
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/engine"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/handlers"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/middleware"
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/sync"
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
 	if err := run(); err != nil {
-		log.Fatalf("Application error: %v", err)
+		log.Fatalf("Fatal: %v", err)
 	}
 }
 
 func run() error {
 	ctx := context.Background()
-
 	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatalf("Config error: %v", err)
+		return err
 	}
 
 	analyzer, err := initGeminiAnalyzer(ctx, *cfg)
@@ -35,14 +33,24 @@ func run() error {
 		return err
 	}
 
+	scraperEngine := engine.NewScraperEngine(analyzer)
+
 	// Production mode | Github Actions
 	if os.Getenv("GO_ENV") == "production" {
-		fmt.Println("Starting scrape")
-		return runOneShotSync(ctx, analyzer, cfg)
+		fmt.Println(">>> Starting Production Sync...")
+
+		results, err := scraperEngine.Run(ctx, cfg.StoryAPIUrl)
+		if err != nil {
+			return err
+		}
+
+		syncClient := sync.NewSyncClient(cfg.SyncAPIUrl, cfg.SyncAPIKey)
+
+		return syncClient.PushResults(results)
 	}
 
-	// Dev mode | HTTP Server
-	fmt.Printf("Starting server mode on %s\n", cfg.Port)
+	// Server mode | Local development
+	fmt.Printf(">>> Starting Dev Server on Port %s\n", cfg.Port)
 
 	fmt.Println("--- Application Configuration ---")
 	fmt.Printf("Gemini Model: %s\n", cfg.GeminiModel)
@@ -52,50 +60,12 @@ func run() error {
 	app := fiber.New()
 
 	app.Use(middleware.Logger())
-	app.Use(middleware.Auth(cfg.InternalAPIKey))
-	app.Use(middleware.RateLimiter(cfg.RateLimit))
+	app.Use(middleware.Auth(cfg.SyncAPIKey))
 
-	app.Get("/scrape", handlers.ScrapeAndAnalyze(ctx, analyzer, cfg))
-	app.Get("/test", handlers.TestAnalyze(ctx, analyzer))
+	app.Post("/scrape", handlers.ScrapeAndAnalyze(scraperEngine, cfg.StoryAPIUrl))
+	app.Post("/test", handlers.TestAnalyze(scraperEngine))
 
-	portStr := fmt.Sprintf(":%s", cfg.Port)
-	return app.Listen(portStr)
-}
-
-func runOneShotSync(ctx context.Context, analyzer *gemini.ImageAnalyzer, cfg *config.AppConfig) error {
-	results, err := handlers.ScrapeAndProcess(ctx, analyzer, cfg.StoryAPIUrl)
-	if err != nil {
-		return fmt.Errorf("scrape failed: %w", err)
-	}
-
-	jsonData, err := json.Marshal(results)
-	if err != nil {
-		return fmt.Errorf("json marshal failed: %w", err)
-	}
-
-	// Rename variable later
-	syncURL := fmt.Sprintf("%s/mensa/sync", cfg.SyncAPIUrl)
-
-	req, err := http.NewRequest("POST", syncURL, bytes.NewBuffer(jsonData))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("X-Internal-Key", cfg.InternalAPIKey)
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return fmt.Errorf("failed to connect Hono API: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return fmt.Errorf("Hono API rejected sync with status: %s", resp.Status)
-	}
-
-	fmt.Println("Sync successfull")
-
-	return nil
+	return app.Listen(":" + cfg.Port)
 }
 
 func initGeminiAnalyzer(ctx context.Context, cfg config.AppConfig) (*gemini.ImageAnalyzer, error) {
