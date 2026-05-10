@@ -6,8 +6,9 @@ const mensaRouter = new Hono();
 mensaRouter.get('/', mensaController.getAllMensas);
 mensaRouter.get('/:slug', mensaController.getMensaWithMenuBySlug);
 
+mensaRouter.post('/sync', mensaController.syncMenus);
+
 // Debug route
-mensaRouter.post('/debug/sync', mensaController.syncMenus);
 mensaRouter.post('/debug/mock-sync', mensaController.debugMockSync);
 
 export default mensaRouter;

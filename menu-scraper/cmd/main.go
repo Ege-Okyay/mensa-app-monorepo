@@ -73,7 +73,10 @@ func runOneShotSync(ctx context.Context, analyzer *gemini.ImageAnalyzer, cfg *co
 		return fmt.Errorf("json marshal failed: %w", err)
 	}
 
-	req, err := http.NewRequest("POST", cfg.SyncAPIUrl, bytes.NewBuffer(jsonData))
+	// Rename variable later
+	syncURL := fmt.Sprintf("%s/sync", cfg.SyncAPIUrl)
+
+	req, err := http.NewRequest("POST", syncURL, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}
