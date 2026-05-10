@@ -1,0 +1,19 @@
+{
+    "name": "mensa-app-monorepo",
+    "private": "true",
+    "workspaces": [
+        "api",
+        "web-app"
+    ],
+    "scripts": {
+        "dev": "concurrently \"bun run dev:api\" \"bun run dev:web\"",
+        "dev:api": "cd api && bun run dev",
+        "dev:web": "cd web-app && bun run dev",
+        "dev:scraper": "cd menu-scraper && go run cmd/main.go",
+        "sync:local": "cd menu-scraper && GO_ENV=production SYNC_API_URL=http://localhost:8787/mensa/sync go run cmd/main.go"
+    },
+    "devDependencies": {
+        "bun-types": "latest",
+        "concurrently": "^9.2.1"
+    }
+}
