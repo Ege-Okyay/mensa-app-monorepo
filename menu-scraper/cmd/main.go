@@ -74,7 +74,7 @@ func runOneShotSync(ctx context.Context, analyzer *gemini.ImageAnalyzer, cfg *co
 	}
 
 	// Rename variable later
-	syncURL := fmt.Sprintf("%s/sync", cfg.SyncAPIUrl)
+	syncURL := fmt.Sprintf("%s/mensa/sync", cfg.SyncAPIUrl)
 
 	req, err := http.NewRequest("POST", syncURL, bytes.NewBuffer(jsonData))
 	if err != nil {
