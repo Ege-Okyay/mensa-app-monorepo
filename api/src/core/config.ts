@@ -1,5 +1,6 @@
 export type Env = {
   PORT: string;
+  INTERNAL_API_KEY: string;
   
   SUPABASE_URL: string;
   SUPABASE_KEY: string;
@@ -14,6 +15,7 @@ export type Env = {
 export const getConfig = (env: Env) => {
   return {
     port: env.PORT,
+    internalApiKey: env.INTERNAL_API_KEY,
     supabase: {
       url: env.SUPABASE_URL,
       key: env.SUPABASE_KEY 

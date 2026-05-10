@@ -38,12 +38,21 @@ export const mensaController = {
   },
 
   async syncMenus(c: AppContext) {
-    const config = getConfig(c.env);
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;
 
-    await scanService.scanAllAndSync(supabase, config.scraper, kv);
-    return c.json(successResponse);
+    const rawResults = await c.req.json();
+
+    if (!Array.isArray(rawResults)) throw new HTTPException(400, { message: 'Invalid payload: Expected an array of menus' });
+
+    console.log(`Received: ${rawResults.length} menus from scraper. Starting sync...`);
+
+    await scanService.applySync(supabase, rawResults, kv);
+
+    return c.json(successResponse({
+      processed: rawResults.length,
+      timestamp: new Date().toISOString()
+    }));
   },
   
   async debugMockSync(c: AppContext) {

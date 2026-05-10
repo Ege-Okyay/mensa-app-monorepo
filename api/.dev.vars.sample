@@ -1,9 +1,10 @@
 # Internal
 PORT=3000
+INTERNAL_API_KEY=""
 
 # Supabase
 SUPABASE_URL=""
 SUPABASE_KEY=""
 
-# Scraper
+# Scraper (Local)
 SCRAPER_URL="http://localhost:3001"
