@@ -31,7 +31,7 @@ export const scanService = {
       await kv.delete('mensas');
     }
 
-    // Merge menus
+    // Update / merge menus
     const mensas = await mensaService.getAllMensas(supabase, kv);
 
     for (const result of rawResults) {
