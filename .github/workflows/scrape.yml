@@ -40,6 +40,7 @@ jobs:
                 # Internal
                 PORT: 3001
                 INTERNAL_API_KEY: ${{ secrets.INTERNAL_API_KEY  }}
+                SYNC_API_URL: ${{ secrets.SYNC_API_URL }}
                 RATE_LIMIT: 5
 
                 # Gemini
