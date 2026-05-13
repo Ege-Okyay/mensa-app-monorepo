@@ -5,7 +5,7 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 import { useTranslation } from "~/lib/contexts/language-context";
 
-export async function loader({ params }: Route.LoaderArgs) {
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const mensa = await mensaApi.getMensaWithMenu(params.slug);
   return { mensa };
 }

@@ -2,3 +2,6 @@
 - no download popup shows up on other than chrome (google, opera) etc
 - push notifications (!) 
 - error -> request timeout (?)
+- not affiliated footer
+- manually show a download popup on all devices instead of relying on chromes install stuff
+- wrangler setup

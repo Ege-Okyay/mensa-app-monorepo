@@ -5,7 +5,7 @@ import { MensaCard } from "~/components/mensa-card/card";
 import { useTranslation } from "~/lib/contexts/language-context";
 import { getOptimizedImageUrl } from "~/lib/utils/image";
 
-export async function loader() {
+export async function clientLoader() {
   const mensas = await mensaApi.getAll();
   return { mensas };
 }

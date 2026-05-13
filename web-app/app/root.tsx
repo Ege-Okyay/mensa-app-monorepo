@@ -13,7 +13,6 @@ import { LanguageProvider } from "./lib/contexts/language-context";
 import Header from "./components/header";
 import InstallBanner from "./components/install-banner";
 import SplashScreen from "./components/splash-screen";
-import { useAppInitialization } from "./lib/hooks/use-app-initialization";
 import { usePWA } from "./lib/hooks/use-pwa";
 import IOSInstallBanner from "./components/ios-install-banner";
 import { useEffect, useState } from "react";
@@ -57,19 +56,20 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+export function HydrateFallback() {
+  return <SplashScreen />;
+}
+
 export default function App() {
-  const isInitializing = useAppInitialization();
   const { showBanner, showIOSBanner, install, dismiss, dismissIOS } = usePWA();
   const [canShowIOS, setCanShowIOS] = useState(false);
 
   useEffect(() => {
-    if (showIOSBanner && !isInitializing) {
+    if (showIOSBanner) {
       const timer = setTimeout(() => setCanShowIOS(true), 2000);
       return () => clearTimeout(timer);
     }
-  }, [showIOSBanner, isInitializing]);
-
-  if (isInitializing) return <SplashScreen />;
+  }, [showIOSBanner]);
 
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden relative">
