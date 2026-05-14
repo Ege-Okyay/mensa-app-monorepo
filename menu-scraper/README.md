@@ -4,4 +4,3 @@
     - Lasagne alla Bolognese (correct translation for turkish on Principe Amedeo and Villa Claretta but different on both)
     - Pasta alla Ligure (correct translation for turkish on Principe Amedeo and Villa Claretta)
     - Lasagne al Ragu
-- When menus get updated, the menus that didn't get updated do not get deleted and they still show up + has to hit the cache for it to refresh correctly
