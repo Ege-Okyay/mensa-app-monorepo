@@ -9,28 +9,6 @@ export const scanService = {
     rawResults: MenuData[],
     kv: KVNamespace
   ): Promise<void> {
-    const now = new Date();
-    const hour = now.getUTCHours();
-    const minute = now.getUTCMinutes();
-
-    // Afternoon clear
-    if (hour >= 15) {
-      console.log('Mensa closed -> Clearing all current menus...');
-      
-      await supabase.from('mensa_current_menus').delete().not('mensa_id', 'is', null);
-      await kv.delete('mensas');
-
-      return;
-    }
-
-    // Morning reset (8:15 - 8:35)
-    if (hour === 8 && minute >= 15 && minute <= 35) {
-      console.log('Daily reset -> clearing previous data...');
-
-      await supabase.from('mensa_current_menus').delete().not('mensa_id', 'is', null);
-      await kv.delete('mensas');
-    }
-
     // Update / merge menus
     const mensas = await mensaService.getAllMensas(supabase, kv);
 
