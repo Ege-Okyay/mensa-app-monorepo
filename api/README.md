@@ -1,3 +1,2 @@
-TODO:
 - Improve supabase client handling
 - Better config system and usage

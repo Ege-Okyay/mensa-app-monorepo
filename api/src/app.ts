@@ -3,16 +3,20 @@ import mensaRouter from './routes/mensa.routes';
 import { errorResponse } from './core/response';
 import type { Env } from './core/config';
 import { rateLimiter } from 'hono-rate-limiter';
-import { cors } from 'hono/cors'; 
+import { cors } from 'hono/cors';
 
 const app = new Hono<{ Bindings: Env }>();
 
 // TODO: add the prod URL
 app.use('*', cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://mensa-app-test.pages.dev'],
+  origin: [
+    'http://localhost:5173',
+    'http://127.0.0.1:8788',
+    'https://mensa-app-test.pages.dev'
+  ],
   // origin: '*', // DEV Mode ONLY
   allowMethods: ['GET', 'POST', 'OPTIONS'],
-  allowHeaders: ['Content-Type', 'Authorization']
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Internal-Key']
 }));
 
 app.use(

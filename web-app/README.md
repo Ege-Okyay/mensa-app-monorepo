@@ -4,4 +4,3 @@
 - error -> request timeout (?)
 - not affiliated footer
 - manually show a download popup on all devices instead of relying on chromes install stuff
-- wrangler setup

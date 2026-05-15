@@ -10,7 +10,13 @@
         "dev:api": "cd api && bun run dev",
         "dev:web": "cd web-app && bun run dev",
         "dev:scraper": "cd menu-scraper && go run cmd/main.go",
-        "sync:local": "cd menu-scraper && GO_ENV=production SYNC_API_URL=http://localhost:8787/mensa/sync go run cmd/main.go"
+        "build:web": "cd web-app && bun run build",
+        "start:web": "cd web-app && bun run start",
+        "preview": "bun run build:web && concurrently \"bun run dev:api\" \"bun run start:web\"",
+        "sync:local": "cd menu-scraper && GO_ENV=production SYNC_API_URL=http://localhost:8787/mensa/sync go run cmd/main.go",
+        "deploy:api": "cd api && bun run deploy",
+        "deploy:web": "cd web-app && bun run deploy",
+        "deploy:all": "bun run deploy:api && bun run deploy:web"
     },
     "devDependencies": {
         "bun-types": "latest",
