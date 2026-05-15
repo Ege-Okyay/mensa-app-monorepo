@@ -1,9 +1,6 @@
 name: Mensa Menu Scraper Cron
 
 on:
-  push:
-    branches:
-      feature/deployment
   schedule:
       - cron: '20,40 10 * * 1-5'
       - cron: '0,20,40 11 * * 1-5'
@@ -54,12 +51,4 @@ jobs:
               IG_STORY_API_URL: ${{ secrets.IG_STORY_API_URL }}
               GO_ENV: production
             run: |
-              ./scraper 2>&1 | tee scraper.log
-          
-          - name: Upload logs on failure
-            if: failure()
-            uses: actions/upload-artifact@v4
-            with:
-              name: scraper-error-logs
-              path: |
-                menu-scraper/scraper.log
+              ./scraper
