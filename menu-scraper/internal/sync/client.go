@@ -34,7 +34,9 @@ func (s *SyncClient) PushResults(results []*models.MenuResponse) error {
 		return fmt.Errorf("json marshal: %w", err)
 	}
 
-	req, err := http.NewRequest("POST", s.APIUrl, bytes.NewBuffer(jsonData))
+	fullAPIUrl := fmt.Sprintf("%s/mensa/sync", s.APIUrl)
+
+	req, err := http.NewRequest("POST", fullAPIUrl, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return err
 	}
