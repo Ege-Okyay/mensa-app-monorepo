@@ -12,7 +12,7 @@ app.use('*', cors({
   origin: [
     'http://localhost:5173',
     'http://127.0.0.1:8788',
-    'https://mensa-app-test.pages.dev'
+    'https://mensa-today-web.pages.dev'
   ],
   // origin: '*', // DEV Mode ONLY
   allowMethods: ['GET', 'POST', 'OPTIONS'],
