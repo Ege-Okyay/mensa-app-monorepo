@@ -47,6 +47,10 @@ jobs:
               GEMINI_MODEL: gemini-3.1-flash-lite
               GEMINI_PROMPT_FILE_NAME: analysis_v5.txt
 
+              # Scraper
+              MAX_CONCURRENCY: 3
+              REQUEST_DELAY_MS: 1500
+
               # Other
               IG_STORY_API_URL: ${{ secrets.IG_STORY_API_URL }}
               GO_ENV: production

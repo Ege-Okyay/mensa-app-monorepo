@@ -14,6 +14,7 @@
         "start:web": "cd web-app && bun run start",
         "preview": "bun run build:web && concurrently \"bun run dev:api\" \"bun run start:web\"",
         "sync:local": "cd menu-scraper && GO_ENV=production SYNC_API_URL=http://localhost:8787 go run cmd/main.go",
+        "sync:prod": "cd menu-scraper && GO_ENV=production go run cmd/main.go",
         "deploy:api": "cd api && bun run deploy",
         "deploy:web": "cd web-app && bun run deploy",
         "deploy:all": "bun run deploy:api && bun run deploy:web"
