@@ -2,13 +2,14 @@ package logic
 
 import (
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
 	"github.com/PuerkitoBio/goquery"
 )
 
+// Parses HTML and returns a list of image URLs
 func ExtractImagesFromHTML(html string) ([]string, error) {
 	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
 	if err != nil {
@@ -18,14 +19,11 @@ func ExtractImagesFromHTML(html string) ([]string, error) {
 	var imgs []string
 	doc.Find("img").Each(func(i int, s *goquery.Selection) {
 		if src, exists := s.Attr("src"); exists {
-			if err == nil {
-				clean_src := cleanImgURL(src)
+			clean_src := cleanImgURL(src)
+			isGif := strings.HasSuffix(strings.ToLower(clean_src), ".gif")
 
-				isGif := strings.HasSuffix(strings.ToLower(clean_src), ".gif")
-
-				if strings.HasPrefix(clean_src, "http") && !isGif {
-					imgs = append(imgs, clean_src)
-				}
+			if strings.HasPrefix(clean_src, "http") && !isGif {
+				imgs = append(imgs, clean_src)
 			}
 		}
 	})
@@ -33,28 +31,18 @@ func ExtractImagesFromHTML(html string) ([]string, error) {
 	return imgs, nil
 }
 
-func FetchHTML(client *http.Client, url string, headers map[string]string) (string, error) {
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		return "", fmt.Errorf("failed to create request: %w", err)
-	}
-
-	for k, v := range headers {
-		req.Header.Set(k, v)
-	}
-
-	resp, err := client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
+// Fetches the HTML content of a URL as a string
+func FetchHTML(client *http.Client, url string) (string, error) {
+	body, err := httpclient.Fetch(client, url)
 	if err != nil {
 		return "", err
 	}
 
 	return string(body), nil
+}
+
+func FetchImage(client *http.Client, url string) ([]byte, error) {
+	return httpclient.Fetch(client, url)
 }
 
 func cleanImgURL(src string) string {

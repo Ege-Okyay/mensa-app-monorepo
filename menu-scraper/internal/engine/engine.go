@@ -5,11 +5,16 @@ import (
 	"context"
 	"fmt"
 	"image"
+	"log"
+	"math/rand"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+	"time"
 
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/config"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/gemini"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/logic"
@@ -18,18 +23,24 @@ import (
 
 type ScraperEngine struct {
 	Analyzer *gemini.ImageAnalyzer
+	Config   *config.AppConfig
 }
 
-func NewScraperEngine(analyzer *gemini.ImageAnalyzer) *ScraperEngine {
-	return &ScraperEngine{Analyzer: analyzer}
+func NewScraperEngine(analyzer *gemini.ImageAnalyzer, config *config.AppConfig) *ScraperEngine {
+	return &ScraperEngine{
+		Analyzer: analyzer,
+		Config:   config,
+	}
 }
 
 // fetch -> extract -> analyze
 func (e *ScraperEngine) Run(ctx context.Context, storyAPIURL string) ([]*models.MenuResponse, error) {
 	client := httpclient.New()
-	html, err := logic.FetchHTML(client, storyAPIURL, httpclient.DefaultHeaders())
+
+	log.Printf("Fetching HTML from %s", storyAPIURL)
+	html, err := logic.FetchHTML(client, storyAPIURL)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to fetch HTML: %w", err)
 	}
 
 	images, err := logic.ExtractImagesFromHTML(html)
@@ -41,10 +52,12 @@ func (e *ScraperEngine) Run(ctx context.Context, storyAPIURL string) ([]*models.
 		return nil, fmt.Errorf("no images found")
 	}
 
-	return e.AnalyzeImages(ctx, images, false)
+	log.Printf("Found %d images, starting analysis...", len(images))
+
+	return e.AnalyzeImages(ctx, client, images, false)
 }
 
-func (e *ScraperEngine) AnalyzeImages(ctx context.Context, images []string, isLocal bool) ([]*models.MenuResponse, error) {
+func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, images []string, isLocal bool) ([]*models.MenuResponse, error) {
 	var (
 		wg        sync.WaitGroup
 		resultsCh = make(chan *models.MenuResponse, len(images))
@@ -57,13 +70,18 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, images []string, isLo
 		go func(source string) {
 			defer wg.Done()
 
+			if !isLocal && e.Config.RequestDelayMs > 0 {
+				jitter := time.Duration(rand.Intn(e.Config.RequestDelayMs)) * time.Millisecond
+				time.Sleep(jitter)
+			}
+
 			var img []byte
 			var err error
 
 			if isLocal {
 				img, err = os.ReadFile(source)
 			} else {
-				img, err = logic.FetchImage(source)
+				img, err = logic.FetchImage(client, source)
 			}
 
 			if err != nil {

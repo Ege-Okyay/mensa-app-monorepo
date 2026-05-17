@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/engine"
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
 	"github.com/gofiber/fiber/v2"
 	_ "golang.org/x/image/webp"
 )
@@ -43,7 +44,8 @@ func TestAnalyze(engine *engine.ScraperEngine) fiber.Handler {
 			return c.Status(fiber.StatusInternalServerError).SendString("Empty test images array")
 		}
 
-		results, err := engine.AnalyzeImages(c.Context(), images, true)
+		client := httpclient.New()
+		results, err := engine.AnalyzeImages(c.Context(), client, images, true)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}

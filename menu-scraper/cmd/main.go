@@ -33,7 +33,7 @@ func run() error {
 		return err
 	}
 
-	scraperEngine := engine.NewScraperEngine(analyzer)
+	scraperEngine := engine.NewScraperEngine(analyzer, cfg)
 
 	// Production mode | Github Actions
 	if os.Getenv("GO_ENV") == "production" {
