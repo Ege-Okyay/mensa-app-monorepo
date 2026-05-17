@@ -44,7 +44,7 @@ func LoadConfig() (*AppConfig, error) {
 	maxConcurrency, _ := strconv.Atoi(os.Getenv("MAX_CONCURRENCY"))
 	requestDelay, _ := strconv.Atoi(os.Getenv("REQUEST_DELAY_MS"))
 
-	return &AppConfig{
+	cfg := &AppConfig{
 		Port:           os.Getenv("PORT"),
 		SyncAPIKey:     os.Getenv("SYNC_API_KEY"),
 		SyncAPIUrl:     os.Getenv("SYNC_API_URL"),
@@ -55,5 +55,31 @@ func LoadConfig() (*AppConfig, error) {
 		RequestDelayMs: requestDelay,
 		StoryAPIUrl:    os.Getenv("IG_STORY_API_URL"),
 		IsProduction:   isProd,
-	}, nil
+	}
+
+	if err := cfg.Validate(); err != nil {
+		return nil, fmt.Errorf("config validation failed: %w", err)
+	}
+
+	return cfg, nil
+}
+
+func (c *AppConfig) Validate() error {
+	if c.SyncAPIKey == "" {
+		return fmt.Errorf("SYNC_API_KEY is required")
+	}
+	if c.SyncAPIUrl == "" {
+		return fmt.Errorf("SYNC_API_URL is required")
+	}
+	if c.GeminiAPIKey == "" {
+		return fmt.Errorf("GEMINI_API_KEY is required")
+	}
+	if c.GeminiModel == "" {
+		return fmt.Errorf("GEMINI_MODEL is required")
+	}
+	if c.StoryAPIUrl == "" {
+		return fmt.Errorf("STORY_API_URL is required")
+	}
+
+	return nil
 }
