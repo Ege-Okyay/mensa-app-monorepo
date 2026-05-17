@@ -16,6 +16,7 @@ import SplashScreen from "./components/splash-screen";
 import { usePWA } from "./lib/hooks/use-pwa";
 import IOSInstallBanner from "./components/ios-install-banner";
 import { useEffect, useState } from "react";
+import Footer from "./components/footer";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

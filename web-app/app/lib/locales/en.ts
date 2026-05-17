@@ -44,6 +44,10 @@ export const en = {
   dietary: {
     vegan: "Vegan",
     vegetarian: "Veggie"
+  },
+  footer: {
+    built_by: "Built by Ege Okyay",
+    no_affiliation: "Not afilliated with Edisu or any official institution."
   }
 };
 

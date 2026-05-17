@@ -46,5 +46,9 @@ export const it: TranslationKeys = {
   dietary: {
     vegan: "Vegano",
     vegetarian: "Vegetariano"
+  },
+  footer: {
+    built_by: "Sviluppato da Ege Okyay",
+    no_affiliation: "Non affiliato a Edisu o ad alcun ente ufficiale."
   }
 };

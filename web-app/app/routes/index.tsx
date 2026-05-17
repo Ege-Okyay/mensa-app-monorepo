@@ -4,6 +4,7 @@ import { mensaApi } from "~/lib/api/mensa";
 import { MensaCard } from "~/components/mensa-card/card";
 import { useTranslation } from "~/lib/contexts/language-context";
 import { getOptimizedImageUrl } from "~/lib/utils/image";
+import Footer from "~/components/footer";
 
 export async function clientLoader() {
   const mensas = await mensaApi.getAll();
@@ -67,6 +68,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           })}
         </div>
       </div>
+
+      <Footer />
     </>
   );
 }
