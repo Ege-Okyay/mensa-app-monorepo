@@ -20,6 +20,10 @@ export const tr: TranslationKeys = {
     ios_steps: {
       step1: "Tarayıcı menüsündeki Paylaş veya üç nokta simgesine dokunun.",
       step2: "Listeden 'Ana Ekrana Ekle' seçeneğini seçin."
+    },
+    android_steps: {
+      step1: "Tarayıcınızdaki üç noktaya tıklayın.",
+      step2: "'Uygulamayı yükle' veya 'Ana Ekrana Ekle' seçeneğini seçin."
     }
   },
   menu: {

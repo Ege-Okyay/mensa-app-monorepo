@@ -18,6 +18,10 @@ export const en = {
     ios_steps: {
       step1: "Tap Share or the three dots in your browser menu.",
       step2: "Select 'Add to Home Screen' from the list."
+    },
+    android_steps: {
+      step1: "Tap the three dots in your browser.",
+      step2: "Select 'Install app' or 'Add to Home Screen'."
     }
   },
   menu: {
@@ -47,7 +51,7 @@ export const en = {
   },
   footer: {
     built_by: "Built by Ege Okyay",
-    no_affiliation: "Not afilliated with Edisu or any official institution."
+    no_affiliation: "Not affiliated with Edisu or any official institution."
   }
 };
 

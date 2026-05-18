@@ -11,12 +11,11 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { LanguageProvider } from "./lib/contexts/language-context";
 import Header from "./components/header";
-import InstallBanner from "./components/install-banner";
 import SplashScreen from "./components/splash-screen";
 import { usePWA } from "./lib/hooks/use-pwa";
 import IOSInstallBanner from "./components/ios-install-banner";
 import { useEffect, useState } from "react";
-import Footer from "./components/footer";
+import AndroidInstallBanner from "./components/android-install-banner";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -62,15 +61,15 @@ export function HydrateFallback() {
 }
 
 export default function App() {
-  const { showBanner, showIOSBanner, install, dismiss, dismissIOS } = usePWA();
-  const [canShowIOS, setCanShowIOS] = useState(false);
+  const { showAndroidBanner, showIOSBanner, dismiss, dismissIOS } = usePWA();
+  const [canShowBanners, setCanShowBanners] = useState(false);
 
   useEffect(() => {
-    if (showIOSBanner) {
-      const timer = setTimeout(() => setCanShowIOS(true), 2000);
+    if (showAndroidBanner || showIOSBanner) {
+      const timer = setTimeout(() => setCanShowBanners(true), 2000);
       return () => clearTimeout(timer);
     }
-  }, [showIOSBanner]);
+  }, [showAndroidBanner, showIOSBanner]);
 
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden relative">
@@ -80,11 +79,11 @@ export default function App() {
         <Outlet />
       </div>
 
-      {showBanner && (
-        <InstallBanner onInstall={install} onDismiss={dismiss} />
+      {showAndroidBanner && canShowBanners && (
+        <AndroidInstallBanner onDismiss={dismiss} />
       )}
 
-      {showIOSBanner && canShowIOS && (
+      {showIOSBanner && canShowBanners && (
         <IOSInstallBanner onDismiss={dismissIOS} />
       )}
     </main>

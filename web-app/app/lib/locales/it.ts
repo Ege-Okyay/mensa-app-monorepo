@@ -20,6 +20,10 @@ export const it: TranslationKeys = {
     ios_steps: {
       step1: "Tocca Condividi o i tre puntini nel menu del browser.",
       step2: "Seleziona 'Aggiungi alla schermata Home' dall'elenco."
+    },
+    android_steps: {
+      step1: "Tocca i tre puntini nel browser",
+      step2: "Seleziona 'Installa app' o 'Aggiungi alla schermata Home'."
     }
   },
   menu: {

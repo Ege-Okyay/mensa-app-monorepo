@@ -17,6 +17,7 @@ export default defineConfig({
       srcDir: "app",
       filename: "sw.ts",
       registerType: "autoUpdate",
+      injectRegister: false,
       manifest: {
         name: "MensaToday - Torino Piemonte",
         short_name: "MensaToday",
