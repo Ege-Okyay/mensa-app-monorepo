@@ -1,6 +1,5 @@
 - some text under the mensa-card that shows the last updated time for the menu
-- no download popup shows up on other than chrome (google, opera) etc
-- push notifications (!) 
+- push notifications (!)
 - error -> request timeout (?)
-- not affiliated footer
-- manually show a download popup on all devices instead of relying on chromes install stuff
+- better 'open in maps' button for mensa cards
+- open on maps -> shows wrong route

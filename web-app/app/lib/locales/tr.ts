@@ -54,5 +54,16 @@ export const tr: TranslationKeys = {
   footer: {
     built_by: "Ege Okyay tarafından geliştirildi",
     no_affiliation: "Edisu veya herhangi bir resmi kurumla bağlantısı yoktur."
+  },
+  settings: {
+    title: "Ayarlar",
+    language: "Dil",
+    notifications: "Bildirimler",
+    push_notifications: "Anlık Bildirimler",
+    notifications_desc: "Yeni menüler yayınlandığında bildirim alın",
+    subscribed: "Abone olundu",
+    unsubscribed: "Abone olunmadı",
+    not_supported: "Bu tarayıcıda desteklenmiyor",
+    loading: "Yükleniyor..."
   }
 };

@@ -1,6 +1,6 @@
 import { UtensilsCrossed } from "lucide-react";
 import { Link } from "react-router";
-import LanguageSelector from "./language-selector";
+import SettingsDropdown from "./settings-dropdown";
 
 export default function Header() {
   return (
@@ -22,7 +22,8 @@ export default function Header() {
             </div>
           </div>
         </Link>
-        <LanguageSelector />
+        
+        <SettingsDropdown  />
       </div>
     </header>
   );

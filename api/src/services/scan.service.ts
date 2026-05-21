@@ -13,7 +13,6 @@ export const scanService = {
     const mensas = await mensaService.getAllMensas(supabase, kv);
 
     for (const result of rawResults) {
-      console.log(result);
       const matchedMensa = mensas.find(m => m.name.toLocaleLowerCase() === result.mensa_name.toLocaleLowerCase());
 
       if (!matchedMensa) {

@@ -54,5 +54,16 @@ export const it: TranslationKeys = {
   footer: {
     built_by: "Sviluppato da Ege Okyay",
     no_affiliation: "Non affiliato a Edisu o ad alcun ente ufficiale."
+  },
+  settings: {
+    title: "Impostazioni",
+    language: "Lingua",
+    notifications: "Notifiche",
+    push_notifications: "Notifiche Push",
+    notifications_desc: "Ricevi una notifica quando vengono pubblicati nuovi menu",
+    subscribed: "Iscritto",
+    unsubscribed: "Non iscritto",
+    not_supported: "Non supportato su questo browser",
+    loading: "Caricamento..."
   }
 };

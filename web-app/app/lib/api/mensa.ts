@@ -1,5 +1,5 @@
-import { api } from "./client"
-import type { Mensa, MenuData } from "./types"
+import { api } from "./client";
+import type { Mensa } from "./types";
 
 export const mensaApi = {
   /**
@@ -13,4 +13,4 @@ export const mensaApi = {
    */
   getMensaWithMenu: (slug: string) =>
     api.get<Mensa>(`/mensa/${slug}`)
-}
+};

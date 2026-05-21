@@ -4,3 +4,4 @@
     - Lasagne alla Bolognese (correct translation for turkish on Principe Amedeo and Villa Claretta but different on both)
     - Pasta alla Ligure (correct translation for turkish on Principe Amedeo and Villa Claretta)
     - Lasagne al Ragu
+- pasta genovese is not vegan etc
