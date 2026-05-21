@@ -79,11 +79,7 @@ export const mensaService = {
   async createMensaMenu(supabase: SupabaseClient<Database>, rawDto: unknown, kv: KVNamespace): Promise<MensaCurrentMenu> {
     const result = CreateMenuSchema.safeParse(rawDto);
 
-    if (!result.success) {
-      throw new HTTPException(400, {
-        message: `Invalid menu data: ${result.error.message}`
-      });
-    }
+    if (!result.success) throw new HTTPException(400, { message: `Invalid menu data: ${result.error.message}` });
 
     const { data, error } = await supabase
       .from('mensa_current_menus')

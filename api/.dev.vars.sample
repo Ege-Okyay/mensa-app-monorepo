@@ -5,3 +5,8 @@ SCRAPER_KEY=""
 # Supabase
 SUPABASE_URL=""
 SUPABASE_KEY=""
+
+# Push Notifications
+VAPID_PUBLIC_KEY=""
+VAPID_PRIVATE_KEY=""
+VAPID_SUBJECT=""

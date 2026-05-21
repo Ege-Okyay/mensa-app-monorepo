@@ -4,6 +4,8 @@ import { HTTPException } from 'hono/http-exception';
 import { scanService } from '../services/scan.service';
 import { getSupabase } from '../core/supabase';
 import type { AppContext } from '../app';
+import { getConfig } from '../core/config';
+import { pushService } from '../services/push.service';
 
 /**
  * Handlers for mensas and their current menu data
@@ -49,6 +51,11 @@ export const mensaController = {
 
     await scanService.applySync(supabase, rawResults, kv);
 
+    // Send push notification
+    const config = getConfig(c.env);
+
+    c.executionCtx.waitUntil(pushService.broadcastMenuUpdate(supabase, config.vapid));
+
     return c.json(successResponse({
       processed: rawResults.length,
       timestamp: new Date().toISOString()
@@ -61,6 +68,10 @@ export const mensaController = {
     const mockData = await c.req.json();
 
     await scanService.applySync(supabase, mockData, kv);
+
+    const config = getConfig(c.env);
+
+    c.executionCtx.waitUntil(pushService.broadcastMenuUpdate(supabase, config.vapid));
 
     return c.json(successResponse({ processed: mockData.length }));
   }

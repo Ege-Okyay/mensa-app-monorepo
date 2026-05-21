@@ -4,6 +4,7 @@ import { errorResponse } from './core/response';
 import type { Env } from './core/config';
 import { rateLimiter } from 'hono-rate-limiter';
 import { cors } from 'hono/cors';
+import pushRouter from './routes/push.routes';
 
 const app = new Hono<{ Bindings: Env }>();
 
@@ -30,6 +31,7 @@ app.use(
 );
 
 app.route('/mensa', mensaRouter);
+app.route('/push', pushRouter);
 
 app.onError((err, c) => {
   const { response, status } = errorResponse(err);
