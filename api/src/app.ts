@@ -22,7 +22,7 @@ app.use('*', cors({
 
 app.use(
   rateLimiter<{ Bindings: Env }>({
-    binding: (c) => c.env.MENSA_APP_RATE_LIMITER,
+    binding: (c) => c.env.GENERAL_RATE_LIMITER,
     keyGenerator: (c) =>
       c.req.header('cf-connecting-ip') ||
       c.req.header('x-forwarded-for') ||

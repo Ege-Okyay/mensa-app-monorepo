@@ -1,5 +1,5 @@
 import { Settings, Bell, Globe, Check, Loader2 } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation, type Language } from "~/lib/contexts/language-context";
 import { usePushNotifications } from "~/lib/hooks/use-push-notification";
 
@@ -27,15 +27,36 @@ export default function SettingsDropdown() {
 
   const vapidPublicKey = import.meta.env.VITE_VAPID_PUBLIC_KEY || "";
 
-  const { isSupported, isSubscribed, subscribe, unsubscribe, loading } = usePushNotifications(vapidPublicKey)
-
   const handleLanguageSelect = (code: string) => setLanguage(code as Language);
 
-  const handleNotificationToggle = () => {
-    if (loading) return;
+  // Notification handling
+  // Instead of sending every request to the backend
+  // Wait for user to finish clicking, and then send only the final state
+  const { isSupported, isSubscribed, subscribe, unsubscribe, loading } = usePushNotifications(vapidPublicKey)
+  const [tempSubscribed, setTempSubscribed] = useState(isSubscribed);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-    if (isSubscribed) unsubscribe();
-    else subscribe();
+  useEffect(() => {
+    setTempSubscribed(isSubscribed);
+  }, [isSubscribed]);
+
+  const handleNotificationToggle = () => {
+    const nextState = !tempSubscribed;
+    setTempSubscribed(nextState);
+
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+
+    debounceTimer.current = setTimeout(async () => {
+      // Dont sync if temp state is same as the real state
+      if (nextState === isSubscribed) return;
+
+      try {
+        if (nextState) await subscribe();
+        else await unsubscribe();
+      } catch (err) {
+        setTempSubscribed(!nextState);
+      }
+    }, 1200);
   };
 
   return (
@@ -87,7 +108,7 @@ export default function SettingsDropdown() {
                 disabled={loading}
                 className={`
                   w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-all border-2
-                  ${isSubscribed
+                  ${tempSubscribed
                     ? "bg-white border-brand text-brand font-bold"
                     : "bg-brand text-white border-brand font-bold"} 
                   disabled:opacity-50 active:scale-95
@@ -95,8 +116,8 @@ export default function SettingsDropdown() {
               >
                 <span>{t("settings.push_notifications")}</span>
 
-                <div className={`w-8 h-4 rounded-full relative transition-colors ${isSubscribed ? "bg-brand" : "bg-gray-300"}`}>
-                  <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${isSubscribed ? "right-1" : "left-1"}`} />
+                <div className={`w-8 h-4 rounded-full relative transition-colors ${tempSubscribed ? "bg-brand" : "bg-gray-300"}`}>
+                  <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${tempSubscribed ? "right-1" : "left-1"}`} />
                 </div>
               </button>
             ) : (

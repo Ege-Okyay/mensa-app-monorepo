@@ -16,8 +16,9 @@ const envSchema = z.object({
 
   // Cloudflare bindings
   MENSA_APP_CACHE: z.any(),
-  MENSA_APP_RATE_LIMITER: z.any()
-})
+  GENERAL_RATE_LIMITER: z.any(),
+  PUSH_RATE_LIMITER: z.any()
+});
 
 export type Env = z.infer<typeof envSchema>;
 
