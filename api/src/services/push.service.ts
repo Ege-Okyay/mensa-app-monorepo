@@ -4,6 +4,8 @@ import { PushSubscriptionsSchema, type PushNotificationPayload, type PushSubscri
 import { HTTPException } from 'hono/http-exception';
 import { sendPushNotification } from '@mmmike/web-push';
 
+const SUPPORTED_LOCALES = ['it', 'en', 'tr'];
+
 const LOCALIZED_MESSAGES: Record<string, { title: string; body: string }> = {
   en: {
     title: '🍽️ Fresh menus just posted!',
@@ -32,7 +34,9 @@ export const pushService = {
     if (!subscription.success) throw new HTTPException(400, { message: `Invalid push subscription data: ${subscription.error.message}` });
 
     const { endpoint, keys, locale = 'en' } = subscription.data as PushSubscription & { locale?: string };
-    const normalizedLocale = locale.split('-')[0].toLowerCase();
+
+    let normalizedLocale = locale.split('-')[0].toLowerCase();
+    if (!SUPPORTED_LOCALES.includes(normalizedLocale)) normalizedLocale = 'en';
 
     const { data, error } = await supabase
       .from('push_subscriptions')
