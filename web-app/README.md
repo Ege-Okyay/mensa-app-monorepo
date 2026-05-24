@@ -1,5 +1,6 @@
 - some text under the mensa-card that shows the last updated time for the menu
-- push notifications (!)
 - error -> request timeout (?)
 - better 'open in maps' button for mensa cards
 - open on maps -> shows wrong route
+- iphone does not receive notifications
+- should add timeout to turning on and off notifications

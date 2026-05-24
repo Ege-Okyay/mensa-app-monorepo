@@ -7,7 +7,7 @@ export const PushSubscriptionsSchema = z.object({
     p256dh: z.string().min(1),
     auth: z.string().min(1)
   })
-});
+}).loose();
 
 export type PushSubscription = z.infer<typeof PushSubscriptionsSchema>;
 
