@@ -32,6 +32,8 @@ export default function SettingsDropdown() {
   const handleLanguageSelect = (code: string) => setLanguage(code as Language);
 
   const handleNotificationToggle = () => {
+    if (loading) return;
+
     if (isSubscribed) unsubscribe();
     else subscribe();
   };
@@ -55,8 +57,8 @@ export default function SettingsDropdown() {
                   key={lang.code}
                   onClick={() => handleLanguageSelect(lang.code)}
                   className={`flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-colors ${language === lang.code
-                      ? "bg-brand-soft text-brand font-bold"
-                      : "text-text-muted hover:bg-background"
+                    ? "bg-brand-soft text-brand font-bold"
+                    : "text-text-muted hover:bg-background"
                     }`}
                 >
                   {lang.name}
@@ -83,12 +85,16 @@ export default function SettingsDropdown() {
               <button
                 onClick={handleNotificationToggle}
                 disabled={loading}
-                className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-all border-2 ${isSubscribed
+                className={`
+                  w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-all border-2
+                  ${isSubscribed
                     ? "bg-white border-brand text-brand font-bold"
-                    : "bg-brand text-white border-brand font-bold"
-                  } disabled:opacity-50 active:scale-95`}
+                    : "bg-brand text-white border-brand font-bold"} 
+                  disabled:opacity-50 active:scale-95
+                  ${loading ? "opacity-50 cursor-not-allowed" : "active:scale-50"}`}
               >
                 <span>{t("settings.push_notifications")}</span>
+
                 <div className={`w-8 h-4 rounded-full relative transition-colors ${isSubscribed ? "bg-brand" : "bg-gray-300"}`}>
                   <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${isSubscribed ? "right-1" : "left-1"}`} />
                 </div>
