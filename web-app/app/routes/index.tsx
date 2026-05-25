@@ -5,6 +5,7 @@ import { MensaCard } from "~/components/mensa-card/card";
 import { useTranslation } from "~/lib/contexts/language-context";
 import { getOptimizedImageUrl } from "~/lib/utils/image";
 import Footer from "~/components/footer";
+import { useStarredMensas } from "~/lib/hooks/use-starred-mensas";
 
 export async function clientLoader() {
   const mensas = await mensaApi.getAll();
@@ -14,13 +15,21 @@ export async function clientLoader() {
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { mensas } = loaderData;
   const { t } = useTranslation();
+  const { isStarred, toggleStar } = useStarredMensas();
 
   const sortedMensas = [...mensas].sort((a, b) => {
+    const aStarred = isStarred(a.id);
+    const bStarred = isStarred(b.id);
+
+    if (aStarred !== bStarred) {
+      return aStarred ? -1 : 1;
+    }
+
     if (a.has_menu === b.has_menu) {
       return a.name.localeCompare(b.name);
     }
-    
-    return a.has_menu ? -1 : 1
+
+    return a.has_menu ? -1 : 1;
   });
 
   return (
@@ -38,10 +47,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
             const imageUrl = getOptimizedImageUrl(mensa.slug, 1200);
 
             return (
-              <div
-                key={mensa.id}
-                className={`w-full transition-all duration-200 ${mensa.has_menu ? "active:scale-[0.98]" : "opacity-60"}`}
-              >
+              <div key={mensa.id} className="relative w-full">
                 {mensa.has_menu ? (
                   <Link
                     viewTransition
@@ -52,14 +58,18 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                       mensa={mensa}
                       hasMenu={mensa.has_menu}
                       imageUrl={imageUrl}
+                      isStarred={isStarred(mensa.id)}
+                      onStarToggle={() => toggleStar(mensa.id)}
                     />
                   </Link>
                 ) : (
-                  <div className="block cursor-not-allowed">
+                  <div className="block group cursor-not-allowed">
                     <MensaCard
                       mensa={mensa}
                       hasMenu={mensa.has_menu}
                       imageUrl={imageUrl}
+                      isStarred={isStarred(mensa.id)}
+                      onStarToggle={() => toggleStar(mensa.id)}
                     />
                   </div>
                 )}

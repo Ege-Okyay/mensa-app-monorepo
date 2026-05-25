@@ -2,5 +2,3 @@
 - error -> request timeout (?)
 - better 'open in maps' button for mensa cards
 - open on maps -> shows wrong route
-- iphone does not receive notifications
-- should add timeout to turning on and off notifications

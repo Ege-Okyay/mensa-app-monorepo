@@ -9,17 +9,10 @@ import { useTranslation } from "~/lib/contexts/language-context";
 interface MensaMenuCardProps {
   menu: MenuData;
   imageUrl: string;
-  location: string;
 }
 
-export default function MensaMenuCard({ menu, imageUrl, location }: MensaMenuCardProps) {
+export default function MensaMenuCard({ menu, imageUrl }: MensaMenuCardProps) {
   const { t } = useTranslation();
-
-  const handleOpenMaps = () => {
-    if (location) {
-      window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(location)}`, '_blank');
-    }
-  };
 
   return (
     <div className="card bg-white w-full rounded-2xl shadow-sm overflow-y-auto h-[80svh] border border-border no-scrollbar flex flex-col">
@@ -43,16 +36,6 @@ export default function MensaMenuCard({ menu, imageUrl, location }: MensaMenuCar
                 Mensa {menu.mensa_name}
               </h2>
             </div>
-
-            {location && (
-              <button
-                onClick={handleOpenMaps}
-                className="bg-white/20 hover:bg-white/30 backdrop-blur-md p-2 rounded-xl text-white transition-colors"
-                title={t("common.view_on_maps")}
-              >
-                <MapPin className="w-5 h-5" />
-              </button>
-            )}
           </div>
         </div>
       </figure>
