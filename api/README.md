@@ -1,3 +1,3 @@
 - Improve supabase client handling
 - Better config system and usage
-- Error handling in edge cases
+- Tests
