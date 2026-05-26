@@ -1,0 +1,18 @@
+name: Clear Mensa Menus
+
+on:
+    schedule:
+        - cron: '30 13 * * 1-5'
+        - cron: '0 20 * * 1-5'
+    workflow_dispatch:
+
+jobs:
+    clear-menus:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Send clear request
+              run: |
+                curl -X POST "${{ secrets.SYNC_API_URL }}/mensa/clear" \
+                -H "X-Internal-Key: ${{ secrets.SYNC_API_KEY }}" \
+                -H "Content-Type: application/json"

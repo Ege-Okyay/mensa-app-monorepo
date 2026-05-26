@@ -62,6 +62,20 @@ export const mensaController = {
     }));
   },
 
+  /**
+   * Endpoint for Github Actions to clear all current menus 
+   */
+  async clearMenus(c: AppContext) {
+    const supabase = getSupabase(c.env);
+    const kv = c.env.MENSA_APP_CACHE;
+
+    await mensaService.clearMensaMenus(supabase, kv);
+
+    return c.json(successResponse({
+      timestamp: new Date().toISOString()
+    }));
+  },
+
   async debugMockSync(c: AppContext) {
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;

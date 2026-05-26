@@ -1,13 +1,10 @@
-import { Hono } from 'hono';
+import { Hono, type Next } from 'hono';
 import { mensaController } from '../controllers/mensa.controller';
 import type { AppContext } from '../app';
 
 const mensaRouter = new Hono();
 
-mensaRouter.get('/', mensaController.getAllMensas);
-mensaRouter.get('/:slug', mensaController.getMensaWithMenuBySlug);
-
-mensaRouter.post('/sync', async(c: AppContext, next) => {
+const scraperKeyMiddleware = async (c: AppContext, next: Next) => {
   const incomingKey = c.req.header('X-Internal-Key');
   const expectedKey = c.env.SCRAPER_KEY;
 
@@ -16,7 +13,13 @@ mensaRouter.post('/sync', async(c: AppContext, next) => {
   }
 
   return next();
-}, mensaController.syncMenus);
+};
+
+mensaRouter.get('/', mensaController.getAllMensas);
+mensaRouter.get('/:slug', mensaController.getMensaWithMenuBySlug);
+
+mensaRouter.post('/sync', scraperKeyMiddleware, mensaController.syncMenus);
+mensaRouter.post('/clear', scraperKeyMiddleware, mensaController.clearMenus);
 
 // Debug route
 mensaRouter.post('/debug/mock-sync', mensaController.debugMockSync);

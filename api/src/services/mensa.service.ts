@@ -15,11 +15,11 @@ const mapMensaWithMenu = (row: any): Mensa => ({
 });
 
 /**
- * Business logic for handling mensas and their current menus.
+ * Business logic for handling mensas and their current menus
  */
 export const mensaService = {
   /**
-   * Fetches all mensas without their current menu data.
+   * Fetches all mensas without their current menu data
    */
   async getAllMensas(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<Mensa[]> {
     const cached = await kv.get('mensas', 'json') as Mensa[];
@@ -34,6 +34,8 @@ export const mensaService = {
 
     if (error) throw new HTTPException(500, { message: error.message });
 
+    // Probably can write this in a more cleaner way
+    // But it works so no need to touch it for now
     const result = (data || []).map(m => ({
       ...m,
       has_menu: m.current_menu !== null,
@@ -46,7 +48,7 @@ export const mensaService = {
   },
 
   /**
-   * Fetches a single mensa with its current menu data using its slug.
+   * Fetches a single mensa with its current menu data using its slug
    * @param slug Slug of the mensa.
    */
   async getMensaWithMenuBySlug(supabase: SupabaseClient<Database>, slug: string, kv: KVNamespace): Promise<Mensa> {
@@ -73,8 +75,8 @@ export const mensaService = {
   },
 
   /**
-   * Creates or updates a mensa menu after validating the input with Zod.
-   * @param rawDto The unvalidated data from the scraper.
+   * Creates or updates a mensa menu after validating the input with Zod
+   * @param rawDto The unvalidated data from the scraper
    */
   async createMensaMenu(supabase: SupabaseClient<Database>, rawDto: unknown, kv: KVNamespace): Promise<MensaCurrentMenu> {
     const result = CreateMenuSchema.safeParse(rawDto);
@@ -104,5 +106,33 @@ export const mensaService = {
     }
 
     return data;
+  },
+
+  /**
+   * Clears the whole `mensa_current_menus` table from database
+   * Deletes `mensas` key and `mensa:mensa_name` keys from cache
+   */
+  async clearMensaMenus(supabase: SupabaseClient<Database>, kv: KVNamespace) {
+    const { data: mensas, error: fetchError } = await supabase
+      .from('mensas')
+      .select('id, slug');
+
+    if (fetchError) throw new HTTPException(500, { message: fetchError.message });
+    if (!mensas || mensas.length === 0) return;
+
+    const ids = mensas.map(m => m.id);
+    const slugs = mensas.map(m => m.slug);
+
+    const { error: deleteError } = await supabase
+      .from('mensa_current_menus')
+      .delete()
+      .in('mensa_id', ids);
+
+    if (deleteError) throw new HTTPException(500, { message: deleteError.message });
+
+    await kv.delete('mensas');
+    await Promise.all(
+      slugs.map(slug => kv.delete(`mensa:${slug}`))
+    );
   }
 };
