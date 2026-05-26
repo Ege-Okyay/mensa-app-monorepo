@@ -1,4 +1,2 @@
 - some text under the mensa-card that shows the last updated time for the menu
 - error -> request timeout (?)
-- better 'open in maps' button for mensa cards
-- open on maps -> shows wrong route

@@ -65,5 +65,15 @@ export const it: TranslationKeys = {
     unsubscribed: "Non iscritto",
     not_supported: "Non supportato su questo browser",
     loading: "Caricamento..."
+  },
+  errors: {
+    title: "Ops!",
+    unexpected: "Si è verificato un errore inaspettato",
+    connection: "Impossibile connettersi. Controlla la tua connessione internet.",
+    timeout: "Richiesta scaduta. Riprova più tardi.",
+    offline: "Il server è temporaneamente non disponibile",
+    not_found: "La pagina che stai cercando non esiste.",
+    try_again: "Riprova",
+    back_home: "Torna alla Home"
   }
 };

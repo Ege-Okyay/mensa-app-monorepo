@@ -63,6 +63,16 @@ export const en = {
     unsubscribed: "Unsubscribed",
     not_supported: "Not supported on this browser",
     loading: "Loading..."
+  },
+  errors: {
+    title: "Oops!",
+    unexpected: "An unexpected error occured.",
+    connection: "Unable to connect. Check your internet connection.",
+    timeout: "Request timed out. Please try again.",
+    offline: "Server is temporarily unavailable",
+    not_found: "The page you are looking for doesn't exist.",
+    try_again: "Try Again",
+    back_home: "Back to Home"
   }
 };
 

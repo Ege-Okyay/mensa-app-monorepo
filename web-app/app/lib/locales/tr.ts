@@ -65,5 +65,15 @@ export const tr: TranslationKeys = {
     unsubscribed: "Abone olunmadı",
     not_supported: "Bu tarayıcıda desteklenmiyor",
     loading: "Yükleniyor..."
+  },
+  errors: {
+    title: "Hata!",
+    unexpected: "Beklenmedik bir hata oluştu",
+    connection: "Bağlantı kurulamadı. İnternet bağlantınızı kontrol edin.",
+    timeout: "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",
+    offline: "Sunucuya şu an ulaşılamıyor",
+    not_found: "Aradığınız sayfa bulunamadı.",
+    try_again: "Tekrar Dene",
+    back_home: "Ana Sayfaya Dön"
   }
 };

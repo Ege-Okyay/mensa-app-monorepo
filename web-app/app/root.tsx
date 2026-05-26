@@ -9,13 +9,15 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { LanguageProvider } from "./lib/contexts/language-context";
+import { LanguageProvider, useTranslation } from "./lib/contexts/language-context";
 import Header from "./components/header";
 import SplashScreen from "./components/splash-screen";
 import { usePWA } from "./lib/hooks/use-pwa";
 import IOSInstallBanner from "./components/ios-install-banner";
 import { useEffect, useState } from "react";
 import AndroidInstallBanner from "./components/android-install-banner";
+import { isApiError } from "./lib/api/client";
+import { ErrorView } from "./components/error-view";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -91,30 +93,27 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
+  const { t } = useTranslation();
+  let message = t("errors.unexpected");
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
+    if (error.status === 404) message = t("errors.not_found");
+    else message = error.statusText || message;
+  } else if (isApiError(error)) {
+    if (error.code === "TIMEOUT") message = t("errors.timeout");
+    else if (error.code === "NETWORK_ERROR") message = t("errors.connection");
+    else if (error.code === "SERVER_OFFLINE") message = t("errors.offline");
+    else message = error.message;
+  } else if (error instanceof Error) {
+    message = error.message;
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <ErrorView
+        message={message}
+        onRetry={() => window.location.reload()}
+      />
+    </div>
   );
 }

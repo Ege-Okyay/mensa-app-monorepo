@@ -6,6 +6,8 @@ import { useTranslation } from "~/lib/contexts/language-context";
 import { getOptimizedImageUrl } from "~/lib/utils/image";
 import Footer from "~/components/footer";
 import { useStarredMensas } from "~/lib/hooks/use-starred-mensas";
+import { isApiError } from "~/lib/api/client";
+import { ErrorView } from "~/components/error-view";
 
 export async function clientLoader() {
   const mensas = await mensaApi.getAll();
@@ -81,5 +83,26 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
       <Footer />
     </>
+  );
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const { t } = useTranslation();
+  let message = t("errors.unexpected");
+
+  if (isApiError(error)) {
+    if (error.code === "TIMEOUT") message = t("errors.timeout");
+    else if (error.code === "NETWORK_ERROR") message = t("errors.connection");
+    else if (error.code === "SERVER_OFFLINE") message = t("errors.offline");
+    else message = error.message;
+  }
+
+  return (
+    <div className="mt-10">
+      <ErrorView
+        message={message}
+        onRetry={() => window.location.reload()}
+      />
+    </div>
   );
 }
