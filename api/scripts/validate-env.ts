@@ -27,7 +27,8 @@ async function validate() {
     getConfig({
       ...env,
       MENSA_APP_CACHE: {},
-      MENSA_APP_RATE_LIMITER: {},
+      GENERAL_RATE_LIMITER: {},
+      PUSH_RATE_LIMITER: {}
     } as any);
 
     console.log('Config is valid');
