@@ -1,10 +1,12 @@
 package httpclient
 
 import (
+	"compress/gzip"
 	"fmt"
 	"io"
 	"math/rand"
 	"net/http"
+	"net/url"
 	"time"
 )
 
@@ -26,17 +28,35 @@ func RandomUserAgent() string {
 	return agents[rand.Intn(len(agents))]
 }
 
-func GetHeaders() map[string]string {
+func GetHeaders(rawURL string) map[string]string {
+	parsedURL, err := url.Parse(rawURL)
+	if err != nil || parsedURL.Host == "" {
+		return map[string]string{
+			"User-Agent": RandomUserAgent(),
+		}
+	}
+
+	domain := parsedURL.Host
+	scheme := parsedURL.Scheme
+	baseUrl := fmt.Sprintf("%s://%s/", scheme, domain)
+
 	return map[string]string{
-		"User-Agent":                RandomUserAgent(),
-		"Accept":                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-		"Accept-Language":           "en-US,en;q=0.9,it;q=0.8",
-		"Sec-Fetch-Dest":            "document",
-		"Sec-Fetch-Site":            "none",
-		"Sec-Fetch-Mode":            "navigate",
-		"Sec-Fetch-User":            "?1",
-		"Upgrade-Insecure-Requests": "1",
-		"Cache-Control":             "max-age=0",
+		"Host":                        domain,
+		"User-Agent":                  RandomUserAgent(),
+		"Accept":                      "application/json,text/plain,*/*,image/avif,image/webp,image/apng,*/*;q=0.8",
+		"Accept-Language":             "en-US,en;q=0.9",
+		"Accept-Encoding":             "gzip, deflate, br, zstd",
+		"Referer":                     rawURL,
+		"Access-Control-Allow-Origin": "*",
+		"X-Href":                      baseUrl,
+		"x-source-domain":             baseUrl,
+		"Sec-GPC":                     "1",
+		"Alt-Used":                    domain,
+		"Connection":                  "keep-alive",
+		"Sec-Fetch-Dest":              "empty",
+		"Sec-Fetch-Mode":              "cors",
+		"Sec-Fetch-Site":              "same-origin",
+		"Priority":                    "u=0",
 	}
 }
 
@@ -46,7 +66,7 @@ func Fetch(client *http.Client, url string) ([]byte, error) {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	for k, v := range GetHeaders() {
+	for k, v := range GetHeaders(url) {
 		req.Header.Set(k, v)
 	}
 
@@ -60,5 +80,17 @@ func Fetch(client *http.Client, url string) ([]byte, error) {
 		return nil, fmt.Errorf("server returned status: %d", resp.StatusCode)
 	}
 
-	return io.ReadAll(resp.Body)
+	var reader io.ReadCloser
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		reader, err = gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create gzip reader: %w", err)
+		}
+		defer reader.Close()
+	default:
+		reader = resp.Body
+	}
+
+	return io.ReadAll(reader)
 }

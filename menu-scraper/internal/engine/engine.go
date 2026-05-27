@@ -33,17 +33,12 @@ func NewScraperEngine(analyzer *gemini.ImageAnalyzer, config *config.AppConfig) 
 	}
 }
 
-// fetch -> extract -> analyze
 func (e *ScraperEngine) Run(ctx context.Context, storyAPIURL string) ([]*models.MenuResponse, error) {
 	client := httpclient.New()
 
-	log.Printf("Fetching HTML from %s", storyAPIURL)
-	html, err := logic.FetchHTML(client, storyAPIURL)
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch HTML: %w", err)
-	}
+	log.Printf("Fetching stories from API...")
 
-	images, err := logic.ExtractImagesFromHTML(html)
+	images, err := logic.FetchStories(client, storyAPIURL)
 	if err != nil {
 		return nil, err
 	}

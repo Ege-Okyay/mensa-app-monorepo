@@ -33,8 +33,11 @@ func TestFetchSendsCorrectHeaders(t *testing.T) {
 		"User-Agent",
 		"Accept",
 		"Accept-Language",
+		"Accept-Encoding",
 		"Sec-Fetch-Dest",
-		"Upgrade-Insecure-Requests",
+		"X-Href",
+		"x-source-domain",
+		"Referer",
 	}
 
 	for _, h := range essentialHeaders {

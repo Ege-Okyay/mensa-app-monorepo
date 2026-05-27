@@ -1,54 +1,40 @@
 package logic
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
-	"github.com/PuerkitoBio/goquery"
+	"github.com/Ege-Okyay/mensa-app-monorepo/internal/models"
 )
 
-// Parses HTML and returns a list of image URLs
-func ExtractImagesFromHTML(html string) ([]string, error) {
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse HTML: %w", err)
-	}
-
-	var imgs []string
-	doc.Find("img").Each(func(i int, s *goquery.Selection) {
-		if src, exists := s.Attr("src"); exists {
-			clean_src := cleanImgURL(src)
-			isGif := strings.HasSuffix(strings.ToLower(clean_src), ".gif")
-
-			if strings.HasPrefix(clean_src, "http") && !isGif {
-				imgs = append(imgs, clean_src)
-			}
-		}
-	})
-
-	return imgs, nil
-}
-
-// Fetches the HTML content of a URL as a string
-func FetchHTML(client *http.Client, url string) (string, error) {
+// Calls the third party API and returns a list of images
+func FetchStories(client *http.Client, url string) ([]string, error) {
 	body, err := httpclient.Fetch(client, url)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return string(body), nil
+	var response models.StoryResponse
+	if err := json.Unmarshal(body, &response); err != nil {
+		return nil, fmt.Errorf("failed to decode story JSON: %w", err)
+	}
+
+	if response.Code != 200 {
+		return nil, fmt.Errorf("API returned code %d", response.Code)
+	}
+
+	var imageUrls []string
+	for _, item := range response.Data.List {
+		if item.IsVideo == 0 && item.DisplayURL != "" {
+			imageUrls = append(imageUrls, item.DisplayURL)
+		}
+	}
+
+	return imageUrls, nil
 }
 
 func FetchImage(client *http.Client, url string) ([]byte, error) {
 	return httpclient.Fetch(client, url)
-}
-
-func cleanImgURL(src string) string {
-	clean := strings.ReplaceAll(src, `\"`, "")
-	clean = strings.Trim(clean, `\"`)
-	clean = strings.ReplaceAll(clean, `\/`, "/")
-
-	return clean
 }

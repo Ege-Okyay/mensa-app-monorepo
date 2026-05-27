@@ -2,6 +2,7 @@ package models
 
 import "sort"
 
+// Gemini Models
 type LocalizedDish struct {
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -23,6 +24,23 @@ type MenuResponse struct {
 	SideDishes           []MenuItem `json:"side_dishes"`
 	SpecialtiesAvailable bool       `json:"specialties_available"`
 	CommonAllergens      []string   `json:"common_allergens"`
+}
+
+// Story API Models
+type StoryItem struct {
+	ID         string `json:"id"`
+	DisplayURL string `json:"display_url"`
+	IsVideo    int    `json:"is_video"`
+	CreatedAt  int64  `json:"created_at"`
+}
+
+type StoryData struct {
+	List []StoryItem `json:"list"`
+}
+
+type StoryResponse struct {
+	Code int       `json:"code"`
+	Data StoryData `json:"data"`
 }
 
 func (mr *MenuResponse) PopulateCommonAllergens() {
