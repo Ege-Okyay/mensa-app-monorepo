@@ -1,6 +1,9 @@
 name: Clear Mensa Menus
 
 on:
+    push:
+        branches:
+            - feat/todo-features
     schedule:
         - cron: '30 13 * * 1-5'
         - cron: '0 20 * * 1-5'
