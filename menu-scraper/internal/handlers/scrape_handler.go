@@ -14,9 +14,20 @@ import (
 	_ "golang.org/x/image/webp"
 )
 
-func ScrapeAndAnalyze(engine *engine.ScraperEngine, storyAPIURL string) fiber.Handler {
+func ScrapeAndAnalyze(engine *engine.ScraperEngine, storyAPIUrl string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		results, err := engine.Run(c.Context(), storyAPIURL)
+		results, err := engine.Run(c.Context(), storyAPIUrl)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+		}
+
+		return c.JSON(results)
+	}
+}
+
+func TestScrape(engine *engine.ScraperEngine, storyAPIUrl string) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		results, err := engine.RunWithoutAnalyze(c.Context(), storyAPIUrl)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}

@@ -27,20 +27,9 @@ type MenuResponse struct {
 }
 
 // Story API Models
-type StoryItem struct {
-	ID         string `json:"id"`
-	DisplayURL string `json:"display_url"`
-	IsVideo    int    `json:"is_video"`
-	CreatedAt  int64  `json:"created_at"`
-}
-
-type StoryData struct {
-	List []StoryItem `json:"list"`
-}
-
 type StoryResponse struct {
-	Code int       `json:"code"`
-	Data StoryData `json:"data"`
+	Status string `json:"status"`
+	HTML   string `json:"html"`
 }
 
 func (mr *MenuResponse) PopulateCommonAllergens() {

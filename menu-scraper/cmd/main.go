@@ -63,7 +63,9 @@ func run() error {
 	app.Use(middleware.Auth(cfg.SyncAPIKey))
 
 	app.Post("/scrape", handlers.ScrapeAndAnalyze(scraperEngine, cfg.StoryAPIUrl))
-	app.Post("/test", handlers.TestAnalyze(scraperEngine))
+
+	app.Post("/test/analyze", handlers.TestAnalyze(scraperEngine))
+	app.Post("/test/scrape", handlers.TestScrape(scraperEngine, cfg.StoryAPIUrl))
 
 	return app.Listen(":" + cfg.Port)
 }

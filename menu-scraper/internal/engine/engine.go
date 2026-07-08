@@ -33,12 +33,12 @@ func NewScraperEngine(analyzer *gemini.ImageAnalyzer, config *config.AppConfig) 
 	}
 }
 
-func (e *ScraperEngine) Run(ctx context.Context, storyAPIURL string) ([]*models.MenuResponse, error) {
+func (e *ScraperEngine) Run(ctx context.Context, storyAPIUrl string) ([]*models.MenuResponse, error) {
 	client := httpclient.New()
 
 	log.Printf("Fetching stories from API...")
 
-	images, err := logic.FetchStories(client, storyAPIURL)
+	images, err := logic.FetchStories(client, storyAPIUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -50,6 +50,23 @@ func (e *ScraperEngine) Run(ctx context.Context, storyAPIURL string) ([]*models.
 	log.Printf("Found %d images, starting analysis...", len(images))
 
 	return e.AnalyzeImages(ctx, client, images, false)
+}
+
+func (e *ScraperEngine) RunWithoutAnalyze(ctx context.Context, storyAPIUrl string) ([]string, error) {
+	client := httpclient.New()
+
+	log.Printf("Fetching stories from API without analyzing...")
+
+	images, err := logic.FetchStories(client, storyAPIUrl)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(images) == 0 {
+		return nil, fmt.Errorf("no images found")
+	}
+
+	return images, nil
 }
 
 func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, images []string, isLocal bool) ([]*models.MenuResponse, error) {

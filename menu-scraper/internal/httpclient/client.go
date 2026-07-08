@@ -41,32 +41,35 @@ func GetHeaders(rawURL string) map[string]string {
 	baseUrl := fmt.Sprintf("%s://%s/", scheme, domain)
 
 	return map[string]string{
-		"Host":                        domain,
-		"User-Agent":                  RandomUserAgent(),
-		"Accept":                      "application/json,text/plain,*/*,image/avif,image/webp,image/apng,*/*;q=0.8",
-		"Accept-Language":             "en-US,en;q=0.9",
-		"Accept-Encoding":             "gzip, deflate, br, zstd",
-		"Referer":                     rawURL,
-		"Access-Control-Allow-Origin": "*",
-		"X-Href":                      baseUrl,
-		"x-source-domain":             baseUrl,
-		"Sec-GPC":                     "1",
-		"Alt-Used":                    domain,
-		"Connection":                  "keep-alive",
-		"Sec-Fetch-Dest":              "empty",
-		"Sec-Fetch-Mode":              "cors",
-		"Sec-Fetch-Site":              "same-origin",
-		"Priority":                    "u=0",
+		"Host":            domain,
+		"User-Agent":      RandomUserAgent(),
+		"Accept":          "*/*",
+		"Accept-Language": "en-US,en;q=0.9",
+		"Accept-Encoding": "gzip, deflate, br, zstd",
+		"Sec-GPC":         "1",
+		"Connection":      "keep-alive",
+		"Sec-Fetch-Dest":  "empty",
+		"Sec-Fetch-Mode":  "cors",
+		"Sec-Fetch-Site":  "same-origin",
+		"Priority":        "u=0",
+		"Referer":         baseUrl,
 	}
 }
 
-func Fetch(client *http.Client, url string) ([]byte, error) {
+func Fetch(client *http.Client, url string, isStoryRequest bool) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
-	for k, v := range GetHeaders(url) {
+	headers := GetHeaders(url)
+
+	if isStoryRequest {
+		headers["Content-Type"] = "application/x-www-form-urlencoded"
+		headers["TE"] = "trailers"
+	}
+
+	for k, v := range headers {
 		req.Header.Set(k, v)
 	}
 

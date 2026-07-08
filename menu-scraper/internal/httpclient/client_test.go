@@ -24,7 +24,7 @@ func TestFetchSendsCorrectHeaders(t *testing.T) {
 	defer server.Close()
 
 	client := New()
-	_, err := Fetch(client, server.URL)
+	_, err := Fetch(client, server.URL, false)
 	if err != nil {
 		t.Fatalf("Fetch failed: %v", err)
 	}
@@ -59,7 +59,7 @@ func TestFetchErrorHandling(t *testing.T) {
 	defer server.Close()
 
 	client := New()
-	_, err := Fetch(client, server.URL)
+	_, err := Fetch(client, server.URL, false)
 
 	if err == nil {
 		t.Error("Expected an error for 403 Forbidden, but got nil")
