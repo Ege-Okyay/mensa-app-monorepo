@@ -2,7 +2,11 @@ import { UtensilsCrossed } from "lucide-react";
 import { Link } from "react-router";
 import SettingsDropdown from "./settings-dropdown";
 
-export default function Header() {
+interface HeaderProps {
+  showInstallGuide: () => void;
+}
+
+export default function Header({ showInstallGuide }: HeaderProps) {
   return (
     <header className="px-5 pt-8 pb-4 shrink-0 bg-background/80 backdrop-blur-md sticky top-0 z-20">
       <div className="flex flex-row items-center justify-between">
@@ -23,7 +27,7 @@ export default function Header() {
           </div>
         </Link>
         
-        <SettingsDropdown  />
+        <SettingsDropdown showInstallGuide={showInstallGuide} />
       </div>
     </header>
   );

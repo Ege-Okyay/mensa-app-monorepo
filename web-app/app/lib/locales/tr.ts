@@ -15,16 +15,20 @@ export const tr: TranslationKeys = {
   },
   install: {
     title: "MensaToday'i Ana Ekrana Ekleyin",
-    description: "Bildirimleri etkinleştirin ve günlük menülere anında ulaşın.",
+    description: "Bildirimleri etkinleştirin ve günlük menülere anında ulaşın",
     install_text: "Yükle",
     ios_steps: {
-      step1: "Tarayıcı menüsündeki Paylaş veya üç nokta simgesine dokunun.",
-      step2: "Listeden 'Ana Ekrana Ekle' seçeneğini seçin."
+      step1: "Tarayıcı menüsündeki Paylaş veya üç nokta simgesine dokunun",
+      step2: "Listeden 'Ana Ekrana Ekle' seçeneğini seçin"
     },
     android_steps: {
-      step1: "Tarayıcınızdaki üç noktaya tıklayın.",
-      step2: "'Uygulamayı yükle' veya 'Ana Ekrana Ekle' seçeneğini seçin."
-    }
+      step1: "Tarayıcınızdaki üç noktaya tıklayın",
+      step2: "'Uygulamayı yükle' veya 'Ana Ekrana Ekle' seçeneğini seçin"
+    },
+    dismiss_title: "Ana Ekrana Eklensin mi?",
+    dismiss_desc: "Yeni menüler yayınlandığında bildirim alın ve ana ekranınızdan anında erişin",
+    dismiss_cancel: "Şimdi Değil",
+    dismiss_confirm: "Kapat"
   },
   menu: {
     first_courses: "BAŞLANGIÇLAR",
@@ -52,6 +56,7 @@ export const tr: TranslationKeys = {
     vegetarian: "Vejetaryen"
   },
   footer: {
+    tagline: "by students, for students",
     built_by: "Ege Okyay tarafından geliştirildi",
     no_affiliation: "Edisu veya herhangi bir resmi kurumla bağlantısı yoktur."
   },
@@ -64,7 +69,9 @@ export const tr: TranslationKeys = {
     subscribed: "Abone olundu",
     unsubscribed: "Abone olunmadı",
     not_supported: "Bu tarayıcıda desteklenmiyor",
-    loading: "Yükleniyor..."
+    loading: "Yükleniyor...",
+    add_to_home: "Ana Ekrana Ekle",
+    add_to_home_desc: "Yeni menüler çıktığında telefonunuzda bildirim alın"
   },
   errors: {
     title: "Hata!",

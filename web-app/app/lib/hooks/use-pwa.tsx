@@ -24,6 +24,15 @@ export function usePWA() {
     }
   }, []);
 
+  const showInstallGuide = useCallback(() => {
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(userAgent);
+    const isAndroid = /android/.test(userAgent);
+
+    if (isIOS) setActiveBanner("ios");
+    else if (isAndroid) setActiveBanner("android");
+  }, []);
+
   const dismiss = useCallback(() => {
     setActiveBanner("none");
     sessionStorage.setItem("android_banner_dismissed", "true");
@@ -37,6 +46,7 @@ export function usePWA() {
   return {
     showAndroidBanner: activeBanner === "android",
     showIOSBanner: activeBanner === "ios",
+    showInstallGuide,
     dismiss,
     dismissIOS
   };

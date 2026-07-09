@@ -16,7 +16,6 @@ export async function clientLoader() {
 
 export default function Home({ loaderData }: Route.ComponentProps) {
   const { mensas } = loaderData;
-  const { t } = useTranslation();
   const { isStarred, toggleStar } = useStarredMensas();
 
   const sortedMensas = [...mensas].sort((a, b) => {
@@ -38,47 +37,40 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     <>
       <title>MensaToday</title>
 
-      <div className="flex flex-col gap-10">
-        <div className="flex flex-col gap-1 px-1">
-          <h2 className="text-display font-bold text-text tracking-tight">{t("common.locations")}</h2>
-          <p className="text-body-sm text-text-muted font-semibold uppercase tracking-widest">{t("common.pick_a_mensa")}</p>
-        </div>
+      <div className="flex flex-col gap-8">
+        {sortedMensas.map((mensa) => {
+          const imageUrl = getOptimizedImageUrl(mensa.slug, 1200);
 
-        <div className="flex flex-col gap-8">
-          {sortedMensas.map((mensa) => {
-            const imageUrl = getOptimizedImageUrl(mensa.slug, 1200);
-
-            return (
-              <div key={mensa.id} className="relative w-full">
-                {mensa.has_menu ? (
-                  <Link
-                    viewTransition
-                    to={`/mensa/${mensa.slug}`}
-                    className="block group"
-                  >
-                    <MensaCard
-                      mensa={mensa}
-                      hasMenu={mensa.has_menu}
-                      imageUrl={imageUrl}
-                      isStarred={isStarred(mensa.id)}
-                      onStarToggle={() => toggleStar(mensa.id)}
-                    />
-                  </Link>
-                ) : (
-                  <div className="block group cursor-not-allowed">
-                    <MensaCard
-                      mensa={mensa}
-                      hasMenu={mensa.has_menu}
-                      imageUrl={imageUrl}
-                      isStarred={isStarred(mensa.id)}
-                      onStarToggle={() => toggleStar(mensa.id)}
-                    />
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
+          return (
+            <div key={mensa.id} className="relative w-full">
+              {mensa.has_menu ? (
+                <Link
+                  viewTransition
+                  to={`/mensa/${mensa.slug}`}
+                  className="block group"
+                >
+                  <MensaCard
+                    mensa={mensa}
+                    hasMenu={mensa.has_menu}
+                    imageUrl={imageUrl}
+                    isStarred={isStarred(mensa.id)}
+                    onStarToggle={() => toggleStar(mensa.id)}
+                  />
+                </Link>
+              ) : (
+                <div className="block group cursor-not-allowed">
+                  <MensaCard
+                    mensa={mensa}
+                    hasMenu={mensa.has_menu}
+                    imageUrl={imageUrl}
+                    isStarred={isStarred(mensa.id)}
+                    onStarToggle={() => toggleStar(mensa.id)}
+                  />
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
       <Footer />

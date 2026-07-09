@@ -1,4 +1,4 @@
-import { Settings, Bell, Globe, Check, Loader2 } from "lucide-react";
+import { Settings, Bell, Globe, Check, Loader2, Smartphone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation, type Language } from "~/lib/contexts/language-context";
 import { usePushNotifications } from "~/lib/hooks/use-push-notification";
@@ -9,9 +9,17 @@ const languages = [
   { code: "tr", name: "Türkçe" },
 ];
 
-export default function SettingsDropdown() {
+interface SettingsDropdownProps {
+  showInstallGuide?: () => void;
+}
+
+export default function SettingsDropdown({ showInstallGuide }: SettingsDropdownProps) {
   const { language, setLanguage, t } = useTranslation();
   const detailsRef = useRef<HTMLDetailsElement>(null);
+  const [isStandalone] = useState(() =>
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as any).standalone === true
+  );
 
   useEffect(() => {
     const handleOutsideClick = (e: MouseEvent) => {
@@ -99,27 +107,37 @@ export default function SettingsDropdown() {
             </div>
 
             <p className="text-body-sm text-text-muted px-1 mb-3 leading-tight">
-              {t("settings.notifications_desc")}
+              {t(isStandalone ? "settings.notifications_desc" : "settings.add_to_home_desc")}
             </p>
 
             {isSupported ? (
-              <button
-                onClick={handleNotificationToggle}
-                disabled={loading}
-                className={`
-                  w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-all border-2
-                  ${tempSubscribed
-                    ? "bg-white border-brand text-brand font-bold"
-                    : "bg-brand text-white border-brand font-bold"} 
-                  disabled:opacity-50 active:scale-95
-                  ${loading ? "opacity-50 cursor-not-allowed" : "active:scale-50"}`}
-              >
-                <span>{t("settings.push_notifications")}</span>
+              isStandalone ? (
+                <button
+                  onClick={handleNotificationToggle}
+                  disabled={loading}
+                  className={`
+                    w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm transition-all border-2
+                    ${tempSubscribed
+                      ? "bg-white border-brand text-brand font-bold"
+                      : "bg-brand text-white border-brand font-bold"} 
+                    disabled:opacity-50 active:scale-95
+                    ${loading ? "opacity-50 cursor-not-allowed" : "active:scale-50"}`}
+                >
+                  <span>{t("settings.push_notifications")}</span>
 
-                <div className={`w-8 h-4 rounded-full relative transition-colors ${tempSubscribed ? "bg-brand" : "bg-gray-300"}`}>
-                  <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${tempSubscribed ? "right-1" : "left-1"}`} />
-                </div>
-              </button>
+                  <div className={`w-8 h-4 rounded-full relative transition-colors ${tempSubscribed ? "bg-brand" : "bg-gray-300"}`}>
+                    <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${tempSubscribed ? "right-1" : "left-1"}`} />
+                  </div>
+                </button>
+              ) : (
+                <button
+                  onClick={showInstallGuide}
+                  className="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm font-bold bg-brand text-white border-2 border-brand active:scale-95 transition-all"
+                >
+                  <Smartphone className="w-4 h-4" />
+                  <span>{t("settings.add_to_home")}</span>
+                </button>
+              )
             ) : (
               <div className="px-3 py-2 rounded-xl bg-background text-text-muted text-body-sm italic">
                 {t("settings.not_supported")}

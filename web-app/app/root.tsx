@@ -63,7 +63,7 @@ export function HydrateFallback() {
 }
 
 export default function App() {
-  const { showAndroidBanner, showIOSBanner, dismiss, dismissIOS } = usePWA();
+  const { showAndroidBanner, showIOSBanner, showInstallGuide, dismiss, dismissIOS } = usePWA();
   const [canShowBanners, setCanShowBanners] = useState(false);
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export default function App() {
 
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden relative">
-      <Header />
+      <Header showInstallGuide={showInstallGuide} />
 
       <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
         <Outlet />

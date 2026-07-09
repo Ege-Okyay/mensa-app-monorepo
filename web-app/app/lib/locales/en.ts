@@ -22,7 +22,11 @@ export const en = {
     android_steps: {
       step1: "Tap the three dots in your browser.",
       step2: "Select 'Install app' or 'Add to Home Screen'."
-    }
+    },
+    dismiss_title: "Add to Home Screen?",
+    dismiss_desc: "Get notified when new menus drop and access them instantly from your home screen",
+    dismiss_cancel: "Not Now",
+    dismiss_confirm: "Dismiss"
   },
   menu: {
     first_courses: "FIRST COURSES",
@@ -50,6 +54,7 @@ export const en = {
     vegetarian: "Veggie"
   },
   footer: {
+    tagline: "by students, for students",
     built_by: "Built by Ege Okyay",
     no_affiliation: "Not affiliated with Edisu or any official institution."
   },
@@ -62,7 +67,9 @@ export const en = {
     subscribed: "Subscribed",
     unsubscribed: "Unsubscribed",
     not_supported: "Not supported on this browser",
-    loading: "Loading..."
+    loading: "Loading...",
+    add_to_home: "Add to Home Screen",
+    add_to_home_desc: "Get notified on your phone when new menus drop"
   },
   errors: {
     title: "Oops!",

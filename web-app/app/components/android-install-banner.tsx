@@ -1,4 +1,5 @@
 import { MoreVertical, PlusSquare, UtensilsCrossed, X } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "~/lib/contexts/language-context";
 
 interface AndroidInstallBannerProps {
@@ -7,6 +8,7 @@ interface AndroidInstallBannerProps {
 
 export default function AndroidInstallBanner({ onDismiss }: AndroidInstallBannerProps) {
   const { t } = useTranslation();
+  const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <div className="fixed bottom-4 left-1/2 w-[94%] max-w-sm bg-white/95 backdrop-blur-md rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.12)] p-6 border border-white/20 flex flex-col gap-5 z-100 animate-slide-up transform-[translateX(-50%)]">
@@ -22,29 +24,49 @@ export default function AndroidInstallBanner({ onDismiss }: AndroidInstallBanner
             </p>
           </div>
         </div>
-        <button onClick={onDismiss} className="p-2 -mr-2 -mt-2 text-text-muted hover:bg-slate-100/50 rounded-full transition-all active:scale-90">
+        <button onClick={() => setShowConfirm(true)} className="p-2 -mr-2 -mt-2 text-text-muted hover:bg-slate-100/50 rounded-full transition-all active:scale-90">
           <X className="w-5 h-5" />
         </button>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex items-center gap-4 text-text">
-          <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
-            <MoreVertical className="w-4 h-4 text-slate-600" />
+      {showConfirm ? (
+        <div className="flex flex-col gap-3 animate-fade-in">
+          <p className="text-[13px] text-text-muted leading-snug">{t("install.dismiss_desc")}</p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowConfirm(false)}
+              className="flex-1 h-11 rounded-2xl border-2 border-border text-text font-bold text-sm transition-all active:scale-95"
+            >
+              {t("install.dismiss_cancel")}
+            </button>
+            <button
+              onClick={onDismiss}
+              className="flex-1 h-11 rounded-2xl bg-brand text-white font-bold text-sm transition-all active:scale-95"
+            >
+              {t("install.dismiss_confirm")}
+            </button>
           </div>
-          <p className="flex-1 leading-tight text-[13px]">
-            {t("install.android_steps.step1")}
-          </p>
         </div>
-        <div className="flex items-center gap-4 text-text">
-          <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
-            <PlusSquare className="w-4 h-4 text-slate-700" />
+      ) : (
+        <div className="space-y-4">
+          <div className="flex items-center gap-4 text-text">
+            <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
+              <MoreVertical className="w-4 h-4 text-slate-600" />
+            </div>
+            <p className="flex-1 leading-tight text-[13px]">
+              {t("install.android_steps.step1")}
+            </p>
           </div>
-          <p className="flex-1 leading-tight text-[13px]">
-            {t("install.android_steps.step2")}
-          </p>
+          <div className="flex items-center gap-4 text-text">
+            <div className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
+              <PlusSquare className="w-4 h-4 text-slate-700" />
+            </div>
+            <p className="flex-1 leading-tight text-[13px]">
+              {t("install.android_steps.step2")}
+            </p>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white border-r border-b border-slate-100 rotate-45" />
     </div>

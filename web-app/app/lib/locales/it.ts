@@ -15,16 +15,20 @@ export const it: TranslationKeys = {
   },
   install: {
     title: "MensaToday sulla tua Home",
-    description: "Attiva le notifiche e accedi istantaneamente ai menu del giorno.",
+    description: "Attiva le notifiche e accedi istantaneamente ai menu del giorno",
     install_text: "Installa",
     ios_steps: {
-      step1: "Tocca Condividi o i tre puntini nel menu del browser.",
-      step2: "Seleziona 'Aggiungi alla schermata Home' dall'elenco."
+      step1: "Tocca Condividi o i tre puntini nel menu del browser",
+      step2: "Seleziona 'Aggiungi alla schermata Home' dall'elenco"
     },
     android_steps: {
       step1: "Tocca i tre puntini nel browser",
-      step2: "Seleziona 'Installa app' o 'Aggiungi alla schermata Home'."
-    }
+      step2: "Seleziona 'Installa app' o 'Aggiungi alla schermata Home'"
+    },
+    dismiss_title: "Aggiungere alla Home?",
+    dismiss_desc: "Ricevi notifiche quando escono nuovi menu e accedici subito dalla home",
+    dismiss_cancel: "Non Ora",
+    dismiss_confirm: "Ignora"
   },
   menu: {
     first_courses: "PRIMI PIATTI",
@@ -52,6 +56,7 @@ export const it: TranslationKeys = {
     vegetarian: "Vegetariano"
   },
   footer: {
+    tagline: "by students, for students",
     built_by: "Sviluppato da Ege Okyay",
     no_affiliation: "Non affiliato a Edisu o ad alcun ente ufficiale."
   },
@@ -64,7 +69,9 @@ export const it: TranslationKeys = {
     subscribed: "Iscritto",
     unsubscribed: "Non iscritto",
     not_supported: "Non supportato su questo browser",
-    loading: "Caricamento..."
+    loading: "Caricamento...",
+    add_to_home: "Aggiungi alla Home",
+    add_to_home_desc: "Ricevi notifiche sul telefono quando escono nuovi menu"
   },
   errors: {
     title: "Ops!",
