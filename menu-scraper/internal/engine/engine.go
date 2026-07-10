@@ -9,8 +9,6 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"path/filepath"
-	"strings"
 	"sync"
 	"time"
 
@@ -74,14 +72,13 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 		wg        sync.WaitGroup
 		resultsCh = make(chan *models.MenuResponse, len(images))
 		errorsCh  = make(chan error, len(images))
-		sem       = make(chan struct{}, 3)
+		sem       = make(chan struct{}, e.Config.MaxConcurrency)
 	)
 
 	for _, imgSource := range images {
+		sem <- struct{}{}
 		wg.Add(1)
 		go func(source string) {
-			defer wg.Done()
-
 			if !isLocal && e.Config.RequestDelayMs > 0 {
 				jitter := time.Duration(rand.Intn(e.Config.RequestDelayMs)) * time.Millisecond
 				time.Sleep(jitter)
@@ -101,7 +98,7 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 				return
 			}
 
-			sem <- struct{}{}
+			defer wg.Done()
 			defer func() { <-sem }()
 
 			debugImage("ORIGINAL", img)
@@ -112,15 +109,7 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 				img = resizedImg
 			}
 
-			ext := filepath.Ext(source)
-			mimeType := "image/jpeg"
-
-			switch strings.ToLower(ext) {
-			case ".png":
-				mimeType = "image/png"
-			case ".webp":
-				mimeType = "image/webp"
-			}
+			mimeType := http.DetectContentType(img)
 
 			resp, err := e.Analyzer.Process(ctx, img, mimeType)
 			if err != nil {
@@ -159,9 +148,9 @@ func debugImage(label string, data []byte) {
 
 	config, _, err := image.DecodeConfig(bytes.NewReader(data))
 	if err != nil {
-		fmt.Printf("[%s] size: %.2f KB | resolution: unknown (%v)\n", label, sizeKB, err)
+		log.Printf("[%s] size: %.2f KB | resolution: unknown (%v)\n", label, sizeKB, err)
 		return
 	}
 
-	fmt.Printf("[%s] size: %.2f KB | resolution: %dx%d\n", label, sizeKB, config.Width, config.Height)
+	log.Printf("[%s] size: %.2f KB | resolution: %dx%d\n", label, sizeKB, config.Width, config.Height)
 }

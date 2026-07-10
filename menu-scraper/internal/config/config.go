@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -31,7 +32,9 @@ type AppConfig struct {
 }
 
 func LoadConfig() (*AppConfig, error) {
-	_ = godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		log.Printf("Warning: no .env file found: %v", err)
+	}
 
 	isProd := os.Getenv("GO_ENV") == "production"
 

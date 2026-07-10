@@ -50,7 +50,7 @@ func (s *SyncClient) PushResults(results []*models.MenuResponse) error {
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return fmt.Errorf("API rejected sync: %s", resp.Status)
 	}
 

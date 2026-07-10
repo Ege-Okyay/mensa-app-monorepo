@@ -37,7 +37,7 @@ func run() error {
 
 	// Production mode | Github Actions
 	if os.Getenv("GO_ENV") == "production" {
-		fmt.Println(">>> Starting Production Sync...")
+		log.Println(">>> Starting Production Sync...")
 
 		results, err := scraperEngine.Run(ctx, cfg.StoryAPIUrl)
 		if err != nil {
@@ -50,12 +50,12 @@ func run() error {
 	}
 
 	// Server mode | Local development
-	fmt.Printf(">>> Starting Dev Server on Port %s\n", cfg.Port)
+	log.Printf(">>> Starting Dev Server on Port %s\n", cfg.Port)
 
-	fmt.Println("--- Application Configuration ---")
-	fmt.Printf("Gemini Model: %s\n", cfg.GeminiModel)
-	fmt.Printf("Prompt File:  prompts/%s\n", os.Getenv("GEMINI_PROMPT_FILE_NAME"))
-	fmt.Println("---------------------------------")
+	log.Println("--- Application Configuration ---")
+	log.Printf("Gemini Model: %s\n", cfg.GeminiModel)
+	log.Printf("Prompt File:  prompts/%s\n", os.Getenv("GEMINI_PROMPT_FILE_NAME"))
+	log.Println("---------------------------------")
 
 	app := fiber.New()
 

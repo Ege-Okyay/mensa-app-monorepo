@@ -8,9 +8,13 @@ import (
 	"strings"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
-	"github.com/Ege-Okyay/mensa-app-monorepo/internal/models"
 	"github.com/PuerkitoBio/goquery"
 )
+
+type storyResponse struct {
+	Status string `json:"status"`
+	HTML   string `json:"html"`
+}
 
 // Calls the third party API and returns a list of images
 func FetchStories(client *http.Client, url string) ([]string, error) {
@@ -19,7 +23,7 @@ func FetchStories(client *http.Client, url string) ([]string, error) {
 		return nil, err
 	}
 
-	var resp models.StoryResponse
+	var resp storyResponse
 	if err := json.Unmarshal(body, &resp); err != nil {
 		return nil, fmt.Errorf("failed to decode story response: %w", err)
 	}

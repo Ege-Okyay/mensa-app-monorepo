@@ -26,12 +26,6 @@ type MenuResponse struct {
 	CommonAllergens      []string   `json:"common_allergens"`
 }
 
-// Story API Models
-type StoryResponse struct {
-	Status string `json:"status"`
-	HTML   string `json:"html"`
-}
-
 func (mr *MenuResponse) PopulateCommonAllergens() {
 	counts := make(map[string]int)
 
