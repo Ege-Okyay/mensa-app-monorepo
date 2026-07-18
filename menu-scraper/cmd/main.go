@@ -39,7 +39,7 @@ func run() error {
 	if os.Getenv("GO_ENV") == "production" {
 		log.Println(">>> Starting Production Sync...")
 
-		results, err := scraperEngine.Run(ctx, cfg.StoryAPIUrl)
+		results, err := scraperEngine.Run(ctx, cfg.StoryAPIUrl, cfg.RateLimitRetryDelay)
 		if err != nil {
 			return err
 		}
@@ -62,7 +62,7 @@ func run() error {
 	app.Use(middleware.Logger())
 	app.Use(middleware.Auth(cfg.SyncAPIKey))
 
-	app.Post("/scrape", handlers.ScrapeAndAnalyze(scraperEngine, cfg.StoryAPIUrl))
+	app.Post("/scrape", handlers.ScrapeAndAnalyze(scraperEngine, cfg.StoryAPIUrl, cfg.RateLimitRetryDelay))
 
 	app.Post("/test/analyze", handlers.TestAnalyze(scraperEngine))
 	app.Post("/test/scrape", handlers.TestScrape(scraperEngine, cfg.StoryAPIUrl))

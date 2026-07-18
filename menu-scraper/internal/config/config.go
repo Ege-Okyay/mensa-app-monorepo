@@ -23,8 +23,9 @@ type AppConfig struct {
 	FixedPrompt  string
 
 	// Scraping
-	MaxConcurrency int
-	RequestDelayMs int
+	MaxConcurrency      int
+	RequestDelayMs      int
+	RateLimitRetryDelay int
 
 	// Other
 	StoryAPIUrl  string
@@ -46,18 +47,20 @@ func LoadConfig() (*AppConfig, error) {
 
 	maxConcurrency, _ := strconv.Atoi(os.Getenv("MAX_CONCURRENCY"))
 	requestDelay, _ := strconv.Atoi(os.Getenv("REQUEST_DELAY_MS"))
+	rateLimitRetryDelay, _ := strconv.Atoi(os.Getenv("RATE_LIMIT_RETRY_DELAY"))
 
 	cfg := &AppConfig{
-		Port:           os.Getenv("PORT"),
-		SyncAPIKey:     os.Getenv("SYNC_API_KEY"),
-		SyncAPIUrl:     os.Getenv("SYNC_API_URL"),
-		GeminiAPIKey:   os.Getenv("GEMINI_API_KEY"),
-		GeminiModel:    os.Getenv("GEMINI_MODEL"),
-		FixedPrompt:    string(prompt),
-		MaxConcurrency: maxConcurrency,
-		RequestDelayMs: requestDelay,
-		StoryAPIUrl:    os.Getenv("IG_STORY_API_URL"),
-		IsProduction:   isProd,
+		Port:                os.Getenv("PORT"),
+		SyncAPIKey:          os.Getenv("SYNC_API_KEY"),
+		SyncAPIUrl:          os.Getenv("SYNC_API_URL"),
+		GeminiAPIKey:        os.Getenv("GEMINI_API_KEY"),
+		GeminiModel:         os.Getenv("GEMINI_MODEL"),
+		FixedPrompt:         string(prompt),
+		MaxConcurrency:      maxConcurrency,
+		RequestDelayMs:      requestDelay,
+		RateLimitRetryDelay: rateLimitRetryDelay,
+		StoryAPIUrl:         os.Getenv("STORY_API_URL"),
+		IsProduction:        isProd,
 	}
 
 	if err := cfg.Validate(); err != nil {

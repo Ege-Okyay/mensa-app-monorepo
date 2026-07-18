@@ -14,9 +14,9 @@ import (
 	_ "golang.org/x/image/webp"
 )
 
-func ScrapeAndAnalyze(engine *engine.ScraperEngine, storyAPIUrl string) fiber.Handler {
+func ScrapeAndAnalyze(engine *engine.ScraperEngine, storyAPIUrl string, retryDelay int) fiber.Handler {
 	return func(c *fiber.Ctx) error {
-		results, err := engine.Run(c.Context(), storyAPIUrl)
+		results, err := engine.Run(c.Context(), storyAPIUrl, retryDelay)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}
@@ -56,7 +56,7 @@ func TestAnalyze(engine *engine.ScraperEngine) fiber.Handler {
 		}
 
 		client := httpclient.New()
-		results, err := engine.AnalyzeImages(c.Context(), client, images, true)
+		results, err := engine.AnalyzeImages(c.Context(), client, images, true, 60)
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 		}

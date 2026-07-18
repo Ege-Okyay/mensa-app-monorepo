@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -54,7 +55,7 @@ func (s *SyncClient) PushResults(results []*models.MenuResponse) error {
 		return fmt.Errorf("API rejected sync: %s", resp.Status)
 	}
 
-	fmt.Println(">>> Sync Successfull")
+	log.Println(">>> Sync Successfull")
 
 	return nil
 }

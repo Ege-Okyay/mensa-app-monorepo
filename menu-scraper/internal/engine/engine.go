@@ -3,6 +3,7 @@ package engine
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"image"
 	"log"
@@ -17,11 +18,59 @@ import (
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/logic"
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/models"
+	"google.golang.org/genai"
 )
 
+type Analyzer interface {
+	Process(ctx context.Context, img []byte, mimeType string) (*models.MenuResponse, error)
+}
+
 type ScraperEngine struct {
-	Analyzer *gemini.ImageAnalyzer
+	Analyzer Analyzer
 	Config   *config.AppConfig
+}
+
+func isRateLimitError(err error) bool {
+	var apiErr *genai.APIError
+
+	if errors.As(err, &apiErr) {
+		return apiErr.Code == 429 || apiErr.Status == "RESOURCE_EXHAUSTED"
+	}
+
+	return false
+}
+
+func (e *ScraperEngine) analyzeWithRetry(ctx context.Context, source string, img []byte, mimeType string, retryDelay int) (*models.MenuResponse, error) {
+	const maxRetries = 2
+
+	for attempt := range maxRetries {
+		resp, err := e.Analyzer.Process(ctx, img, mimeType)
+		if err == nil {
+			return resp, nil
+		}
+
+		if !isRateLimitError(err) || attempt == maxRetries-1 {
+			return nil, fmt.Errorf("analyzing %s: %w", source, err)
+		}
+
+		log.Printf("Rate limit hit on %s, waiting %ds before retry (attempt %d/%d)", source, retryDelay, attempt+1, maxRetries)
+
+		time.Sleep(time.Duration(retryDelay) * time.Second)
+	}
+
+	return nil, fmt.Errorf("analyzing %s: max retries exceeded", source)
+}
+
+func debugImage(label string, data []byte) {
+	sizeKB := float64(len(data)) / 1024
+
+	config, _, err := image.DecodeConfig(bytes.NewReader(data))
+	if err != nil {
+		log.Printf("[%s] size: %.2f KB | resolution: unknown (%v)\n", label, sizeKB, err)
+		return
+	}
+
+	log.Printf("[%s] size: %.2f KB | resolution: %dx%d\n", label, sizeKB, config.Width, config.Height)
 }
 
 func NewScraperEngine(analyzer *gemini.ImageAnalyzer, config *config.AppConfig) *ScraperEngine {
@@ -31,7 +80,7 @@ func NewScraperEngine(analyzer *gemini.ImageAnalyzer, config *config.AppConfig) 
 	}
 }
 
-func (e *ScraperEngine) Run(ctx context.Context, storyAPIUrl string) ([]*models.MenuResponse, error) {
+func (e *ScraperEngine) Run(ctx context.Context, storyAPIUrl string, retryDelay int) ([]*models.MenuResponse, error) {
 	client := httpclient.New()
 
 	log.Printf("Fetching stories from API...")
@@ -47,7 +96,7 @@ func (e *ScraperEngine) Run(ctx context.Context, storyAPIUrl string) ([]*models.
 
 	log.Printf("Found %d images, starting analysis...", len(images))
 
-	return e.AnalyzeImages(ctx, client, images, false)
+	return e.AnalyzeImages(ctx, client, images, false, retryDelay)
 }
 
 func (e *ScraperEngine) RunWithoutAnalyze(ctx context.Context, storyAPIUrl string) ([]string, error) {
@@ -67,7 +116,7 @@ func (e *ScraperEngine) RunWithoutAnalyze(ctx context.Context, storyAPIUrl strin
 	return images, nil
 }
 
-func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, images []string, isLocal bool) ([]*models.MenuResponse, error) {
+func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, images []string, isLocal bool, retryDelay int) ([]*models.MenuResponse, error) {
 	var (
 		wg        sync.WaitGroup
 		resultsCh = make(chan *models.MenuResponse, len(images))
@@ -111,9 +160,15 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 
 			mimeType := http.DetectContentType(img)
 
-			resp, err := e.Analyzer.Process(ctx, img, mimeType)
+			// resp, err := e.Analyzer.Process(ctx, img, mimeType)
+			// if err != nil {
+			// 	errorsCh <- fmt.Errorf("analyzing %s: %w", source, err)
+			// 	return
+			// }
+
+			resp, err := e.analyzeWithRetry(ctx, source, img, mimeType, retryDelay)
 			if err != nil {
-				errorsCh <- fmt.Errorf("analyzing %s: %w", source, err)
+				errorsCh <- err
 				return
 			}
 
@@ -141,16 +196,4 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 	}
 
 	return results, nil
-}
-
-func debugImage(label string, data []byte) {
-	sizeKB := float64(len(data)) / 1024
-
-	config, _, err := image.DecodeConfig(bytes.NewReader(data))
-	if err != nil {
-		log.Printf("[%s] size: %.2f KB | resolution: unknown (%v)\n", label, sizeKB, err)
-		return
-	}
-
-	log.Printf("[%s] size: %.2f KB | resolution: %dx%d\n", label, sizeKB, config.Width, config.Height)
 }
