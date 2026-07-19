@@ -36,7 +36,7 @@ internal/
 
 ### HTTP Headers (`httpclient/client.go`)
 - `GetHeaders(url)` — generic headers, Referer = `baseUrl` from parsed URL
-- `Fetch(client, url, isStoryRequest bool)` — when `true`, adds `Content-Type` + `TE: trailers`
+- `Fetch(client, url, isStoryRequest bool)` — when `true`, adds `Content-Type`
 - Story requests use `true`, image downloads use `false`
 
 ## Configuration (`.env`)

@@ -3,6 +3,7 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -29,6 +30,7 @@ func FetchStories(client *http.Client, url string) ([]string, error) {
 	}
 
 	if resp.Status != "ok" {
+		log.Printf("API error response body: %s", string(body))
 		return nil, fmt.Errorf("API returned status: %s", resp.Status)
 	}
 

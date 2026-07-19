@@ -2,6 +2,7 @@ package httpclient
 
 import (
 	"compress/gzip"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"math/rand"
@@ -13,6 +14,28 @@ import (
 func New() *http.Client {
 	return &http.Client{
 		Timeout: 60 * time.Second,
+		Transport: &http.Transport{
+			ForceAttemptHTTP2: false,
+			TLSClientConfig: &tls.Config{
+				CipherSuites: []uint16{
+					tls.TLS_AES_128_GCM_SHA256,
+					tls.TLS_CHACHA20_POLY1305_SHA256,
+					tls.TLS_AES_256_GCM_SHA384,
+					tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+					tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+					tls.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,
+					tls.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,
+					tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+					tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+				},
+				CurvePreferences: []tls.CurveID{
+					tls.X25519,
+					tls.CurveP256,
+					tls.CurveP384,
+				},
+				MinVersion: tls.VersionTLS12,
+			},
+		},
 	}
 }
 
@@ -36,38 +59,30 @@ func GetHeaders(rawURL string) map[string]string {
 		}
 	}
 
-	domain := parsedURL.Host
 	scheme := parsedURL.Scheme
-	baseUrl := fmt.Sprintf("%s://%s/", scheme, domain)
+	host := parsedURL.Host
+	baseUrl := fmt.Sprintf("%s://%s/", scheme, host)
 
 	return map[string]string{
-		"Host":            domain,
 		"User-Agent":      RandomUserAgent(),
 		"Accept":          "*/*",
 		"Accept-Language": "en-US,en;q=0.9",
-		"Accept-Encoding": "gzip, deflate, br, zstd",
+		"Accept-Encoding": "gzip",
 		"Sec-GPC":         "1",
-		"Connection":      "keep-alive",
+		"Referer":         baseUrl,
 		"Sec-Fetch-Dest":  "empty",
 		"Sec-Fetch-Mode":  "cors",
 		"Sec-Fetch-Site":  "same-origin",
-		"Priority":        "u=0",
-		"Referer":         baseUrl,
 	}
 }
 
-func Fetch(client *http.Client, url string, isStoryRequest bool) ([]byte, error) {
+func Fetch(client *http.Client, url string, _ bool) ([]byte, error) {
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
 	}
 
 	headers := GetHeaders(url)
-
-	if isStoryRequest {
-		headers["Content-Type"] = "application/x-www-form-urlencoded"
-		headers["TE"] = "trailers"
-	}
 
 	for k, v := range headers {
 		req.Header.Set(k, v)

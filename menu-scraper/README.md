@@ -1,4 +1,3 @@
-- hash the image url (or the bytes), skip calling gemini if found before
 - translation problems:
     - Risotto al Radicchio -> didn't get translated
     - Lasagne alla Bolognese (correct translation for turkish on Principe Amedeo and Villa Claretta but different on both)

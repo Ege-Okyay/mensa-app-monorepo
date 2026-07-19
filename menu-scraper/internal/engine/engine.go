@@ -152,11 +152,6 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 		close(errorsCh)
 	}()
 
-	if cache != nil {
-		cache.Save()
-		log.Printf("Saved cache with %d total images", len(cache.Hashes))
-	}
-
 	var results []*models.MenuResponse
 
 	for r := range resultsCh {
@@ -165,6 +160,11 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 
 	if len(results) == 0 && len(errorsCh) > 0 {
 		return nil, <-errorsCh
+	}
+
+	if cache != nil {
+		cache.Save()
+		log.Printf("Saved cache with %d total images", len(cache.Hashes))
 	}
 
 	return results, nil
