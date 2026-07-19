@@ -45,9 +45,9 @@ func LoadConfig() (*AppConfig, error) {
 		return nil, fmt.Errorf("failed to read prompt file: %w", err)
 	}
 
-	maxConcurrency, _ := strconv.Atoi(os.Getenv("MAX_CONCURRENCY"))
-	requestDelay, _ := strconv.Atoi(os.Getenv("REQUEST_DELAY_MS"))
-	rateLimitRetryDelay, _ := strconv.Atoi(os.Getenv("RATE_LIMIT_RETRY_DELAY"))
+	maxConcurrency := getEnvInt("MAX_CONCURRENCY", 3)
+	requestDelay := getEnvInt("REQUEST_DELAY_MS", 1500)
+	rateLimitRetryDelay := getEnvInt("RATE_LIMIT_RETRY_DELAY", 60)
 
 	cfg := &AppConfig{
 		Port:                os.Getenv("PORT"),
@@ -88,4 +88,11 @@ func (c *AppConfig) Validate() error {
 	}
 
 	return nil
+}
+
+func getEnvInt(key string, defaultVal int) int {
+	if val, err := strconv.Atoi(os.Getenv(key)); err == nil {
+		return val
+	}
+	return defaultVal
 }
