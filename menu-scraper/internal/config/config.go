@@ -23,9 +23,10 @@ type AppConfig struct {
 	FixedPrompt  string
 
 	// Scraping
-	MaxConcurrency      int
-	RequestDelayMs      int
-	RateLimitRetryDelay int
+	MaxConcurrency           int
+	RequestDelayMs           int
+	RateLimitRetryDelay      int
+	ProcessedImagesCachePath string
 
 	// Other
 	StoryAPIUrl  string
@@ -39,7 +40,7 @@ func LoadConfig() (*AppConfig, error) {
 
 	isProd := os.Getenv("GO_ENV") == "production"
 
-	promptDir := fmt.Sprintf("prompts/%s", os.Getenv("GEMINI_PROMPT_FILE_NAME"))
+	promptDir := fmt.Sprintf("prompts/%s", getEnvString("GEMINI_PROMPT_FILE_NAME", "analysis_v5.txt"))
 	prompt, err := os.ReadFile(promptDir)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read prompt file: %w", err)
@@ -50,16 +51,16 @@ func LoadConfig() (*AppConfig, error) {
 	rateLimitRetryDelay := getEnvInt("RATE_LIMIT_RETRY_DELAY", 60)
 
 	cfg := &AppConfig{
-		Port:                os.Getenv("PORT"),
-		SyncAPIKey:          os.Getenv("SYNC_API_KEY"),
-		SyncAPIUrl:          os.Getenv("SYNC_API_URL"),
-		GeminiAPIKey:        os.Getenv("GEMINI_API_KEY"),
-		GeminiModel:         os.Getenv("GEMINI_MODEL"),
+		Port:                getEnvString("PORT", "3001"),
+		SyncAPIKey:          getEnvString("SYNC_API_KEY", ""),
+		SyncAPIUrl:          getEnvString("SYNC_API_URL", ""),
+		GeminiAPIKey:        getEnvString("GEMINI_API_KEY", ""),
+		GeminiModel:         getEnvString("GEMINI_MODEL", "gemini-3.1-flash-lite"),
 		FixedPrompt:         string(prompt),
 		MaxConcurrency:      maxConcurrency,
 		RequestDelayMs:      requestDelay,
 		RateLimitRetryDelay: rateLimitRetryDelay,
-		StoryAPIUrl:         os.Getenv("STORY_API_URL"),
+		StoryAPIUrl:         getEnvString("STORY_API_URL", ""),
 		IsProduction:        isProd,
 	}
 
@@ -80,9 +81,6 @@ func (c *AppConfig) Validate() error {
 	if c.GeminiAPIKey == "" {
 		return fmt.Errorf("GEMINI_API_KEY is required")
 	}
-	if c.GeminiModel == "" {
-		return fmt.Errorf("GEMINI_MODEL is required")
-	}
 	if c.StoryAPIUrl == "" {
 		return fmt.Errorf("STORY_API_URL is required")
 	}
@@ -92,6 +90,13 @@ func (c *AppConfig) Validate() error {
 
 func getEnvInt(key string, defaultVal int) int {
 	if val, err := strconv.Atoi(os.Getenv(key)); err == nil {
+		return val
+	}
+	return defaultVal
+}
+
+func getEnvString(key string, defaultVal string) string {
+	if val := os.Getenv(key); val != "" {
 		return val
 	}
 	return defaultVal
