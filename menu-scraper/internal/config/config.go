@@ -51,17 +51,18 @@ func LoadConfig() (*AppConfig, error) {
 	rateLimitRetryDelay := getEnvInt("RATE_LIMIT_RETRY_DELAY", 60)
 
 	cfg := &AppConfig{
-		Port:                getEnvString("PORT", "3001"),
-		SyncAPIKey:          getEnvString("SYNC_API_KEY", ""),
-		SyncAPIUrl:          getEnvString("SYNC_API_URL", ""),
-		GeminiAPIKey:        getEnvString("GEMINI_API_KEY", ""),
-		GeminiModel:         getEnvString("GEMINI_MODEL", "gemini-3.1-flash-lite"),
-		FixedPrompt:         string(prompt),
-		MaxConcurrency:      maxConcurrency,
-		RequestDelayMs:      requestDelay,
-		RateLimitRetryDelay: rateLimitRetryDelay,
-		StoryAPIUrl:         getEnvString("STORY_API_URL", ""),
-		IsProduction:        isProd,
+		Port:                     getEnvString("PORT", "3001"),
+		SyncAPIKey:               getEnvString("SYNC_API_KEY", ""),
+		SyncAPIUrl:               getEnvString("SYNC_API_URL", ""),
+		GeminiAPIKey:             getEnvString("GEMINI_API_KEY", ""),
+		GeminiModel:              getEnvString("GEMINI_MODEL", "gemini-3.1-flash-lite"),
+		FixedPrompt:              string(prompt),
+		MaxConcurrency:           maxConcurrency,
+		RequestDelayMs:           requestDelay,
+		RateLimitRetryDelay:      rateLimitRetryDelay,
+		ProcessedImagesCachePath: getEnvString("PROCESSED_IMAGES_CACHE_PATH", ".cache/processed-images.json"),
+		StoryAPIUrl:              getEnvString("STORY_API_URL", ""),
+		IsProduction:             isProd,
 	}
 
 	if err := cfg.Validate(); err != nil {

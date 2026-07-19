@@ -34,6 +34,7 @@ func run() error {
 	}
 
 	scraperEngine := engine.NewScraperEngine(analyzer, cfg)
+	scraperEngine.ProcessedImagesCachePath = cfg.ProcessedImagesCachePath
 
 	// Production mode | Github Actions
 	if os.Getenv("GO_ENV") == "production" {

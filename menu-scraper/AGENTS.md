@@ -51,6 +51,7 @@ internal/
 | `GEMINI_PROMPT_FILE_NAME` | Prompt file in `prompts/` dir |
 | `MAX_CONCURRENCY` | Max concurrent Gemini analyses |
 | `REQUEST_DELAY_MS` | Random jitter delay between requests |
+| `PROCESSED_IMAGES_CACHE_PATH` | Path to cahce file for dedup |
 | `STORY_API_URL` | Third-party Instagram story viewer API URL |
 
 ## Running
