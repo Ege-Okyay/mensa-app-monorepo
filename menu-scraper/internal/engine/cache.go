@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"path/filepath"
 	"sync"
@@ -74,5 +75,9 @@ func (c *ProcessedImagesCache) Save() {
 }
 
 func hashSource(source string) string {
+	if parsed, err := url.Parse(source); err == nil {
+		parsed.RawQuery = ""
+		source = parsed.String()
+	}
 	return fmt.Sprintf("%x", sha256.Sum256([]byte(source)))
 }
