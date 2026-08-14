@@ -1,0 +1,18 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "mensa-today-cron",
+    "main": "src/index.ts",
+    "compatibility_date": "2026-07-31",
+    "triggers": {
+        "crons": [
+            "0 15 * * *"
+        ]
+    },
+    "vars": {
+        "GITHUB_OWNER": "Ege-Okyay",
+        "GITHUB_REPO": "mensa-app-monorepo",
+        "GITHUB_REF": "dev",
+        "GITHUB_API_BASE": "https://api.github.com",
+        "DRY_RUN": false
+    }
+}
