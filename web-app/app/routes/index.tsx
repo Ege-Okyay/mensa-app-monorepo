@@ -3,7 +3,6 @@ import type { Route } from "./+types/index";
 import { mensaApi } from "~/lib/api/mensa";
 import { MensaCard } from "~/components/mensa-card/card";
 import { useTranslation } from "~/lib/contexts/language-context";
-import { getOptimizedImageUrl } from "~/lib/utils/image";
 import Footer from "~/components/footer";
 import { useStarredMensas } from "~/lib/hooks/use-starred-mensas";
 import { isApiError } from "~/lib/api/client";
@@ -39,8 +38,6 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
       <div className="flex flex-col gap-8">
         {sortedMensas.map((mensa) => {
-          const imageUrl = getOptimizedImageUrl(mensa.slug, 1200);
-
           return (
             <div key={mensa.id} className="relative w-full">
               {mensa.has_menu ? (
@@ -52,7 +49,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   <MensaCard
                     mensa={mensa}
                     hasMenu={mensa.has_menu}
-                    imageUrl={imageUrl}
+                    imageUrl={`/mensas/${mensa.slug}.webp`}
                     isStarred={isStarred(mensa.id)}
                     onStarToggle={() => toggleStar(mensa.id)}
                   />
@@ -62,7 +59,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   <MensaCard
                     mensa={mensa}
                     hasMenu={mensa.has_menu}
-                    imageUrl={imageUrl}
+                    imageUrl={`/mensas/${mensa.slug}.webp`}
                     isStarred={isStarred(mensa.id)}
                     onStarToggle={() => toggleStar(mensa.id)}
                   />

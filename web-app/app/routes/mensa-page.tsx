@@ -4,7 +4,6 @@ import type { Route } from "./+types/mensa-page";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 import { useTranslation } from "~/lib/contexts/language-context";
-
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const mensa = await mensaApi.getMensaWithMenu(params.slug);
   return { mensa };
@@ -12,7 +11,6 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export default function MensaPage({ loaderData }: Route.ComponentProps) {
   const { mensa } = loaderData;
-  const imageUrl = `https://xoarqcxbowmkqvzchhde.supabase.co/storage/v1/object/public/mensas/${mensa.slug}.webp`;
   const { t } = useTranslation();
 
   if (!mensa.current_menu) {
@@ -34,6 +32,7 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
           <span className="font-bold">{t("common.back_to_locations")}</span>
         </Link>
       </div>
+      
     )
   }
 
@@ -44,7 +43,7 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
       <div className="w-full max-w-2xl h-full max-h-[85vh] flex flex-col gap-4">
         <MensaMenuCard
           menu={mensa.current_menu.menu_data}
-          imageUrl={imageUrl}
+          imageUrl={`/mensas/${mensa.slug}.webp`}
         />
         
         <Link 

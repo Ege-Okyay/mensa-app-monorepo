@@ -1,2 +1,2 @@
-- some text under the mensa-card that shows the last updated time for the menu
-- error -> request timeout (?)
+- add ability to refresh on the app
+- opening / closing hours
