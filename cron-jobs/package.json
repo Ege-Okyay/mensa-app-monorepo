@@ -5,6 +5,8 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev --test-scheduled",
+    "mock": "bun src/mock-github.ts",
+    "test": "bun test",
     "deploy": "wrangler deploy",
     "typecheck": "tsc --noEmit"
   },
