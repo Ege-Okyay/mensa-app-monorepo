@@ -1,5 +1,8 @@
 name: Test Dispatch
 on:
+    push:
+        branches:
+            - feat/adding-cron-jobs
     workflow_dispatch:
 jobs:
     echo:
