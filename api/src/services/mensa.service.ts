@@ -35,7 +35,7 @@ export const mensaService = {
    */
   async getAllMensas(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<Mensa[]> {
     const cached = await kv.get('mensas', 'json') as Mensa[];
-    // if (cached) return cached;
+    if (cached) return cached;
 
     const { data, error } = await supabase
       .from('mensas')
