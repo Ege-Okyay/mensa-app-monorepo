@@ -1,5 +1,5 @@
 import { HTTPException } from 'hono/http-exception';
-import { CreateMenuSchema, MenuDataSchema, type Mensa, type MensaCurrentMenu } from '../models/mensa';
+import { CreateMenuSchema, MenuDataSchema, ScheduleSchema, type Mensa, type MensaCurrentMenu, type Schedule } from '../models/mensa';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../models/database.types';
 
@@ -8,11 +8,23 @@ import type { Database } from '../models/database.types';
  */
 const mapMensaWithMenu = (row: any): Mensa => ({
   ...row,
+  schedule: parseSchedule(row.schedule),
   current_menu: row.current_menu ? {
     ...row.current_menu,
     menu_data: MenuDataSchema.parse(row.current_menu.menu_data)
   } : null
 });
+
+/**
+ * Helper function to safely parse mensa schedules from JSON
+ */
+const parseSchedule = (json: unknown): Schedule | null => {
+  if (!json || typeof json !== 'object') return null;
+
+  const result = ScheduleSchema.safeParse(json);
+
+  return result.success ? result.data : null;
+}
 
 /**
  * Business logic for handling mensas and their current menus
@@ -23,12 +35,12 @@ export const mensaService = {
    */
   async getAllMensas(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<Mensa[]> {
     const cached = await kv.get('mensas', 'json') as Mensa[];
-    if (cached) return cached;
+    // if (cached) return cached;
 
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-        id, slug, name, location,
+        id, slug, name, location, schedule,
         current_menu:mensa_current_menus ( mensa_id )
       `);
 
@@ -39,7 +51,8 @@ export const mensaService = {
     const result = (data || []).map(m => ({
       ...m,
       has_menu: m.current_menu !== null,
-      current_menu: undefined
+      current_menu: undefined,
+      schedule: parseSchedule(m.schedule),
     }));
 
     await kv.put('mensas', JSON.stringify(result), { expirationTtl: 86400 });
@@ -58,7 +71,7 @@ export const mensaService = {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-        id, slug, name, location,
+        id, slug, name, location, schedule
         current_menu:mensa_current_menus ( menu_data )
       `)
       .eq('slug', slug)

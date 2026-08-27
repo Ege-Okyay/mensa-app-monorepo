@@ -29,10 +29,19 @@ export const CreateMenuSchema = z.object({
   menu_data: MenuDataSchema
 });
 
+export const ScheduleRangeSchema = z.object({
+  open: z.string().regex(/^\d{2}:\d{2}$/), // HH:MM
+  close: z.string().regex(/^\d{2}:\d{2}$/)
+});
+
+export const ScheduleSchema = z.record(z.string(), z.array(ScheduleRangeSchema));
+
 // Types and interfaces
 export type LocalizedDish = z.infer<typeof LocalizedDishSchema>;
 export type MenuItem = z.infer<typeof MenuItemSchema>;
 export type MenuData = z.infer<typeof MenuDataSchema>;
+export type ScheduleRange = z.infer<typeof ScheduleRangeSchema>;
+export type Schedule = z.infer<typeof ScheduleSchema>;
 
 type MensaRow = Database['public']['Tables']['mensas']['Row'];
 export type MensaCurrentMenu = Database['public']['Tables']['mensa_current_menus']['Row'];
@@ -43,4 +52,5 @@ export interface Mensa extends MensaRow {
     menu_data: MenuData;
     updated_at: string | null;
   } | null;
+  schedule: Schedule | null;
 };
