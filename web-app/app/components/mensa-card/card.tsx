@@ -2,6 +2,8 @@ import { AlertCircle, ChevronRight, FileText, MapPin, Star } from "lucide-react"
 import type { Mensa, Schedule } from "~/lib/api/types";
 import { useTranslation } from "~/lib/contexts/language-context";
 import { ScheduleBadge } from "../schedule-badge";
+import type { MouseEvent } from "react";
+import { Link } from "react-router";
 
 interface MensaCardProps {
   mensa: Mensa;
@@ -15,14 +17,11 @@ interface MensaCardProps {
 export function MensaCard({ mensa, hasMenu, imageUrl, isStarred, onStarToggle, schedule }: MensaCardProps) {
   const { t } = useTranslation();
 
-  const handleMapsClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const query = encodeURIComponent(`${mensa.name} ${mensa.location || ""}`.trim());
-    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, "_blank");
-  };
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${mensa.name} ${mensa.location || ""}`.trim()
+  )}`;
 
-  const handleStarClick = (e: React.MouseEvent) => {
+  const handleStarClick = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     onStarToggle();
@@ -67,13 +66,16 @@ export function MensaCard({ mensa, hasMenu, imageUrl, isStarred, onStarToggle, s
 
         <div className="flex items-center gap-2 shrink-0 ml-4">
           <div className="flex items-center bg-brand-soft rounded-2xl p-1 border border-brand-border-subtle">
-            <button
-              type="button"
-              onClick={handleMapsClick}
-              className="p-2.5 text-brand active:scale-90 transition-transform"
+            <Link
+              to={mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open on Google Maps"
+              className="p-2.5 text-brand active:scale-90 transition-transform inline-flex"
+              onClick={(e) => e.stopPropagation()}
             >
               <MapPin className="w-5 h-5" />
-            </button>
+            </Link>
             <div className="w-px h-5 bg-brand-border-subtle" />
             <button
               type="button"

@@ -1,3 +1,2 @@
 - add ability to refresh on the app
 - meta descriptions etc for SEO
-- location button gives wrong direction
