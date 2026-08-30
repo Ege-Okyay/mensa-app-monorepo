@@ -53,19 +53,12 @@ export const en = {
     vegan: "Vegan",
     vegetarian: "Veggie"
   },
-  footer: {
-    tagline: "by students, for students",
-    built_by: "Built by Ege Okyay",
-    no_affiliation: "Not affiliated with Edisu or any official institution."
-  },
   settings: {
     title: "Settings",
     language: "Language",
     notifications: "Notifications",
     push_notifications: "Push Notifications",
     notifications_desc: "Get notified when new menus are published",
-    subscribed: "Subscribed",
-    unsubscribed: "Unsubscribed",
     not_supported: "Not supported on this browser",
     loading: "Loading...",
     add_to_home: "Add to Home Screen",

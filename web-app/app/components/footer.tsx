@@ -1,4 +1,5 @@
 import { UtensilsCrossed } from "lucide-react";
+import { Link } from "react-router";
 import { useTranslation } from "~/lib/contexts/language-context";
 
 export default function Footer() {
@@ -16,11 +17,17 @@ export default function Footer() {
       </div>
 
       <span className="text-body-sm font-bold uppercase tracking-widest text-text-muted/60">
-        {t("footer.tagline")}
+        By 
+        <Link
+          to={"https://ege-okyay.github.io"}
+          target="_blank"
+          className="text-brand"
+        > Ege Okyay</Link>,
+        For students          
       </span>
 
       <span className="text-body-sm text-text-muted opacity-60">
-        {t("footer.no_affiliation")}
+        Not affiliated with Edisu or any official institution.
       </span>
     </footer>
   );
