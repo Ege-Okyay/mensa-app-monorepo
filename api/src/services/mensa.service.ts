@@ -71,7 +71,7 @@ export const mensaService = {
     const { data, error } = await supabase
       .from('mensas')
       .select(`
-        id, slug, name, location, schedule
+        id, slug, name, location, schedule,
         current_menu:mensa_current_menus ( menu_data )
       `)
       .eq('slug', slug)
