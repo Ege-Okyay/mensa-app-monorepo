@@ -1,4 +1,3 @@
 - add ability to refresh on the app
-- opening / closing hours
 - meta descriptions etc for SEO
 - location button gives wrong direction
