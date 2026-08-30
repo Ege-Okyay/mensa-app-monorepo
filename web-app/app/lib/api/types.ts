@@ -1,3 +1,10 @@
+export interface ScheduleRange {
+  open: string;
+  close: string;
+}
+
+export type Schedule = Record<string, ScheduleRange[]>;
+
 export interface LocalizedDish {
   name: string;
   description: string;
@@ -30,6 +37,7 @@ export interface Mensa {
     menu_data: MenuData;
     updated_at: string | null;
   } | null;
+  schedule: Schedule | null;
 }
 
 export interface ApiResponse<T> {

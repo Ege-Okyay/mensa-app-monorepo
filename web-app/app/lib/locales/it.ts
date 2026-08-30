@@ -82,5 +82,10 @@ export const it: TranslationKeys = {
     not_found: "La pagina che stai cercando non esiste.",
     try_again: "Riprova",
     back_home: "Torna alla Home"
-  }
+  },
+  schedule: {
+    opens_at: "Apre alle {time}",
+    closes_at: "Chiude alle {time}",
+    closed: "Chiuso oggi",
+  },
 };

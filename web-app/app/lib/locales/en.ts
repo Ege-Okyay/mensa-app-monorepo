@@ -80,6 +80,11 @@ export const en = {
     not_found: "The page you are looking for doesn't exist.",
     try_again: "Try Again",
     back_home: "Back to Home"
+  },
+  schedule: {
+    opens_at: "Opens at {time}",
+    closes_at: "Closes at {time}",
+    closed: "Closed today",
   }
 };
 

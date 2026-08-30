@@ -32,7 +32,6 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
           <span className="font-bold">{t("common.back_to_locations")}</span>
         </Link>
       </div>
-      
     )
   }
 

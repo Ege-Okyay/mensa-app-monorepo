@@ -82,5 +82,10 @@ export const tr: TranslationKeys = {
     not_found: "Aradığınız sayfa bulunamadı.",
     try_again: "Tekrar Dene",
     back_home: "Ana Sayfaya Dön"
+  },
+  schedule: {
+    opens_at: "Açılış saati: {time}",
+    closes_at: "Kapanış saati: {time}",
+    closed: "Bugün kapalı"
   }
 };

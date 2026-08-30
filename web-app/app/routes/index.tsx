@@ -52,6 +52,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                     imageUrl={`/mensas/${mensa.slug}.webp`}
                     isStarred={isStarred(mensa.id)}
                     onStarToggle={() => toggleStar(mensa.id)}
+                    schedule={mensa.schedule}
                   />
                 </Link>
               ) : (
@@ -62,6 +63,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                     imageUrl={`/mensas/${mensa.slug}.webp`}
                     isStarred={isStarred(mensa.id)}
                     onStarToggle={() => toggleStar(mensa.id)}
+                    schedule={mensa.schedule}
                   />
                 </div>
               )}
