@@ -50,6 +50,7 @@ export const mensaController = {
     if (!Array.isArray(rawResults)) throw new HTTPException(400, { message: 'Invalid payload: Expected an array of menus' });
 
     await scanService.applySync(supabase, rawResults, kv);
+    await mensaService.setScraped(kv);
 
     /*
     Disabled for now
@@ -74,10 +75,21 @@ export const mensaController = {
     const kv = c.env.MENSA_APP_CACHE;
 
     await mensaService.clearMensaMenus(supabase, kv);
+    await mensaService.clearScraped(kv);
 
     return c.json(successResponse({
       timestamp: new Date().toISOString()
     }));
+  },
+
+  /**
+   * Returns scraped status from cache
+   */
+  async getScrapedStatus(c: AppContext) {
+    const kv = c.env.MENSA_APP_CACHE;
+    const scraped = await mensaService.getScraped(kv);
+    
+    return c.json(successResponse({ scraped }));
   },
 
   async debugMockSync(c: AppContext) {
@@ -86,6 +98,7 @@ export const mensaController = {
     const mockData = await c.req.json();
 
     await scanService.applySync(supabase, mockData, kv);
+    await mensaService.setScraped(kv);
 
     const config = getConfig(c.env);
 

@@ -16,6 +16,7 @@ const scraperKeyMiddleware = async (c: AppContext, next: Next) => {
 };
 
 mensaRouter.get('/', mensaController.getAllMensas);
+mensaRouter.get('/scraped-status', scraperKeyMiddleware, mensaController.getScrapedStatus);
 mensaRouter.get('/:slug', mensaController.getMensaWithMenuBySlug);
 
 mensaRouter.post('/sync', scraperKeyMiddleware, mensaController.syncMenus);

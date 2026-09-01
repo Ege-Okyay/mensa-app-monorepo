@@ -147,5 +147,26 @@ export const mensaService = {
     await Promise.all(
       slugs.map(slug => kv.delete(`mensa:${slug}`))
     );
+  },
+
+  /**
+   * Sets `scraped` key to 1 in cache 
+   */
+  async setScraped(kv: KVNamespace): Promise<void> {
+    await kv.put('scraped', '1', { expirationTtl: 43200 });
+  },
+
+  /**
+   * Deletes `scraped` key from cache
+   */
+  async clearScraped(kv: KVNamespace): Promise<void> {
+    await kv.delete('scraped');
+  },
+
+  /**
+   * Gets `scraped` key from cache
+   */
+  async getScraped(kv: KVNamespace): Promise<boolean> {
+    return await kv.get('scraped') !== null;
   }
 };
