@@ -97,6 +97,9 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 		sem <- struct{}{}
 		wg.Add(1)
 		go func(source string) {
+			defer wg.Done()
+			defer func() { <-sem }()
+
 			if !isLocal && e.Config.RequestDelayMs > 0 {
 				jitter := time.Duration(rand.Intn(e.Config.RequestDelayMs)) * time.Millisecond
 				time.Sleep(jitter)
@@ -115,9 +118,6 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 				errorsCh <- fmt.Errorf("getting image %s: %w", source, err)
 				return
 			}
-
-			defer wg.Done()
-			defer func() { <-sem }()
 
 			debugImage("ORIGINAL", img)
 
