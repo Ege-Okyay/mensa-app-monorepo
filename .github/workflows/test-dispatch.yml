@@ -1,6 +1,9 @@
 name: Test Dispatch
 on:
     workflow_dispatch:
+    push:
+        branches:
+            - feat/scraped-status
 jobs:
     echo:
         runs-on: ubuntu-latest
