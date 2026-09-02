@@ -9,7 +9,7 @@ const pushRateLimit = rateLimiter<{ Bindings: Env }>({
   binding: (c) => c.env.PUSH_RATE_LIMITER,
   keyGenerator: (c) =>
     c.req.header('cf-connecting-ip') ||
-    c.req.header('x-forwarded-to') ||
+    c.req.header('x-forwarded-for') ||
     'push-spam'
 });
 
