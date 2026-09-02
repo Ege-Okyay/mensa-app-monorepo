@@ -1,10 +1,7 @@
 import { UtensilsCrossed } from "lucide-react";
 import { Link } from "react-router";
-import { useTranslation } from "~/lib/contexts/language-context";
 
 export default function Footer() {
-  const { t } = useTranslation();
-
   return (
     <footer className="mt-12 flex flex-col items-center gap-2">
       <div className="flex items-center gap-2">
@@ -16,18 +13,18 @@ export default function Footer() {
         </span>
       </div>
 
-      <span className="text-body-sm font-bold uppercase tracking-widest text-text-muted/60">
-        By 
+      <span className="text-body-sm text-text-muted opacity-60">
+        Not affiliated with Edisu or any official institution.
+      </span>
+      
+      <span className="text-body-sm font-bold tracking-widest text-text-muted/60">
         <Link
           to={"https://ege-okyay.github.io"}
           target="_blank"
+          rel="noopener"
           className="text-brand"
-        > Ege Okyay</Link>,
-        For students          
-      </span>
-
-      <span className="text-body-sm text-text-muted opacity-60">
-        Not affiliated with Edisu or any official institution.
+        >ege </Link>
+        made this so you don't have to
       </span>
     </footer>
   );
