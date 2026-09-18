@@ -31,5 +31,13 @@
 				"period": 60
 			}
 		}
+	],
+	"routes": [
+		{
+			"pattern": "api.mensatoday.app",
+			"custom_domain": true,
+			"enabled": true,
+			"previews_enabled": false
+		}
 	]
 }
