@@ -7,8 +7,10 @@ import Footer from "~/components/footer";
 import { useStarredMensas } from "~/lib/hooks/use-starred-mensas";
 import { isApiError } from "~/lib/api/client";
 import { ErrorView } from "~/components/error-view";
+import { isMaintenanceMode } from "~/lib/utils/maintenance";
 
 export async function clientLoader() {
+  if (isMaintenanceMode()) return { mensas: [] };
   const mensas = await mensaApi.getAll();
   return { mensas };
 }

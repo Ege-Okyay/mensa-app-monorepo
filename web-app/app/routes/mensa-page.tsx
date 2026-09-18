@@ -4,7 +4,9 @@ import type { Route } from "./+types/mensa-page";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 import { Link } from "react-router";
 import { useTranslation } from "~/lib/contexts/language-context";
+import { isMaintenanceMode } from "~/lib/utils/maintenance";
 export async function clientLoader({ params }: Route.ClientLoaderArgs) {
+  if (isMaintenanceMode()) return { mensa: null };
   const mensa = await mensaApi.getMensaWithMenu(params.slug);
   return { mensa };
 }
@@ -12,6 +14,8 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 export default function MensaPage({ loaderData }: Route.ComponentProps) {
   const { mensa } = loaderData;
   const { t } = useTranslation();
+
+  if (!mensa) return null;
 
   if (!mensa.current_menu) {
     return (
