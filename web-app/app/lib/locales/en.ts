@@ -78,6 +78,10 @@ export const en = {
     opens_at: "Opens at {time}",
     closes_at: "Closes at {time}",
     closed: "Closed today",
+  },
+  coming_soon: {
+    title: "We're working on it",
+    description: "This page is under construction. Check back soon.",
   }
 };
 

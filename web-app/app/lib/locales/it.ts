@@ -81,4 +81,8 @@ export const it: TranslationKeys = {
     closes_at: "Chiude alle {time}",
     closed: "Chiuso oggi",
   },
+  coming_soon: {
+    title: "Ci stiamo lavorando",
+    description: "Questa pagina è in costruzione. Torna presto.",
+  },
 };

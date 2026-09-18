@@ -80,5 +80,9 @@ export const tr: TranslationKeys = {
     opens_at: "Açılış saati: {time}",
     closes_at: "Kapanış saati: {time}",
     closed: "Bugün kapalı"
+  },
+  coming_soon: {
+    title: "Üzerinde çalışıyoruz",
+    description: "Bu sayfa yapım aşamasında. Yakında tekrar göz atın."
   }
 };

@@ -2,7 +2,7 @@ import { UtensilsCrossed } from "lucide-react";
 import { Link } from "react-router";
 
 export default function Footer() {
-  const API_VERSION = import.meta.env.API_VERSION || "1.0.0";
+  const API_VERSION = import.meta.env.VITE_APP_VERSION || "1.0.0";
 
   return (
     <footer className="mt-12 flex flex-col items-center gap-2">

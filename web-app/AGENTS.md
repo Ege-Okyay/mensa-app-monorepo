@@ -18,7 +18,7 @@ app/
     mensa-menu-card/      — menu detail (image header, allergens, food cards, side dishes)
     header.tsx            — logo + settings dropdown
     settings-dropdown.tsx — language selector + push notification toggle
-    footer.tsx, section-title.tsx, error-view.tsx, splash-screen.tsx
+    footer.tsx, section-title.tsx, error-view.tsx, splash-screen.tsx, maintenance-page.tsx
     android-install-banner.tsx, ios-install-banner.tsx
     language-selector.tsx
   lib/
@@ -44,6 +44,7 @@ app/
 - **Data fetching**: client-side loaders (`clientLoader`) — no SSR data. Home shows mensas even without menus; detail page shows a no-menu state.
 - **Starred mensas**: `useStarredMensas` stores IDs in `localStorage["starred-mensas"]`. Sorting on home puts starred first, then mensas with menus.
 - **Push notifications**: only in standalone (installed) PWA via settings dropdown; debounced toggle; registers SW only in PROD.
+- **Maintenance mode**: `VITE_MAINTENANCE="true"` makes `root.tsx` render `MaintenancePage` for all routes (header/banners hidden).
 
 ## Configuration (`.env`)
 
@@ -52,6 +53,8 @@ app/
 | `VITE_API_URL` | Backend API base URL |
 | `VITE_REQUEST_TIMEOUT` | Request timeout in ms (default 5000) |
 | `VITE_VAPID_PUBLIC_KEY` | VAPID public key for push notifications |
+| `VITE_APP_VERSION` | App version shown in the footer |
+| `VITE_MAINTENANCE` | Set to `"true"` to show the under-construction page for all routes |
 
 Files: `.env.development`, `.env.production`, `.env.sample` (all committed).
 

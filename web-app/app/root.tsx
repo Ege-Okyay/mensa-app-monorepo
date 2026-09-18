@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import AndroidInstallBanner from "./components/android-install-banner";
 import { isApiError } from "./lib/api/client";
 import { ErrorView } from "./components/error-view";
+import MaintenancePage from "./components/maintenance-page";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -65,6 +66,7 @@ export function HydrateFallback() {
 export default function App() {
   const { showAndroidBanner, showIOSBanner, showInstallGuide, dismiss, dismissIOS } = usePWA();
   const [canShowBanners, setCanShowBanners] = useState(false);
+  const isMaintenance = import.meta.env.VITE_MAINTENANCE === "true";
 
   useEffect(() => {
     if (showAndroidBanner || showIOSBanner) {
@@ -72,6 +74,14 @@ export default function App() {
       return () => clearTimeout(timer);
     }
   }, [showAndroidBanner, showIOSBanner]);
+
+  if (isMaintenance) {
+    return (
+      <main className="w-full h-full max-w-sm flex flex-col overflow-hidden relative">
+        <MaintenancePage />
+      </main>
+    );
+  }
 
   return (
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden relative">
