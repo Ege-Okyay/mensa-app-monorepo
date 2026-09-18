@@ -5,27 +5,23 @@ export interface CronJob {
 
 export const CRON_JOBS: CronJob[] = [
   {
-    cron: '0,20,40 11 * * *',
+    cron: '0,20,40 9 * * *',
     workflows: ['scrape.yml']
   },
   {
-    cron: '0,20 12 * * *',
+    cron: '0,20 10 * * *',
     workflows: ['scrape.yml'],
   },
   {
-    cron: '30,50 17 * * *',
+    cron: '30,50 15 * * *',
     workflows: ['scrape.yml'],
   },
   {
-    cron: '10 18 * * *',
+    cron: '10 16 * * *',
     workflows: ['scrape.yml'],
   },
   {
-    cron: '0 15 * * *',
+    cron: '0 13 * * *',
     workflows: ['clear-menus.yml']
   },
-  {
-    cron: '0 22 * * *',
-    workflows: ['clear-menus.yml']
-  }
 ];
