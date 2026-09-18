@@ -3,9 +3,6 @@
 	"name": "mensa-today-api",
 	"main": "src/index.ts",
 	"compatibility_date": "2026-03-27",
-	"observability": {
-		"enabled": true
-	},
 	"kv_namespaces": [
 		{
 			"binding": "MENSA_APP_CACHE",
@@ -30,14 +27,6 @@
 				"limit": 3,
 				"period": 60
 			}
-		}
-	],
-	"routes": [
-		{
-			"pattern": "api.mensatoday.app",
-			"custom_domain": true,
-			"enabled": true,
-			"previews_enabled": false
 		}
 	]
 }
