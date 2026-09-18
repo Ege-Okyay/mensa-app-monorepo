@@ -8,12 +8,12 @@ import pushRouter from './routes/push.routes';
 
 const app = new Hono<{ Bindings: Env }>();
 
-// TODO: add the prod URL
 app.use('*', cors({
   origin: [
     'http://localhost:5173',
     'http://127.0.0.1:8788',
-    'https://mensa-today-web.pages.dev'
+    'https://mensa-today-web.pages.dev',
+    'https://mensatoday.app'
   ],
   // origin: '*', // DEV Mode ONLY
   allowMethods: ['GET', 'POST', 'OPTIONS'],
