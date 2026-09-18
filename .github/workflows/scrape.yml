@@ -1,11 +1,6 @@
-name: Mensa Menu Scraper Cron
+name: Menu Scraper
 
 on:
-  schedule:
-      - cron: '20,40 10 * * 1-5'
-      - cron: '0,20,40 11 * * 1-5'
-      - cron: '0,20 12 * * 1-5'
-      - cron: '0 15 * * 1-5'
   workflow_dispatch:
 
 jobs:
@@ -20,7 +15,15 @@ jobs:
           - name: Checkout repository
             uses: actions/checkout@v6
           
+          - name: Check if menus already scraped
+            id: check_menus
+            run: |
+              RESPONSE=$(curl -sf "${{ secrets.SYNC_API_URL }}/mensa/scraped-status" \ -H "X-Internal-Key: ${{ secrets.SYNC_API_KEY }}")
+              SCRAPED=$(echo "$RESPONSE" | jq -r '.data.scraped')
+              echo "scraped=$SCRAPED" >> "$GITHUB_OUTPUT"
+
           - name: Set up Go
+            if: steps.check_menus.outputs.scraped != 'true'
             uses: actions/setup-go@v6
             with:
               go-version: 'stable'
@@ -52,7 +55,7 @@ jobs:
               REQUEST_DELAY_MS: 1500
 
               # Other
-              IG_STORY_API_URL: ${{ secrets.IG_STORY_API_URL }}
+              STORY_API_URL: ${{ secrets.STORY_API_URL }}
               GO_ENV: production
             run: |
               ./scraper
