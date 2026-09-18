@@ -43,6 +43,42 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#E83939" />
         <meta name="google" content="notranslate" />
 
+        <title>MensaToday</title>
+        <meta name="description" content="Daily menus for EDISU Piemonte cafeterias in Turin, updated every day. Check dishes, allergens, and vegan and vegetarian options in 3 languages." />
+        <meta name="keywords" content="mensa, cafeteria, EDISU, Piemonte, Torino, Turin, university, menu, daily menu, allergens" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <meta name="author" content="Ege Okyay" />
+        <meta name="creator" content="Ege Okyay" />
+        <meta name="publisher" content="MensaToday" />
+        <meta name="copyright" content="© 2026 Ege Okyay" />
+
+        <link rel="canonical" href="https://mensatoday.app/" />
+
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="MensaToday" />
+        <meta property="og:title" content="MensaToday" />
+        <meta property="og:description" content="Daily menus for EDISU Piemonte cafeterias in Turin, updated every day. Check dishes, allergens, and vegan and vegetarian options in 3 languages." />
+        <meta property="og:url" content="https://mensatoday.app" />
+        <meta property="og:image" content="https://mensatoday.app/pwa-512x512.png" />
+        <meta property="og:image:width" content="512" />
+        <meta property="og:image:height" content="512" />
+        <meta property="og:image:alt" content="MensaToday logo" />
+        <meta property="og:locale" content="it_IT" />
+        <meta property="og:locale:alternate" content="it_IT" />
+        <meta property="og:locale:alternate" content="tr_TR" />
+
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="MensaToday" />
+        <meta name="twitter:description" content="Daily menus for EDISU Piemonte cafeterias in Turin, updated every day. Check dishes, allergens, and vegan and vegetarian options in 3 languages." />
+        <meta name="twitter:image" content="https://mensatoday.app/pwa-512x512.png" />
+
+        <meta name="application-name" content="MensaToday" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="apple-mobile-web-app-title" content="MensaToday" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-status-bar-style" content="default" />
+
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
 
