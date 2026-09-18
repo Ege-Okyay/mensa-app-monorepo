@@ -18,7 +18,7 @@ jobs:
           - name: Check if menus already scraped
             id: check_menus
             run: |
-              RESPONSE=$(curl -sf "${{ secrets.SYNC_API_URL }}/mensa/scraped-status" \ -H "X-Internal-Key: ${{ secrets.SYNC_API_KEY }}")
+              RESPONSE=$(curl -sf "${{ secrets.SYNC_API_URL }}/mensa/scraped-status" -H "X-Internal-Key: ${{ secrets.SYNC_API_KEY }}")
               SCRAPED=$(echo "$RESPONSE" | jq -r '.data.scraped')
               echo "scraped=$SCRAPED" >> "$GITHUB_OUTPUT"
 
