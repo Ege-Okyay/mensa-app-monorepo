@@ -47,6 +47,7 @@ export default function MensaPage({ loaderData }: Route.ComponentProps) {
         <MensaMenuCard
           menu={mensa.current_menu.menu_data}
           imageUrl={`/mensas/${mensa.slug}.webp`}
+          schedule={mensa.schedule}
         />
         
         <Link 

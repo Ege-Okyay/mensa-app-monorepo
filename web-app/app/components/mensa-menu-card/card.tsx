@@ -1,21 +1,51 @@
-import { Clock, Zap, MapPin } from "lucide-react";
+import { AlarmClock, Ban, CalendarClock, Clock, Zap } from "lucide-react";
 import SectionTitle from "./section-title";
 import FoodCard from "./food-card";
 import SideDish from "./side-dish";
 import Allergy from "./allergy";
-import type { MenuData } from "~/lib/api/types";
+import type { MenuData, Schedule } from "~/lib/api/types";
 import { useTranslation } from "~/lib/contexts/language-context";
+import { getScheduleStatus, type ScheduleStatus } from "~/lib/utils/schedule";
 
 interface MensaMenuCardProps {
   menu: MenuData;
   imageUrl: string;
+  schedule: Schedule | null;
 }
 
-export default function MensaMenuCard({ menu, imageUrl }: MensaMenuCardProps) {
+const BANNER_STYLES: Record<
+  ScheduleStatus["kind"],
+  { icon: typeof Ban; className: string }
+> = {
+  opens: { icon: CalendarClock, className: "bg-brand-soft text-brand border-brand-border-subtle" },
+  closes: { icon: AlarmClock, className: "bg-amber-50 text-amber-700 border-amber-200" },
+  closed: { icon: Ban, className: "bg-neutral-100 text-neutral-500 border-neutral-200" },
+};
+
+export default function MensaMenuCard({ menu, imageUrl, schedule }: MensaMenuCardProps) {
   const { t } = useTranslation();
+  const status = getScheduleStatus(schedule);
+
+  let label: string | null = null;
+  let Icon: typeof Ban | null = null;
+  if (status) {
+    Icon = BANNER_STYLES[status.kind].icon;
+    if (status.kind === "closed") label = t("schedule.closed");
+    else if (status.kind === "opens") label = t("schedule.opens_at").replace("{time}", status.time);
+    else label = t("schedule.closes_at").replace("{time}", status.time);
+  }
+
+  const showBanner = status && status.kind !== "closes" && label;
 
   return (
     <div className="card bg-white w-full rounded-2xl shadow-sm overflow-y-auto h-[80svh] border border-border no-scrollbar flex flex-col">
+      {showBanner && status && Icon && (
+        <div className={`flex items-center justify-center gap-2 px-4 py-2.5 shrink-0 border-b ${BANNER_STYLES[status.kind].className}`}>
+          <Icon className="w-4 h-4" />
+          <span className="text-sm font-black uppercase tracking-widest">{label}</span>
+        </div>
+      )}
+
       <figure className="relative h-32 w-full shrink-0">
         <img
           src={imageUrl}
