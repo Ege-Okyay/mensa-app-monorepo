@@ -52,14 +52,10 @@ export const mensaController = {
     await scanService.applySync(supabase, rawResults, kv);
     await mensaService.setScraped(kv);
 
-    /*
-    Disabled for now
-
     // Send push notification
     const config = getConfig(c.env);
 
     c.executionCtx.waitUntil(pushService.broadcastMenuUpdate(supabase, config.vapid));
-    */
 
     return c.json(successResponse({
       processed: rawResults.length,
