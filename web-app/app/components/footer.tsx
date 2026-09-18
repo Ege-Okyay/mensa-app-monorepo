@@ -2,6 +2,8 @@ import { UtensilsCrossed } from "lucide-react";
 import { Link } from "react-router";
 
 export default function Footer() {
+  const API_VERSION = import.meta.env.API_VERSION || "1.0.0";
+
   return (
     <footer className="mt-12 flex flex-col items-center gap-2">
       <div className="flex items-center gap-2">
@@ -25,6 +27,10 @@ export default function Footer() {
           className="text-brand"
         >ege </Link>
         made this so you don't have to
+      </span>
+
+      <span className="text-body-sm text-text-muted/40">
+        v{API_VERSION}
       </span>
     </footer>
   );
