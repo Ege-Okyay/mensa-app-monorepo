@@ -33,7 +33,7 @@ export const en = {
     main_courses: "MAIN COURSES",
     side_dishes: "SIDE DISHES",
     specialties: "Specialties Available",
-    details: "More details coming soon..."
+    search_on_google: "Search on Google",
   },
   allergens: {
     title: "Allergens",

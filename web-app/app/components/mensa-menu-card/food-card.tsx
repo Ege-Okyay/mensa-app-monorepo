@@ -1,4 +1,4 @@
-import { Info, X, Leaf, Carrot } from "lucide-react";
+import { Leaf, Carrot, ChevronDown, Search } from "lucide-react";
 import AllergyCard from "./allergy-card";
 import type { MenuItem } from "~/lib/api/types";
 import { useTranslation, type AllPaths } from "~/lib/contexts/language-context";
@@ -21,15 +21,16 @@ const dietaryConfig = {
 
 export default function FoodCard({ menuItem }: FoodCardProps) {
   const { t, language } = useTranslation();
+  const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(menuItem.it.name)}`;
 
   return (
-    <div className="collapse rounded-xl border-border border bg-background transition-all duration-300 ease-in-out has-checked:bg-brand-soft has-checked:border-brand-border group w-full">
-      <input type="checkbox" className="peer" />
+    <div className="collapse group rounded-xl border-border border bg-background transition-all duration-300 ease-in-out has-checked:bg-brand-soft has-checked:border-brand-border w-full">
+      <input type="checkbox" />
       <div className="collapse-title p-3 min-h-0 flex flex-col gap-1">
-        <div className="flex flex-row justify-between items-start gap-2">
+        <div className="flex flex-row justify-between items-center gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-text text-h2 font-bold leading-tight">{menuItem[language].name}</h2>
-            
+
             {menuItem.dietary_category && menuItem.dietary_category !== "Meat" && (
               <div className={`flex items-center gap-1 px-2 py-0.5 rounded-full border shadow-sm ${dietaryConfig[menuItem.dietary_category].styles}`}>
                 {(() => {
@@ -43,15 +44,21 @@ export default function FoodCard({ menuItem }: FoodCardProps) {
             )}
           </div>
 
-          <div className="p-1 shrink-0">
-            <Info className="group-has-checked:hidden block text-brand w-4 h-4" />
-            <X className="group-has-checked:block hidden text-brand w-4 h-4" />
-          </div>
+          <ChevronDown className="shrink-0 text-text-muted w-4 h-4 transition-transform duration-300 group-has-checked:rotate-180" />
         </div>
         <span className="text-body text-text-muted leading-tight">{menuItem[language].description}</span>
       </div>
-      <div className="collapse-content transition-all ease-in-out duration-300">
+      <div className="collapse-content transition-all ease-in-out duration-300 flex flex-col gap-2">
         <AllergyCard allergens={menuItem.allergens} />
+        <a
+          href={searchUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center gap-2 w-full px-3 py-2.5 bg-white rounded-lg border border-brand-border-subtle shadow-sm text-brand text-xs font-bold active:scale-[0.98] transition-transform"
+        >
+          <Search className="w-3.5 h-3.5" />
+          {t("menu.search_on_google")}
+        </a>
       </div>
     </div>
   );

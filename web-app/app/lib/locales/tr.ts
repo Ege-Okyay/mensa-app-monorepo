@@ -35,7 +35,7 @@ export const tr: TranslationKeys = {
     main_courses: "ANA YEMEKLER",
     side_dishes: "YAN LEZZETLER",
     specialties: "Özel Yemekler Mevcut",
-    details: "Daha fazla detay yakında..."
+    search_on_google: "Google'da Ara",
   },
   allergens: {
     title: "Alerjenler",
