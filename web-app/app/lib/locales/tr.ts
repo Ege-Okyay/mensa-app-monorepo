@@ -84,5 +84,9 @@ export const tr: TranslationKeys = {
   coming_soon: {
     title: "Üzerinde çalışıyoruz",
     description: "Bu sayfa yapım aşamasında. Yakında tekrar göz atın."
+  },
+  legal: {
+    privacy_policy: "Gizlilik Politikası",
+    terms_of_service: "Kullanım Şartları"
   }
 };

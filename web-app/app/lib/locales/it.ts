@@ -85,4 +85,8 @@ export const it: TranslationKeys = {
     title: "Ci stiamo lavorando",
     description: "Questa pagina è in costruzione. Torna presto.",
   },
+  legal: {
+    privacy_policy: "Informativa Privacy",
+    terms_of_service: "Termini di Servizio",
+  },
 };
