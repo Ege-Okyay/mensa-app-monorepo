@@ -35,7 +35,7 @@ export const it: TranslationKeys = {
     main_courses: "SECONDI PIATTI",
     side_dishes: "CONTORNI",
     specialties: "Specialità Disponibili",
-    details: "Maggiori dettagli in arrivo..."
+    search_on_google: "Cerca su Google",
   },
   allergens: {
     title: "Allergeni",

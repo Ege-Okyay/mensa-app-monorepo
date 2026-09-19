@@ -124,7 +124,7 @@ export default function App() {
     <main className="w-full h-full max-w-sm flex flex-col overflow-hidden relative">
       <Header showInstallGuide={showInstallGuide} />
 
-      <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-12">
+      <div className="flex-1 overflow-y-auto no-scrollbar px-5 pt-4 pb-6">
         <Outlet />
       </div>
 

@@ -28,13 +28,6 @@ export default function AllergyCard({ allergens }: AllergyCardProps) {
           </div>
         )}
       </div>
-
-      <div className="border-t border-brand-border-subtle pt-2 hidden group-has-checked:block animate-in fade-in slide-in-from-top-1 duration-500">
-        <div className="flex items-center gap-2 opacity-40">
-          <div className="h-1.5 w-1.5 rounded-full bg-brand"></div>
-          <span className="text-[9px] font-bold uppercase tracking-widest text-text-muted">{t("menu.details")}</span>
-        </div>
-      </div>
     </div>
   );
 }
