@@ -77,7 +77,7 @@ export const en = {
   schedule: {
     opens_at: "Opens at {time}",
     closes_at: "Closes at {time}",
-    closed: "Closed today",
+    closed: "Closed",
   },
   coming_soon: {
     title: "We're working on it",

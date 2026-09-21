@@ -79,7 +79,7 @@ export const tr: TranslationKeys = {
   schedule: {
     opens_at: "Açılış saati: {time}",
     closes_at: "Kapanış saati: {time}",
-    closed: "Bugün kapalı"
+    closed: "Kapalı"
   },
   coming_soon: {
     title: "Üzerinde çalışıyoruz",

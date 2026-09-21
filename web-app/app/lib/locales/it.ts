@@ -79,7 +79,7 @@ export const it: TranslationKeys = {
   schedule: {
     opens_at: "Apre alle {time}",
     closes_at: "Chiude alle {time}",
-    closed: "Chiuso oggi",
+    closed: "Chiuso",
   },
   coming_soon: {
     title: "Ci stiamo lavorando",
