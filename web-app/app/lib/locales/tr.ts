@@ -9,7 +9,7 @@ export const tr: TranslationKeys = {
   },
   status: {
     menu_available: "Menü Mevcut",
-    not_published: "Henüz Yayınlanmadı",
+    not_published: "Yayınlanmadı",
     no_menu: "Menü Bulunamadı",
     no_menu_desc: "Mensa {name} için bugünün menüsü henüz yayınlanmadı",
   },

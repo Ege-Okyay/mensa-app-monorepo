@@ -7,7 +7,7 @@ export const en = {
   },
   status: {
     menu_available: "Menu Available",
-    not_published: "Not Published Yet",
+    not_published: "Not Published",
     no_menu: "No Menu Found",
     no_menu_desc: "Today's menu for Mensa {name} hasn't been published yet",
   },

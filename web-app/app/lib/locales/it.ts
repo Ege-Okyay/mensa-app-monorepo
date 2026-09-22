@@ -9,7 +9,7 @@ export const it: TranslationKeys = {
   },
   status: {
     menu_available: "Menu Disponibile",
-    not_published: "Non ancora pubblicato",
+    not_published: "Non pubblicato",
     no_menu: "Nessun menu trovato",
     no_menu_desc: "Il menu di oggi per Mensa {name} non è ancora stato pubblicato",
   },
