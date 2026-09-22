@@ -30,14 +30,17 @@ jobs:
               cache-dependency-path: menu-scraper/go.sum
           
           - name: Install dependencies
+            if: steps.check_menus.outputs.scraped != 'true'
             run: |
               go mod download
           
           - name: Build scraper
+            if: steps.check_menus.outputs.scraped != 'true'
             run: |
               go build -o scraper ./cmd/main.go
 
           - name: Run scraper
+            if: steps.check_menus.outputs.scraped != 'true'
             env:
               # Internal
               PORT: 3001
