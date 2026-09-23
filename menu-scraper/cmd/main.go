@@ -45,6 +45,11 @@ func run() error {
 			return err
 		}
 
+		if len(results) == 0 {
+			log.Println("Now new menus to sync, skipping sync")
+			return nil
+		}
+
 		syncClient := sync.NewSyncClient(cfg.SyncAPIUrl, cfg.SyncAPIKey)
 
 		return syncClient.PushResults(results)
