@@ -39,6 +39,14 @@ jobs:
             run: |
               go build -o scraper ./cmd/main.go
 
+          - name: Restore cache
+            if: steps.check_menus.outputs.scraped != 'true'
+            uses: actions/cache@v6
+            id: image-cache
+            with:
+              path: menu-scraper/.cache/processed-images.json
+              key: processed-images-v1
+
           - name: Run scraper
             if: steps.check_menus.outputs.scraped != 'true'
             env:
