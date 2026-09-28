@@ -132,6 +132,7 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 
 			resp, err := e.analyzeWithRetry(ctx, source, img, mimeType, retryDelay)
 			if err != nil {
+				log.Printf("[GEMINI] failed: %v", err)
 				errorsCh <- err
 				return
 			}
