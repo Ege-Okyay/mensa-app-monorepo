@@ -45,8 +45,6 @@ func run() error {
 			return err
 		}
 
-		scraperEngine.LogSummary()
-
 		if len(results) == 0 {
 			log.Println("Now new menus to sync, skipping sync")
 			return nil

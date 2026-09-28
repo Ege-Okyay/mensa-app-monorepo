@@ -52,19 +52,19 @@ jobs:
             env:
               # Internal
               PORT: 3001
-              DETAILED_LOGS: ${{ secrets.DETAILED_LOGS }}
               SYNC_API_KEY: ${{ secrets.SYNC_API_KEY  }}
               SYNC_API_URL: ${{ secrets.SYNC_API_URL }}
               RATE_LIMIT: 5
 
               # Gemini
               GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-              GEMINI_MODEL: gemini-3.1-flash-lite
+              GEMINI_MODEL: gemini-3.5-flash-lite
               GEMINI_PROMPT_FILE_NAME: analysis_v5.txt
 
               # Scraper
               MAX_CONCURRENCY: 3
               REQUEST_DELAY_MS: 1500
+              RATE_LIMIT_RETRY_DELAY: 60
 
               # Other
               STORY_API_URL: ${{ secrets.STORY_API_URL }}
