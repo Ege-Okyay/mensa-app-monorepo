@@ -29,6 +29,8 @@ src/
     mensa.service.ts    — KV-cached DB queries, upsert menus, cache invalidation
     push.service.ts     — Save/delete subscriptions, broadcast localized notifications
     scan.service.ts     — Matches scraped menus → DB mensas by name, applies sync
+  utils/
+    schedule.ts         — isMensaOpen: Europe/Rome open-range check used to skip open mensas during clear
 ```
 
 ### Key Flows
@@ -38,7 +40,7 @@ src/
 | `GET /mensa` | Public (rate limited) | List all mensas (cached 24h) |
 | `GET /mensa/:slug` | Public (rate limited) | Single mensa + current menu (cached 24h) |
 | `POST /mensa/sync` | `X-Internal-Key` (scraper) | Upsert menus from GitHub Actions scraper |
-| `POST /mensa/clear` | `X-Internal-Key` (scraper) | Clear all menus + cache |
+| `POST /mensa/clear` | `X-Internal-Key` (scraper) | Clear menus of closed mensas only (open ones kept) + cache |
 | `POST /push/subscribe` | Rate limited (3/min) | Save push subscription with locale |
 | `POST /push/unsubscribe` | Rate limited (3/min) | Remove subscription |
 
