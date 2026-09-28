@@ -136,6 +136,8 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 				return
 			}
 
+			log.Printf("[GEMINI] mensa_name=%q is_menu=%-5v", resp.MensaName, resp.IsMenu)
+
 			if resp.IsMenu {
 				resp.PopulateCommonAllergens()
 				resultsCh <- resp
