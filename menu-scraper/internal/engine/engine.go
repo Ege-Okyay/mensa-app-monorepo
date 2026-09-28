@@ -21,6 +21,15 @@ import (
 	"google.golang.org/genai"
 )
 
+type runSummary struct {
+	fetched  int
+	skipped  int
+	analyzed int
+	menus    int
+	notMenu  int
+	errors   int
+}
+
 type Analyzer interface {
 	Process(ctx context.Context, img []byte, mimeType string) (*models.MenuResponse, error)
 }
@@ -29,6 +38,7 @@ type ScraperEngine struct {
 	Analyzer                 Analyzer
 	Config                   *config.AppConfig
 	ProcessedImagesCachePath string
+	summary                  runSummary
 }
 
 func NewScraperEngine(analyzer *gemini.ImageAnalyzer, config *config.AppConfig) *ScraperEngine {
@@ -82,6 +92,8 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 		sem       = make(chan struct{}, e.Config.MaxConcurrency)
 	)
 
+	e.summary = runSummary{fetched: len(images)}
+
 	var cache *ProcessedImagesCache
 	if e.ProcessedImagesCachePath != "" {
 		cache = LoadCache(e.ProcessedImagesCachePath)
@@ -90,6 +102,7 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 
 	for _, imgSource := range images {
 		if cache != nil && cache.IsProcessed(imgSource) {
+			e.summary.skipped++
 			log.Printf("Skipping already processed image: %s", imgSource)
 			continue
 		}
@@ -115,7 +128,9 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 			}
 
 			if err != nil {
-				errorsCh <- fmt.Errorf("getting image %s: %w", source, err)
+				err = fmt.Errorf("getting image: %w", err)
+				errorsCh <- err
+				e.logOutcome(nil, err)
 				return
 			}
 
@@ -132,6 +147,7 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 			resp, err := e.analyzeWithRetry(ctx, source, img, mimeType, retryDelay)
 			if err != nil {
 				errorsCh <- err
+				e.logOutcome(nil, err)
 				return
 			}
 
@@ -139,6 +155,8 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 				resp.PopulateCommonAllergens()
 				resultsCh <- resp
 			}
+
+			e.logOutcome(resp, nil)
 
 			if cache != nil {
 				cache.MarkProcessed(source)
@@ -157,6 +175,11 @@ func (e *ScraperEngine) AnalyzeImages(ctx context.Context, client *http.Client, 
 	for r := range resultsCh {
 		results = append(results, r)
 	}
+
+	e.summary.menus = len(results)
+	e.summary.analyzed = e.summary.fetched - e.summary.skipped
+	e.summary.notMenu = e.summary.analyzed - e.summary.menus
+	e.summary.errors = len(errorsCh)
 
 	if len(results) == 0 && len(errorsCh) > 0 {
 		return nil, <-errorsCh
