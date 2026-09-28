@@ -11,7 +11,8 @@ import (
 
 type AppConfig struct {
 	// Internal
-	Port string
+	Port         string
+	DetailedLogs bool
 
 	// Sync
 	SyncAPIUrl string
@@ -39,6 +40,7 @@ func LoadConfig() (*AppConfig, error) {
 	}
 
 	isProd := os.Getenv("GO_ENV") == "production"
+	detailedLogs := getEnvBool("DETAILED_LOGS", false)
 
 	promptDir := fmt.Sprintf("prompts/%s", getEnvString("GEMINI_PROMPT_FILE_NAME", "analysis_v5.txt"))
 	prompt, err := os.ReadFile(promptDir)
@@ -63,6 +65,7 @@ func LoadConfig() (*AppConfig, error) {
 		ProcessedImagesCachePath: getEnvString("PROCESSED_IMAGES_CACHE_PATH", ".cache/processed-images.json"),
 		StoryAPIUrl:              getEnvString("STORY_API_URL", ""),
 		IsProduction:             isProd,
+		DetailedLogs:             detailedLogs,
 	}
 
 	if err := cfg.Validate(); err != nil {
@@ -98,6 +101,13 @@ func getEnvInt(key string, defaultVal int) int {
 
 func getEnvString(key string, defaultVal string) string {
 	if val := os.Getenv(key); val != "" {
+		return val
+	}
+	return defaultVal
+}
+
+func getEnvBool(key string, defaultVal bool) bool {
+	if val, err := strconv.ParseBool(os.Getenv(key)); err == nil {
 		return val
 	}
 	return defaultVal

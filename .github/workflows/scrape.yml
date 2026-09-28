@@ -52,6 +52,7 @@ jobs:
             env:
               # Internal
               PORT: 3001
+              DETAILED_LOGS: ${{ secrets.DETAILED_LOGS }}
               SYNC_API_KEY: ${{ secrets.SYNC_API_KEY  }}
               SYNC_API_URL: ${{ secrets.SYNC_API_URL }}
               RATE_LIMIT: 5

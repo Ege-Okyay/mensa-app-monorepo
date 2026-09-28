@@ -53,6 +53,7 @@ internal/
 | `REQUEST_DELAY_MS` | Random jitter delay between requests |
 | `PROCESSED_IMAGES_CACHE_PATH` | Path to cahce file for dedup |
 | `STORY_API_URL` | Third-party Instagram story viewer API URL |
+| `DETAILED_LOGS` | Print per-image Gemini outcomes (menu dumps, skips, errors) |
 
 ## Running
 
