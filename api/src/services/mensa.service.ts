@@ -2,6 +2,7 @@ import { HTTPException } from 'hono/http-exception';
 import { CreateMenuSchema, MenuDataSchema, ScheduleSchema, type Mensa, type MensaCurrentMenu, type Schedule } from '../models/mensa';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../models/database.types';
+import { isMensaOpen } from "../utils/schedule";
 
 /**
  * Helper function to transform and validate database results
@@ -122,31 +123,46 @@ export const mensaService = {
   },
 
   /**
-   * Clears the whole `mensa_current_menus` table from database
-   * Deletes `mensas` key and `mensa:mensa_name` keys from cache
+   * Clears the current menu of every mensa that is currently closed
+   * Deletes `mensas` key and `mensa:mensa_name` keys of the cleared mensas from cache
    */
-  async clearMensaMenus(supabase: SupabaseClient<Database>, kv: KVNamespace) {
+  async clearMensaMenus(supabase: SupabaseClient<Database>, kv: KVNamespace): Promise<{ cleared: number, kept: number, open: number }> {
     const { data: mensas, error: fetchError } = await supabase
       .from('mensas')
-      .select('id, slug');
+      .select('id, slug, schedule');
 
     if (fetchError) throw new HTTPException(500, { message: fetchError.message });
-    if (!mensas || mensas.length === 0) return;
+    if (!mensas || mensas.length === 0) return { cleared: 0, kept: 0, open: 0 };
 
-    const ids = mensas.map(m => m.id);
-    const slugs = mensas.map(m => m.slug);
+    const now = new Date();
 
-    const { error: deleteError } = await supabase
+    const openIds = new Set(mensas.filter(m => isMensaOpen(m.schedule, now)).map(m => m.id));
+    const closedIds = mensas.filter(m => !openIds.has(m.id)).map(m => m.id);
+
+    if (closedIds.length === 0) return { cleared: 0, kept: mensas.length, open: openIds.size };
+
+    const { data: deleted, error: deleteError } = await supabase
       .from('mensa_current_menus')
       .delete()
-      .in('mensa_id', ids);
+      .in('mensa_id', closedIds)
+      .select('mensa_id')
 
     if (deleteError) throw new HTTPException(500, { message: deleteError.message });
 
-    await kv.delete('mensas');
-    await Promise.all(
-      slugs.map(slug => kv.delete(`mensa:${slug}`))
-    );
+    const clearedIds = new Set((deleted ?? []).map(row => row.mensa_id));
+
+    if (clearedIds.size > 0) {
+      await kv.delete('mensas');
+      await Promise.all(
+        mensas.filter(m => clearedIds.has(m.id)).map(m => kv.delete(`mensa:${m.slug}`))
+      );
+    }
+
+    return {
+      cleared: clearedIds.size,
+      kept: mensas.length - clearedIds.size,
+      open: openIds.size
+    };
   },
 
   /**

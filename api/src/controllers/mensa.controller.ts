@@ -64,16 +64,20 @@ export const mensaController = {
   },
 
   /**
-   * Endpoint for Github Actions to clear all current menus 
+   * Endpoint for Github Actions to clear the menus of all currently closed mensas 
    */
   async clearMenus(c: AppContext) {
     const supabase = getSupabase(c.env);
     const kv = c.env.MENSA_APP_CACHE;
 
-    await mensaService.clearMensaMenus(supabase, kv);
+    const { cleared, kept, open } = await mensaService.clearMensaMenus(supabase, kv);
+
     await mensaService.clearScraped(kv);
 
     return c.json(successResponse({
+      cleared,
+      kept,
+      open,
       timestamp: new Date().toISOString()
     }));
   },

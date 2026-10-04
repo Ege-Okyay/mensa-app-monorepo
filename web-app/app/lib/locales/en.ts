@@ -79,10 +79,6 @@ export const en = {
     closes_at: "Closes at {time}",
     closed: "Closed",
   },
-  coming_soon: {
-    title: "We're working on it",
-    description: "This page is under construction. Check back soon.",
-  },
   legal: {
     privacy_policy: "Privacy Policy",
     terms_of_service: "Terms of Service",
