@@ -86,7 +86,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   if (isApiError(error)) {
     if (error.code === "TIMEOUT") message = t("errors.timeout");
     else if (error.code === "NETWORK_ERROR") message = t("errors.connection");
-    // else if (error.code === "SERVER_OFFLINE") message = t("errors.offline");
+    else if (error.code === "SERVER_OFFLINE") message = t("errors.offline");
     else message = error.message;
   }
 
