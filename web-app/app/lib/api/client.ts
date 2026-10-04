@@ -27,14 +27,14 @@ async function request<T>(path: string, options?: RequestInit): Promise<T> {
       }
     });
 
-    const contentType = response.headers.get("content-type");
-    if (!contentType?.includes("application/json")) {
-      throw {
-        message: "Server is temporarily unavailable",
-        code: "SERVER_OFFLINE",
-        status: response.status
-      };
-    }
+    // const contentType = response.headers.get("content-type");
+    // if (!contentType?.includes("application/json")) {
+    //   throw {
+    //     message: "Server is temporarily unavailable",
+    //     code: "SERVER_OFFLINE",
+    //     status: response.status
+    //   };
+    // }
 
     const result: ApiResponse<T> = await response.json();
 
