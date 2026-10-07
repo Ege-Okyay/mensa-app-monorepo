@@ -3,18 +3,28 @@ package logic
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
-	"net/url"
-	"strings"
 
 	"github.com/Ege-Okyay/mensa-app-monorepo/internal/httpclient"
-	"github.com/PuerkitoBio/goquery"
 )
 
+type storyItem struct {
+	Kind     string `json:"kind"`
+	Src      string `json:"src"`
+	Raw      string `json:"raw"`
+	VideoRaw string `json:"video_raw"`
+	IsVideo  bool   `json:"is_video"`
+}
+
+// type storyResponse struct {
+// 	Status string `json:"status"`
+// 	HTML   string `json:"html"`
+// }
+
 type storyResponse struct {
-	Status string `json:"status"`
-	HTML   string `json:"html"`
+	Name   string      `json:"name"`
+	Handle string      `json:"handle"`
+	Items  []storyItem `json:"items"`
 }
 
 // Calls the third party API and returns a list of images
@@ -29,25 +39,30 @@ func FetchStories(client *http.Client, url string) ([]string, error) {
 		return nil, fmt.Errorf("failed to decode story response: %w", err)
 	}
 
-	if resp.Status != "ok" {
-		log.Printf("API error response body: %s", string(body))
-		return nil, fmt.Errorf("API returned status: %s", resp.Status)
-	}
+	// if resp.Status != "ok" {
+	// 	log.Printf("API error response body: %s", string(body))
+	// 	return nil, fmt.Errorf("API returned status: %s", resp.Status)
+	// }
 
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(resp.HTML))
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse story HTML: %w", err)
-	}
+	// doc, err := goquery.NewDocumentFromReader(strings.NewReader(resp.HTML))
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to parse story HTML: %w", err)
+	// }
 
 	var imageUrls []string
-	doc.Find(".load img").Each(func(i int, s *goquery.Selection) {
-		src, exists := s.Attr("src")
-		if exists && src != "" {
-			if decoded := decodeImageURL(src); decoded != "" {
-				imageUrls = append(imageUrls, decoded)
-			}
+	// doc.Find(".load img").Each(func(i int, s *goquery.Selection) {
+	// 	src, exists := s.Attr("src")
+	// 	if exists && src != "" {
+	// 		if decoded := decodeImageURL(src); decoded != "" {
+	// 			imageUrls = append(imageUrls, decoded)
+	// 		}
+	// 	}
+	// })
+	for _, item := range resp.Items {
+		if item.Raw != "" {
+			imageUrls = append(imageUrls, item.Raw)
 		}
-	})
+	}
 
 	if len(imageUrls) == 0 {
 		return nil, fmt.Errorf("no image stories found")
@@ -60,21 +75,21 @@ func FetchImage(client *http.Client, url string) ([]byte, error) {
 	return httpclient.Fetch(client, url, false)
 }
 
-func decodeImageURL(rawURL string) string {
-	parsed, err := url.Parse(rawURL)
-	if err != nil {
-		return ""
-	}
+// func decodeImageURL(rawURL string) string {
+// 	parsed, err := url.Parse(rawURL)
+// 	if err != nil {
+// 		return ""
+// 	}
 
-	media := parsed.Query().Get("media")
-	if media == "" {
-		return rawURL
-	}
+// 	media := parsed.Query().Get("media")
+// 	if media == "" {
+// 		return rawURL
+// 	}
 
-	decoded, err := url.QueryUnescape(media)
-	if err != nil || decoded == "" {
-		return rawURL
-	}
+// 	decoded, err := url.QueryUnescape(media)
+// 	if err != nil || decoded == "" {
+// 		return rawURL
+// 	}
 
-	return decoded
-}
+// 	return decoded
+// }
