@@ -65,14 +65,17 @@ func GetHeaders(rawURL string) map[string]string {
 
 	return map[string]string{
 		"User-Agent":      RandomUserAgent(),
-		"Accept":          "application/json",
+		"Accept":          "*/*",
+		"Accept-Encoding": "gzip,deflate,br,zstd",
 		"Accept-Language": "en-US,en;q=0.9",
-		"Sec-GPC":         "1",
+		"Connection":      "keep-alive",
+		"Host":            host,
+		"Referer":         baseUrl,
 		"Sec-Fetch-Dest":  "empty",
 		"Sec-Fetch-Mode":  "cors",
 		"Sec-Fetch-Site":  "same-origin",
-		"Priority":        "u=0",
-		"Referer":         baseUrl,
+		"Sec-GPC":         "1",
+		"TE":              "trailers",
 	}
 }
 
