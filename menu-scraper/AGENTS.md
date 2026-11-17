@@ -12,7 +12,7 @@ internal/
   config/                — env-based config loading (.env file)
   httpclient/            — HTTP client with anti-bot headers, gzip support
   logic/
-    scraper.go           — fetch stories + decode image URLs
+    scraper.go           — run Apify stories actor + extract image URLs
     processor.go         — resize images before Gemini analysis
   models/                — domain types (MenuResponse, MenuItem, etc.)
   engine/                — orchestration: fetch → analyze → collect
@@ -29,15 +29,15 @@ internal/
 ```
 
 ### How story fetching works (`logic/scraper.go`)
-1. `FetchStories` → `httpclient.Fetch(url, true)` — uses story-specific headers
-2. JSON parse: `{status, html}`
-3. goquery: `.load img` → extracts `src` (naturally skips video stories)
-4. `decodeImageURL()` — extracts `media` query param from `media.php?media=<encoded-url>` and URL-decodes it to get the raw Instagram CDN URL
+1. `FetchStories` → `POST` to the Apify actor run URL in `STORY_API_URL` (token included in the query string)
+2. Input: `{ includeStories: true, usernames: ["edisupiemonte"] }`
+3. The run is awaited (`waitForFinish`), then its dataset items are fetched from `/v2/datasets/{id}/items`
+4. Only stories with `mediaType == "image"` are kept; videos are skipped
 
 ### HTTP Headers (`httpclient/client.go`)
 - `GetHeaders(url)` — generic headers, Referer = `baseUrl` from parsed URL
 - `Fetch(client, url, isStoryRequest bool)` — when `true`, adds `Content-Type`
-- Story requests use `true`, image downloads use `false`
+- Image downloads use `Fetch`; Apify requests use a plain JSON client
 
 ## Configuration (`.env`)
 
@@ -52,7 +52,7 @@ internal/
 | `MAX_CONCURRENCY` | Max concurrent Gemini analyses |
 | `REQUEST_DELAY_MS` | Random jitter delay between requests |
 | `PROCESSED_IMAGES_CACHE_PATH` | Path to cahce file for dedup |
-| `STORY_API_URL` | Third-party Instagram story viewer API URL |
+| `STORY_API_URL` | Apify actor run URL, including `?token=...` |
 
 ## Running
 
@@ -70,7 +70,6 @@ bun run sync:prod
 
 ## Dependencies (key)
 
-- `github.com/PuerkitoBio/goquery` — HTML parsing for story API response
 - `github.com/gofiber/fiber/v2` — HTTP server
 - `github.com/disintegration/imaging` — image resize
 - `google.golang.org/genai` — Gemini AI SDK

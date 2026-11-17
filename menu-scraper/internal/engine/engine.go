@@ -43,7 +43,7 @@ func (e *ScraperEngine) Run(ctx context.Context, storyAPIUrl string, retryDelay 
 
 	log.Printf("Fetching stories from API...")
 
-	images, err := logic.FetchStories(client, storyAPIUrl)
+	images, err := logic.FetchStories(storyAPIUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -58,11 +58,9 @@ func (e *ScraperEngine) Run(ctx context.Context, storyAPIUrl string, retryDelay 
 }
 
 func (e *ScraperEngine) RunWithoutAnalyze(ctx context.Context, storyAPIUrl string) ([]string, error) {
-	client := httpclient.New()
-
 	log.Printf("Fetching stories from API without analyzing...")
 
-	images, err := logic.FetchStories(client, storyAPIUrl)
+	images, err := logic.FetchStories(storyAPIUrl)
 	if err != nil {
 		return nil, err
 	}
